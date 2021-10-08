@@ -47,6 +47,14 @@ function SlideMenu({ navigation }) {
                 <FontAwesome5 name="clipboard-list" style={styles.menuIcon} />
                 <Text style={styles.menuText}>Introduction</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>{
+                  navigation.navigate('Blog');
+            }} style={styles.menuItem}>
+                <FontAwesome5 name="blog" style={styles.menuIcon} />
+                <Text style={styles.menuText}>Blog</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('ContactInfo');
             }} style={styles.menuItem}>

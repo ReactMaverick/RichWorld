@@ -21,6 +21,15 @@ import PrivecyPolicy from './src/screens/PrivecyPolicy'
 import Faq from './src/screens/Faq'
 import ProductDetails from './src/screens/ProductDetails'
 
+import Account from './src/screens/Account'
+import MyOrder from './src/screens/MyOrder'
+import MyAddress from './src/screens/MyAddress'
+import MyPurchased from './src/screens/MyPurchased'
+import Blog from './src/screens/Blog'
+import BlogDetails from './src/screens/BlogDetails'
+
+
+
 
 
 
@@ -50,6 +59,14 @@ function MyDrawer() {
       <Drawer.Screen name="TermsCondition" component={TermsCondition} options={{ headerShown: false }} />
       <Drawer.Screen name="PrivecyPolicy" component={PrivecyPolicy} options={{ headerShown: false }} />
       <Drawer.Screen name="Faq" component={Faq} options={{ headerShown: false }} />
+      <Drawer.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
+      <Drawer.Screen name="Account" component={Account} options={{ headerShown: false }} />
+      <Drawer.Screen name="MyOrder" component={MyOrder} options={{ headerShown: false }} />
+      <Drawer.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />
+      <Drawer.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />     
+      <Drawer.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
+      <Drawer.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
+     
 
     </Drawer.Navigator>
   );
@@ -71,8 +88,14 @@ function Stack1() {
       <Stack.Screen name="TermsCondition" component={TermsCondition} options={{ headerShown: false }} />
       <Stack.Screen name="PrivecyPolicy" component={PrivecyPolicy} options={{ headerShown: false }} />
       <Stack.Screen name="Faq" component={Faq} options={{ headerShown: false }} />
-      <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
-      
+      <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />      
+      <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
+      <Stack.Screen name="MyOrder" component={MyOrder} options={{ headerShown: false }} />
+      <Stack.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />
+      <Stack.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />      
+      <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
+      <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
+
     </Stack.Navigator>
   )
 

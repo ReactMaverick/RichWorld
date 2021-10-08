@@ -51,9 +51,9 @@ function HomeScreen({ navigation }) {
 
         <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" />
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <ProductBox />
-          <ProductBox />
-          <ProductBox />
+          <ProductBox navigation={navigation}/>
+          <ProductBox navigation={navigation}/>
+          <ProductBox navigation={navigation}/>
         </ScrollView>
 
 

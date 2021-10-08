@@ -26,14 +26,14 @@ function ProductList({ navigation }) {
 
             <ScrollView>
                 <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
-                    <ProductBox />
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
+                    <ProductBox navigation={navigation}/>
                 </View>
             </ScrollView>
 
@@ -45,9 +45,11 @@ function ProductList({ navigation }) {
 
 
 
-function ProductBox({ }) {
+function ProductBox({navigation}) {
     return (
-        <View style={styles.productBox}>
+        <TouchableOpacity onPress={()=>{
+            navigation.navigate('ProductDetails');
+          }} style={styles.productBox}>
             <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
             <Text style={styles.productTitle}>Husskinzl: Men’s socks</Text>
             <Rating
@@ -68,7 +70,7 @@ function ProductBox({ }) {
 
             </View>
 
-        </View>
+        </TouchableOpacity>
     )
 }
 

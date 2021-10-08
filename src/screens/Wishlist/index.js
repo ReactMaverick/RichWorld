@@ -23,7 +23,7 @@ function Wishlist({ navigation }) {
          <Image source ={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
          <View style={styles.leftBox}>
            <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-           <Text style={styles.leftText2}>$260.00</Text>
+           <Text style={styles.leftText2}>₹260.00</Text>
          </View>
          </View>
         
@@ -45,7 +45,7 @@ function Wishlist({ navigation }) {
          <Image source ={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
          <View style={styles.leftBox}>
            <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-           <Text style={styles.leftText2}>$260.00</Text>
+           <Text style={styles.leftText2}>₹260.00</Text>
          </View>
          </View>
         
@@ -67,7 +67,7 @@ function Wishlist({ navigation }) {
          <Image source ={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
          <View style={styles.leftBox}>
            <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-           <Text style={styles.leftText2}>$260.00</Text>
+           <Text style={styles.leftText2}>₹260.00</Text>
          </View>
          </View>
         
