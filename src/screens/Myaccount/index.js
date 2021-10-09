@@ -156,10 +156,10 @@ function Myaccount({ navigation }) {
 
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('HomeScreen');
+            navigation.navigate('Login');
           }} style={styles.menuItem}>
             <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Log Out</Text>
+            <Text style={styles.menuText}>Login</Text>
           </TouchableOpacity>
 
     

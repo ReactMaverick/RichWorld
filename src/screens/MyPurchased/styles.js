@@ -121,6 +121,37 @@ export default StyleSheet.create({
         fontSize:15,
         textTransform:'uppercase',
         color:'#fff'
-    }
-
+    },
+    btnOuterImage:{
+      
+       borderColor:'#818181',
+       borderWidth:1,
+       padding:10,
+       marginTop:10,
+      
+       justifyContent:'center',
+       alignItems:'center'
+    },
+    btnImageText:{
+        fontFamily:'Poppins-Bold',
+        fontSize:15,
+        textTransform:'uppercase',
+        color:'#818181'
+    },
+    
+    productBox :{
+        width:Dimensions.get('window').width/2-50,
+        height:Dimensions.get('window').width/2-50,
+        backgroundColor:'#fff',
+        margin:10,
+        borderRadius:5,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        elevation: 5,    
+    
+    },
+  
+  
 });

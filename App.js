@@ -6,6 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
+import SplashScreen from 'react-native-splash-screen'
+
 
 import HomeScreen from './src/screens/HomeScreen'
 import Notifications from './src/screens/Notifications'
@@ -27,6 +29,8 @@ import MyAddress from './src/screens/MyAddress'
 import MyPurchased from './src/screens/MyPurchased'
 import Blog from './src/screens/Blog'
 import BlogDetails from './src/screens/BlogDetails'
+import Login from './src/screens/Login'
+import Signup from "./src/screens/Signup";
 
 
 
@@ -95,7 +99,8 @@ function Stack1() {
       <Stack.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />      
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
-
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />            
     </Stack.Navigator>
   )
 
@@ -105,7 +110,7 @@ function Stack1() {
 export default function App() {
 
   useEffect(() => {
-
+    SplashScreen.hide();
   }, []);
 
   return (

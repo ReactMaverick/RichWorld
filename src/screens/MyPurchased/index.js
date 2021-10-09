@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ImageBackground } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import Modal from "react-native-modal";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import { Rating } from 'react-native-ratings';
 
 function MyPurchased({ navigation }) {
 
@@ -14,6 +14,19 @@ function MyPurchased({ navigation }) {
 
   const toggleCancelModal = () => {
     setCancelModal(!cancelModal);
+  };
+
+  const [ratingModal, setRatingModal] = useState(false);
+
+  const toggleRatingModal = () => {
+    setRatingModal(!ratingModal);
+  };
+
+
+  const [imageModal, setImageModal] = useState(false);
+
+  const toggleImageModal = () => {
+    setImageModal(!imageModal);
   };
 
   useEffect(() => {
@@ -46,11 +59,11 @@ function MyPurchased({ navigation }) {
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={toggleCancelModal} >
               <Text style={styles.btnTxt}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={toggleRatingModal}>
               <Text style={styles.btnTxt}>Rating</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={toggleImageModal}>
               <Text style={styles.btnTxt}>Upload images</Text>
             </TouchableOpacity>
           </View>
@@ -76,11 +89,11 @@ function MyPurchased({ navigation }) {
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={toggleCancelModal}>
               <Text style={styles.btnTxt}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={toggleRatingModal}>
               <Text style={styles.btnTxt}>Rating</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={toggleImageModal}>
               <Text style={styles.btnTxt}>Upload images</Text>
             </TouchableOpacity>
           </View>
@@ -106,11 +119,11 @@ function MyPurchased({ navigation }) {
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={toggleCancelModal}>
               <Text style={styles.btnTxt}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={toggleRatingModal}>
               <Text style={styles.btnTxt}>Rating</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]}>
+            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={toggleImageModal}>
               <Text style={styles.btnTxt}>Upload images</Text>
             </TouchableOpacity>
           </View>
@@ -123,31 +136,31 @@ function MyPurchased({ navigation }) {
 
       <Modal isVisible={cancelModal} onBackdropPress={toggleCancelModal}  >
         <View style={styles.cancelPopup}>
-         <View style={styles.headerPopup}>
-         <Text style={styles.CategoryText2}>Write Your Reason</Text>
-         <TouchableOpacity onPress={toggleCancelModal}>
-         <AntDesign name="close" style={styles.closeBtn} />
-         </TouchableOpacity>
-       
-         
-         </View>
-         <View style={styles.itemOuter}>
-         <MaterialIcons style={{ fontSize: 20 }} name="radio-button-checked" />
-         <Text style={styles.radioText}> Defected product</Text>
-         </View>
+          <View style={styles.headerPopup}>
+            <Text style={styles.CategoryText2}>Write Your Reason</Text>
+            <TouchableOpacity onPress={toggleCancelModal}>
+              <AntDesign name="close" style={styles.closeBtn} />
+            </TouchableOpacity>
 
-         <View style={styles.itemOuter}>
-         <MaterialIcons style={{ fontSize: 20 }} name="radio-button-off" />
-         <Text  style={styles.radioText}>Product quality not good</Text>
-         </View>
 
-         <View style={styles.itemOuter}>
-         <MaterialIcons style={{ fontSize: 20 }} name="radio-button-off" />
-         <Text  style={styles.radioText}>Product quality not good</Text>
-         </View>
-         
-          <Text style={[styles.leftText2,{color:'#000'}]}>Your Comment</Text>
-         
+          </View>
+          <View style={styles.itemOuter}>
+            <MaterialIcons style={{ fontSize: 20 }} name="radio-button-checked" />
+            <Text style={styles.radioText}> Defected product</Text>
+          </View>
+
+          <View style={styles.itemOuter}>
+            <MaterialIcons style={{ fontSize: 20 }} name="radio-button-off" />
+            <Text style={styles.radioText}>Product quality not good</Text>
+          </View>
+
+          <View style={styles.itemOuter}>
+            <MaterialIcons style={{ fontSize: 20 }} name="radio-button-off" />
+            <Text style={styles.radioText}>Product quality not good</Text>
+          </View>
+
+          <Text style={[styles.leftText2, { color: '#000' }]}>Your Comment</Text>
+
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Your Comment'}
@@ -165,11 +178,82 @@ function MyPurchased({ navigation }) {
       </Modal>
 
 
+      <Modal isVisible={ratingModal} onBackdropPress={toggleRatingModal}  >
+        <View style={styles.cancelPopup}>
+          <View style={styles.headerPopup}>
+            <Text style={styles.CategoryText2}>Write Your Review</Text>
+            <TouchableOpacity onPress={toggleRatingModal}>
+              <AntDesign name="close" style={styles.closeBtn} />
+            </TouchableOpacity>
+
+
+          </View>
+          
+          <Rating
+                startingValue={5}
+                ratingCount={5}
+                showRating={false}
+                imageSize={20}
+                style={{ alignSelf: 'flex-start', marginTop:20,marginBottom:10 }}
+            />
+
+          <Text style={[styles.leftText2, { color: '#000' }]}>Your feedback</Text>
+
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={''}
+              style={[styles.textInput, { height: 100 }]}
+              multiline={true}
+              numberOfLines={4}
+            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            />
+          </View>
+
+          <TouchableOpacity style={styles.btnOuter}>
+            <Text style={styles.btnMessage}>Send </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal isVisible={imageModal} onBackdropPress={toggleImageModal}  >
+        <View style={styles.cancelPopup}>
+          <View style={styles.headerPopup}>
+            <Text style={styles.CategoryText2}>Upload Your Images</Text>
+            <TouchableOpacity onPress={toggleImageModal}>
+              <AntDesign name="close" style={styles.closeBtn} />
+            </TouchableOpacity>
+
+          </View>
+          <ScrollView>
+            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+              <ImageBackground style={styles.productBox} source={require('../../assets/Image/uploadImage.png')}>
+                <AntDesign name="closecircle" style={[styles.closeBtn, { position: 'absolute', alignSelf: 'flex-end', padding: 10 }]} />
+              </ImageBackground>
+
+              <ImageBackground style={styles.productBox} source={require('../../assets/Image/uploadImage.png')}>
+                <AntDesign name="closecircle" style={[styles.closeBtn, { position: 'absolute', alignSelf: 'flex-end', padding: 10 }]} />
+              </ImageBackground>
+
+            </View>
+          </ScrollView>
+
+          <TouchableOpacity style={styles.btnOuterImage}>
+            <Text style={styles.btnImageText}>Upload Images </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnOuter}>
+            <Text style={styles.btnMessage}>Submit </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+
 
     </>
   )
 
 }
+
 
 
 export default MyPurchased;
