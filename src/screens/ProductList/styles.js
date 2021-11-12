@@ -85,6 +85,90 @@ export default StyleSheet.create({
         color: '#620000',
         textTransform:'uppercase'
     },
+    filterAreaMain:{
+      flex:1,
+   
+        backgroundColor: "#fff",
+    },
+    outerBtn:{
+        height: 70,
+        flexDirection:'row',
+    },
+    btn:{
+        flex:1,      
+        padding:10,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    btnTxt:{
+        fontFamily:'Poppins-Bold',
+        color:'#fff',
+        fontSize:14
+    },
+    filterArea:{
+        padding:10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        
+    },
+    filterAreaText:{
+        fontFamily: "Poppins-Bold",
+        fontSize: 20,
+        color: "#000"
+    },
+    filterClearText:{
+        fontFamily: "Poppins-Regular",
+        fontSize: 16,
+        color: "#AB0000"
+    },
+    filterOptionsMain:{
+        margin:10,
+       
+        backgroundColor: "#fff",
+       
+        elevation: 5,
+        borderRadius: 5,
+    },
+    filterOptions:{
+        marginTop:10,
+        marginLeft:10,
+        marginRight:10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
+    filterOptionsText:{
+        fontFamily: "Poppins-Regular",
+        fontSize: 14,
+        color: "#000"
+    },
+    dropdownIcon:{
+        fontSize: 24,
+    },
+    filterOptionsTextOptions:{
+        fontFamily: "Poppins-Regular",
+        fontSize: 14,
+        color: "#000",
+        marginTop: 10,  
+    },
+    filterOptionsSection1:{
+        marginLeft:10,
+        marginRight:10,
+        marginBottom:10,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width:Dimensions.get('window').width/2-30,
+        
+        
+        
+    },
+    filterOptionsSectionBoth:{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
     
 
 });

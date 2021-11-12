@@ -5,6 +5,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 
 
 function SlideMenu({ navigation }) {
@@ -24,7 +26,7 @@ function SlideMenu({ navigation }) {
                 <Text style={styles.menuText}>Home</Text>
             </TouchableOpacity>
 
-            <View style={styles.menuItem}>
+            {/* <View style={styles.menuItem}>
                 
                 <Text style={[styles.menuText,{fontWeight:'bold',marginLeft:15}]}>All Categories</Text>
             </View>
@@ -39,6 +41,13 @@ function SlideMenu({ navigation }) {
             }} style={styles.menuItem}>
                 <AntDesign name="home" style={styles.menuIcon} />
                 <Text style={styles.menuText}>Women</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity onPress={()=>{
+                  navigation.navigate('MyCart');
+            }} style={styles.menuItem}>
+                <Entypo name="shopping-cart" style={styles.menuIcon} />
+                <Text style={styles.menuText}>MyCart</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>{
@@ -92,6 +101,14 @@ function SlideMenu({ navigation }) {
             }} style={styles.menuItem}>
                 <Entypo name="chat" style={styles.menuIcon} />
                 <Text style={styles.menuText}>Faq</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>{
+                  navigation.navigate('Login');
+            }} style={styles.menuItem}>
+                
+                <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
+                <Text style={styles.menuText}>Login</Text>
             </TouchableOpacity>
             
         </ScrollView>

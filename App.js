@@ -13,6 +13,7 @@ import HomeScreen from './src/screens/HomeScreen'
 import Notifications from './src/screens/Notifications'
 import Settings from './src/screens/Settings'
 import Wishlist from './src/screens/Wishlist'
+import MyCart from './src/screens/MyCart'
 import Myaccount from './src/screens/Myaccount'
 import ProductList from './src/screens/ProductList'
 import Introduction from './src/screens/Introduction'
@@ -31,6 +32,11 @@ import Blog from './src/screens/Blog'
 import BlogDetails from './src/screens/BlogDetails'
 import Login from './src/screens/Login'
 import Signup from "./src/screens/Signup";
+import Search from "./src/screens/Search";
+import Checkout from "./src/screens/Checkout";
+import Thankyou from "./src/screens/Thankyou";
+
+
 
 
 
@@ -55,6 +61,7 @@ function MyDrawer() {
       <Drawer.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
       <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
       <Drawer.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
+      <Drawer.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />      
       <Drawer.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
       <Drawer.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Drawer.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
@@ -70,8 +77,8 @@ function MyDrawer() {
       <Drawer.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />     
       <Drawer.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Drawer.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
-     
-
+      <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} /> 
+      
     </Drawer.Navigator>
   );
 }
@@ -84,6 +91,7 @@ function Stack1() {
       <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
       <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
       <Stack.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
+      <Stack.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />      
       <Stack.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
       <Stack.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Stack.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
@@ -100,7 +108,12 @@ function Stack1() {
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />            
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />     
+      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />   
+      <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />  
+      <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />   
+        
+        
     </Stack.Navigator>
   )
 

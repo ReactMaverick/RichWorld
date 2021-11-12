@@ -40,6 +40,7 @@ export default StyleSheet.create({
         justifyContent: "flex-start",
         flexDirection: 'row',
         alignItems: 'center',
+        padding:10,
     },
     searchBoxAudio:{
         backgroundColor:"#AB0000",
@@ -103,7 +104,7 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end'
+        justifyContent: 'space-between'
     }
 
 });
