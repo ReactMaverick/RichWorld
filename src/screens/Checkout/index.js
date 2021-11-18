@@ -42,7 +42,7 @@ function Checkout({ navigation }) {
                             description: 'Payment to RichWorld Expert',
                             image: 'https://richworld.online/frontEnd/images/richworldlogo.png',
                             currency: 'INR',
-                            key: 'rzp_test_H3HhzBIEfp3cOX',
+                            key: 'rzp_test_CX62akPXgMwPrk',
                             amount: 2000,
                             name: 'Richworld',
                             // order_id: response.order_id,//Replace this with an order_id created using Orders API.

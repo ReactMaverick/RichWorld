@@ -32,16 +32,16 @@ function HomeScreen({ navigation }) {
 
         </Swiper>
 
-        <SectionTitle Title1="FEATURE" title2="PRODUCTS" />
+        <SectionTitle Title1="FEATURE" title2="PRODUCTS" navigation={navigation} />
         <ProductBox navigation={navigation} />
 
-        <SectionTitle Title1="BRAND" title2="PRODUCTS" />
+        <SectionTitle Title1="BRAND" title2="PRODUCTS" navigation={navigation} />
         <ProductBox navigation={navigation} />
 
 
 
 
-        <SectionTitle Title1="POPULAR" title2="CATEGORIES" />
+        <SectionTitle Title1="POPULAR" title2="CATEGORIES" navigation={navigation} />
         <CategoryItem navigation={navigation} />
         {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginLeft: 10 }}>
           <CategoryItem />
@@ -52,7 +52,7 @@ function HomeScreen({ navigation }) {
         </ScrollView> */}
 
 
-        <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" />
+        <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" navigation={navigation} />
         <ProductBox navigation={navigation} />
 
       </ScrollView>
@@ -62,7 +62,7 @@ function HomeScreen({ navigation }) {
 
 }
 
-function SectionTitle({ Title1, title2 }) {
+function SectionTitle({ Title1, title2,navigation }) {
   return (
     <View style={styles.titleBox}>
       <View style={{ flexDirection: 'row' }}>
@@ -70,7 +70,9 @@ function SectionTitle({ Title1, title2 }) {
         <Text style={styles.titleStyle2}>{title2}</Text>
       </View>
       {/* <AntDesign name="rightcircleo" style={styles.titleIcon} /> */}
-      <TouchableOpacity style={styles.viewAllBtn}>
+      <TouchableOpacity style={styles.viewAllBtn} onPress={()=>{
+        navigation.navigate('ProductList')
+      }}>
         <Text style={styles.viewAllBtnText}>View All</Text>
         <AntDesign name="rightcircleo" style={styles.titleIcon} />
       </TouchableOpacity>

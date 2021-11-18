@@ -35,7 +35,7 @@ import Signup from "./src/screens/Signup";
 import Search from "./src/screens/Search";
 import Checkout from "./src/screens/Checkout";
 import Thankyou from "./src/screens/Thankyou";
-
+import Rewards from "./src/screens/Rewards";
 
 
 
@@ -78,6 +78,8 @@ function MyDrawer() {
       <Drawer.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Drawer.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} /> 
+      <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} /> 
+      
       
     </Drawer.Navigator>
   );

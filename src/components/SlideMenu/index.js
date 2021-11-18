@@ -6,6 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Feather from 'react-native-vector-icons/Feather'
 
 
 
@@ -46,28 +47,36 @@ function SlideMenu({ navigation }) {
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('MyCart');
             }} style={styles.menuItem}>
-                <Entypo name="shopping-cart" style={styles.menuIcon} />
+                <View style={{width:30}}><Entypo name="shopping-cart" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>MyCart</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>{
+                  navigation.navigate('Rewards');
+            }} style={styles.menuItem}>
+                <View style={{width:30}}><Feather name="gift" style={styles.menuIcon} /></View>
+                <Text style={styles.menuText}>Rewards</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity onPress={()=>{
                   navigation.navigate('Introduction');
             }} style={styles.menuItem}>
-                <FontAwesome5 name="clipboard-list" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome5 name="clipboard-list" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Introduction</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('Blog');
             }} style={styles.menuItem}>
-                <FontAwesome5 name="blog" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome5 name="blog" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Blog</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('ContactInfo');
             }} style={styles.menuItem}>
-                <FontAwesome name="phone" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome name="phone" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Contact Info</Text>
             </TouchableOpacity>
 
@@ -75,7 +84,7 @@ function SlideMenu({ navigation }) {
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('Testimonials');
             }} style={styles.menuItem}>
-                <FontAwesome name="users" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome name="users" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Testimonials</Text>
             </TouchableOpacity>
 
@@ -83,7 +92,7 @@ function SlideMenu({ navigation }) {
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('TermsCondition');
             }} style={styles.menuItem}>
-                <FontAwesome name="shield" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome name="shield" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Terms & Condition</Text>
             </TouchableOpacity>
 
@@ -91,7 +100,7 @@ function SlideMenu({ navigation }) {
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('PrivecyPolicy');
             }} style={styles.menuItem}>
-                <FontAwesome5 name="lock" style={styles.menuIcon} />
+                <View style={{width:30}}><FontAwesome5 name="lock" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Privecy & Policy</Text>
             </TouchableOpacity>
 
@@ -99,7 +108,7 @@ function SlideMenu({ navigation }) {
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('Faq');
             }} style={styles.menuItem}>
-                <Entypo name="chat" style={styles.menuIcon} />
+                <View style={{width:30}}><Entypo name="chat" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Faq</Text>
             </TouchableOpacity>
 
@@ -107,7 +116,7 @@ function SlideMenu({ navigation }) {
                   navigation.navigate('Login');
             }} style={styles.menuItem}>
                 
-                <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
+                <View style={{width:30}}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Login</Text>
             </TouchableOpacity>
             

@@ -66,7 +66,7 @@ function ProductDetails({ navigation }) {
           </View>
           <Text style={styles.descriptionText}>Nulla eleifend pulvinar purus, molestie euismod odio imperdiet ac. Ut sit amet erat nec nibh </Text>
           <View style={styles.attribute}>
-            <Text style={styles.attributeLeft}>Product images :</Text>
+            <Text style={styles.attributeLeft}>Color :</Text>
             <View style={styles.attributeRight}>
               <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
               <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
@@ -90,9 +90,9 @@ function ProductDetails({ navigation }) {
           <View style={styles.attribute}>
             <Text style={styles.attributeLeft}>Quantity :</Text>
             <View style={styles.attributeRight}>
-              <View style={styles.quantityPlusBox}><Text style={styles.attrboxTxt}>+</Text></View>
+              <View style={styles.quantityPlusBox}><Text style={styles.attrboxTxt}>-</Text></View>
               <View style={styles.quantityTextBox}><Text style={styles.attrboxTxt}>1</Text></View>
-              <View style={styles.quantityMinusBox}><Text style={styles.attrboxTxt}>-</Text></View>
+              <View style={styles.quantityMinusBox}><Text style={styles.attrboxTxt}>+</Text></View>
 
             </View>
 

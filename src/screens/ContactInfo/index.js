@@ -75,6 +75,15 @@ function ContactInfo({ navigation }) {
             // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
             />
           </View>
+
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Phone'}
+              style={[styles.textInput]}
+            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            />
+          </View>
+
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Subject'}

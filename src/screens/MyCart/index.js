@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHandler, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -10,7 +10,7 @@ import ActionSheet from "react-native-actions-sheet";
 const actionSheetRef = createRef();
 function MyCart({ navigation }) {
 
-const [check,setCheck]=useState(1);
+  const [check, setCheck] = useState(1);
 
   useEffect(() => {
   }, [navigation]);
@@ -55,10 +55,12 @@ const [check,setCheck]=useState(1);
                   <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
                 </View>
               </View>
+              <AntDesign name="delete"  style={styles.deleteIcon} />
+
             </View>
           </View>
 
-          <View style={styles.outerBtn}>
+          {/* <View style={styles.outerBtn}>
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
               <Text style={styles.btnTxt}>Remove</Text>
             </TouchableOpacity>
@@ -66,7 +68,7 @@ const [check,setCheck]=useState(1);
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
               <Text style={styles.btnTxt}>Move to Wishlist</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
 
@@ -86,10 +88,11 @@ const [check,setCheck]=useState(1);
                   <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
                 </View>
               </View>
+              <AntDesign name="delete"  style={styles.deleteIcon} />
             </View>
           </View>
 
-          <View style={styles.outerBtn}>
+          {/* <View style={styles.outerBtn}>
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
               <Text style={styles.btnTxt}>Remove</Text>
             </TouchableOpacity>
@@ -97,7 +100,7 @@ const [check,setCheck]=useState(1);
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
               <Text style={styles.btnTxt}>Move to Wishlist</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
 
@@ -117,10 +120,11 @@ const [check,setCheck]=useState(1);
                   <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
                 </View>
               </View>
+              <AntDesign name="delete"  style={styles.deleteIcon} />
             </View>
           </View>
 
-          <View style={styles.outerBtn}>
+          {/* <View style={styles.outerBtn}>
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
               <Text style={styles.btnTxt}>Remove</Text>
             </TouchableOpacity>
@@ -128,9 +132,31 @@ const [check,setCheck]=useState(1);
             <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
               <Text style={styles.btnTxt}>Move to Wishlist</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
+        <View style={styles.outerBoxPrice}>
+          <Text style={styles.priceTitle}>
+            Use Coupon Code
+          </Text>
+          <View style={styles.priceLine}></View>
+          <View style={{ flexDirection: 'row' ,marginTop:10,justifyContent:'space-between'}}>
+            <View style={styles.textInput}>
+            <TextInput
+              placeholder={'Enter your coupon code'}
+            />
+            </View>
+            
+            <TouchableOpacity onPress={() => {
+
+            }} style={[styles.applyCoupon, { backgroundColor: '#A20101' }]}>
+              <Text style={styles.checkoutbtnTxt}>
+                Apply Coupon
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
 
         <View style={styles.outerBoxPrice}>
           <View style={styles.priceList}>
@@ -139,11 +165,23 @@ const [check,setCheck]=useState(1);
             </Text>
             <View style={styles.priceLine}></View>
             <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Price (2 item)</Text>
+              <Text style={styles.priceItemText}>Sub Total</Text>
               <Text style={styles.priceItemText}>₹2600.00</Text>
             </View>
             <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Discount</Text>
+              <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
+              <View style={{flexDirection:'row',alignItems:'center'}}>
+              <Text style={styles.priceItemText}>4</Text>
+              <Image source={require('../../assets/Image/loyalty.png')} style={{width:30,height:30,marginLeft:5}} />
+              </View>
+              
+            </View>
+            <View style={styles.priceItem}>
+              <Text style={styles.priceItemText}>Total Tax</Text>
+              <Text style={styles.priceItemText}>₹20.00</Text>
+            </View>
+            <View style={styles.priceItem}>
+              <Text style={styles.priceItemText}>Discount(Coupon)</Text>
               <Text style={[styles.priceItemText, { color: 'red' }]}>-₹700.00</Text>
             </View>
 
@@ -164,13 +202,13 @@ const [check,setCheck]=useState(1);
           <View>
             <Text style={styles.priceAmount}>₹1900.00</Text>
           </View>
-          <View><TouchableOpacity onPress={()=>{            
+          <TouchableOpacity onPress={() => {
             navigation.navigate('Checkout');
           }} style={[styles.checkoutButton, { backgroundColor: '#A20101' }]}>
             <Text style={styles.checkoutbtnTxt}>
               Checkout
             </Text>
-          </TouchableOpacity></View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 
@@ -190,27 +228,27 @@ const [check,setCheck]=useState(1);
           </View>
 
           <View style={styles.changeAddressSectionInner}>
-          <View><Text style={styles.nameTitle}>John Doe</Text>
-          <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-          <TouchableOpacity onPress={()=>{
-            setCheck(1)
-          }}><Fontisto name={check==1?"checkbox-active":"checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            <View><Text style={styles.nameTitle}>John Doe</Text>
+              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
+            <TouchableOpacity onPress={() => {
+              setCheck(1)
+            }}><Fontisto name={check == 1 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
           </View>
 
           <View style={styles.changeAddressSectionInner}>
-          <View><Text style={styles.nameTitle}>John Doe</Text>
-          <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-          <TouchableOpacity onPress={()=>{
-            setCheck(2)
-          }}><Fontisto name={check==2?"checkbox-active":"checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            <View><Text style={styles.nameTitle}>John Doe</Text>
+              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
+            <TouchableOpacity onPress={() => {
+              setCheck(2)
+            }}><Fontisto name={check == 2 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
           </View>
 
           <View style={styles.changeAddressSectionInner}>
-          <View><Text style={styles.nameTitle}>John Doe</Text>
-          <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-          <TouchableOpacity onPress={()=>{
-            setCheck(3)
-          }}><Fontisto name={check==3?"checkbox-active":"checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            <View><Text style={styles.nameTitle}>John Doe</Text>
+              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
+            <TouchableOpacity onPress={() => {
+              setCheck(3)
+            }}><Fontisto name={check == 3 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
           </View>
 
 

@@ -28,6 +28,12 @@ export default StyleSheet.create({
         // shadowRadius: 3,
         // elevation: 5,   
     },
+    textInput:{
+       width:'60%',
+        borderColor:'#eee',
+        borderWidth:1,
+      
+    },
     outerBox: {
         marginTop: 10,
         marginLeft: 10,
@@ -82,7 +88,8 @@ export default StyleSheet.create({
         fontSize: 14
     },
     leftBox: {
-        marginTop: 10
+        marginTop: 10,
+        flex:1
     },
     leftText1: {
         fontFamily: 'Poppins-Bold',
@@ -208,6 +215,18 @@ export default StyleSheet.create({
         fontFamily:"Poppins-Regular",
         fontSize: 14,
         color: "#000",
+    },
+    applyCoupon:{
+       padding:10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    deleteIcon:{
+        fontSize:24,
+        alignSelf:'flex-end',
+       margin:10,
+       marginTop:'15%',
+       color:'#A20101'
     }
 
 

@@ -169,6 +169,11 @@ export default StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between"
     },
+    rangeText:{
+        fontFamily: "Poppins-Regular",
+        color:'#A20101',
+        fontSize:14
+    }
     
 
 });

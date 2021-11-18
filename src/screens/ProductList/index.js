@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -9,10 +9,14 @@ import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Rating } from 'react-native-ratings';
+import Slider from '@react-native-community/slider';
 
 
 function ProductList({ navigation }) {
+
   const [modalVisible, setModalVisible] = useState(false);
+  const [data, setSliderData] = useState(10);
+
   useEffect(() => {
   }, [navigation]);
 
@@ -103,8 +107,25 @@ function ProductList({ navigation }) {
                   <Feather name="chevron-down" style={styles.dropdownIcon} />
 
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                 
+                <Text style={[styles.rangeText,{textAlign: 'center'}]  }>₹{data}</Text>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+
+                  <Text style={styles.rangeText}>₹0</Text>
+
+                  <Slider
+                    maximumValue={100}
+                    minimumValue={0}
+                    minimumTrackTintColor="#A20101"
+                    maximumTrackTintColor="#A20101"
+                    step={1}
+                    value={data}
+                    onValueChange={
+                      (sliderValue) => setSliderData(sliderValue)
+                    }
+                    thumbTintColor="#1B5E20"
+                    style={{ width: Dimensions.get('window').width - 100, height: 40 }}
+                  />
+                  <Text style={styles.rangeText}>₹100</Text>
                 </View>
 
               </View>
@@ -136,7 +157,7 @@ function ProductList({ navigation }) {
               </TouchableOpacity>
 
               <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-                <Text style={styles.btnTxt}>Approve</Text>
+                <Text style={styles.btnTxt}>Search</Text>
               </TouchableOpacity>
             </View>
 

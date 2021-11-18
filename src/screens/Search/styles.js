@@ -16,16 +16,31 @@ export default StyleSheet.create({
         paddingLeft: 5,
         paddingTop: 3,
         paddingBottom: 3,
+        flexDirection: 'row',
+        justifyContent:'flex-start',
     },
     searchSectionText: {
+        flexDirection: 'row',
         fontFamily: "Poppins-bold",
         fontSize: 14,
         color: "#000",
         paddingLeft: 5,
+        width:'88%',
     },
     searchIcon: {
         fontSize: 20,
         color: "#989898",
+    },
+    searchBoxAudio:{
+        flexDirection: 'row',
+        justifyContent:'flex-end',
+        // width:'50%',
+    },
+    menuIconMic:{
+        alignItems: 'center',
+        fontSize: 20,
+        color: "#989898",
+        paddingRight: 10,
     },
     searchResult:{
         margin: 10,

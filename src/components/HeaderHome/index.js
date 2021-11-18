@@ -72,9 +72,9 @@ function HeaderHome({ navigation }) {
           <Text>Search for Products...</Text>
           {/* <TextInput placeholder="Search for Products..."></TextInput> */}
         </View>
-        {/* <View style={styles.searchBoxAudio}>
+        <View style={styles.searchBoxAudio}>
           <Feather name="mic" style={styles.menuIconMic} />
-        </View> */}
+        </View>
       </TouchableOpacity>
     </View>
   )
