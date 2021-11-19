@@ -36,7 +36,7 @@ import Search from "./src/screens/Search";
 import Checkout from "./src/screens/Checkout";
 import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
-
+import OtpScreen from "./src/screens/OtpScreen";
 
 
 
@@ -110,7 +110,8 @@ function Stack1() {
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />     
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />   
+      <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />           
       <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />   
       <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />  
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />   

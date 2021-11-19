@@ -61,7 +61,59 @@ export default StyleSheet.create({
     downicon:{
         fontSize:20,
 
-    }
+    },
+    cancelPopup:{
+        width:Dimensions.get('window').width-40,
+        alignSelf:'center',
+        backgroundColor:'#fff',
+        padding:10,
+        borderRadius:3
+    },
+    closeBtn:{
+        fontSize:20,
+        color:'#818181',
+    },
+    headerPopup:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        borderBottomWidth:1,
+        borderBottomColor:'#CCCCCC',
+        paddingBottom:5
+    },
+    itemOuter:{
+        flexDirection:'row',
+        marginTop:5,
+        alignItems:'center'
+    },
+    btnOuter:{
+        backgroundColor:'#620000',
+       
+        marginTop:10,
+        padding:10,
+        justifyContent:'center',
+        alignItems:'center'
+
+    },
+    btnMessage:{
+        fontFamily:'Poppins-Bold',
+        fontSize:15,
+        textTransform:'uppercase',
+        color:'#fff'
+    },
+    textInput:{
+        color:'#000',
+        fontFamily:'Poppins-Regular',
+        fontSize:12,
+        width:'100%'
+      
+    },
+    textInputOuter:{
+       
+        borderBottomWidth:1,
+        borderBottomColor:'#CCCCCC',
+        marginBottom:10
+    },
  
 
 

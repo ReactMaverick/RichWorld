@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,createRef } from "react";
 import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -11,11 +11,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
 
-
+import ActionSheet from "react-native-actions-sheet";
+const actionSheetRef = createRef();
 function ProductList({ navigation }) {
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setFilterModalVisible] = useState(false);
   const [data, setSliderData] = useState(10);
+  let actionSheet;
 
   useEffect(() => {
   }, [navigation]);
@@ -29,9 +31,18 @@ function ProductList({ navigation }) {
           <Text style={styles.CategoryText1}>Sport </Text>
           <Text style={styles.CategoryText2}>Socks</Text>
         </View>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Image source={require('../../assets/Image/filter.png')} style={styles.filterIcon} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => {
+            actionSheetRef.current?.setModalVisible();
+          }}>
+            <Ionicons name="swap-vertical" style={styles.sortIcon} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setFilterModalVisible(true)}>
+            <Image source={require('../../assets/Image/filter.png')} style={styles.filterIcon} />
+          </TouchableOpacity>
+
+        </View>
 
       </View>
 
@@ -58,7 +69,7 @@ function ProductList({ navigation }) {
         visible={modalVisible}
         onRequestClose={() => {
 
-          setModalVisible(!modalVisible);
+          setFilterModalVisible(!modalVisible);
         }}
       >
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -67,7 +78,7 @@ function ProductList({ navigation }) {
             <View style={styles.filterArea}>
               <Text style={styles.filterAreaText}>FILTER</Text>
               <TouchableOpacity onPress={() => {
-                setModalVisible(!modalVisible)
+                setFilterModalVisible(!modalVisible)
               }}>
                 <Text style={styles.filterClearText}>Clear All</Text>
               </TouchableOpacity>
@@ -107,7 +118,7 @@ function ProductList({ navigation }) {
                   <Feather name="chevron-down" style={styles.dropdownIcon} />
 
                 </View>
-                <Text style={[styles.rangeText,{textAlign: 'center'}]  }>₹{data}</Text>
+                <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{data}</Text>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
                   <Text style={styles.rangeText}>₹0</Text>
@@ -151,7 +162,7 @@ function ProductList({ navigation }) {
             </ScrollView>
             <View style={styles.outerBtn}>
               <TouchableOpacity onPress={() => {
-                setModalVisible(!modalVisible)
+                setFilterModalVisible(!modalVisible)
               }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
                 <Text style={styles.btnTxt}>Cancel</Text>
               </TouchableOpacity>
@@ -165,6 +176,19 @@ function ProductList({ navigation }) {
           </View>
         </View>
       </Modal>
+
+
+
+
+      <ActionSheet ref={actionSheetRef}>
+         <View style={{backgroundColor:'#fff',padding:10}}>
+           <Text style={styles.sortingText}>New Arrival</Text>
+           <Text style={styles.sortingText}>Price: Low to High </Text>
+           <Text style={styles.sortingText}>Price: High to Low</Text>
+           <Text style={styles.sortingText}>Discount: High to Low </Text>
+           <Text style={styles.sortingText}>Rating: High to Low </Text>
+         </View>
+        </ActionSheet>
     </>
   )
 

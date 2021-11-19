@@ -45,15 +45,19 @@ function Signup({ navigation }) {
               // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
               />
             </View>
+
+            <TouchableOpacity style={styles.btnOuter} onPress={()=>{            
+            navigation.navigate('OtpScreen');
+          }}>
+          <AntDesign name="arrowright" style={styles.btnIcon} />
+          <Text style={styles.btnMessage}>Create Account</Text>
+        </TouchableOpacity>
           
           </View>
 
         </ScrollView>
 
-        <TouchableOpacity style={styles.btnOuter}>
-          <AntDesign name="arrowright" style={styles.btnIcon} />
-          <Text style={styles.btnMessage}>Create Account</Text>
-        </TouchableOpacity>
+       
       </View>
       <TouchableOpacity onPress={() => {
         navigation.navigate('Login');

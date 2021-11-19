@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput,ScrollView } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput,ScrollView,Image } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
+
 
 function Login({ navigation }) {
 
@@ -41,12 +42,30 @@ function Login({ navigation }) {
 
           </View>
 
-        </ScrollView>
 
-        <TouchableOpacity style={styles.btnOuter}>
+          <TouchableOpacity style={styles.btnOuter} onPress={()=>{            
+            navigation.navigate('OtpScreen');
+          }}>
         <AntDesign name="arrowright" style={styles.btnIcon} />
           <Text style={styles.btnMessage}>Sign in</Text>
         </TouchableOpacity>
+        <View style={styles.socialLoginOuter}>
+          <Text style={styles.socialLoginText}>Login with</Text> 
+          <TouchableOpacity onPress={()=>{            
+            navigation.navigate('HomeScreen');
+          }}>
+          <Image source={require('../../assets/Image/fb.png')} style={{width:47, height:47,marginLeft:10}} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>{            
+            navigation.navigate('HomeScreen');
+          }}>
+          <Image source={require('../../assets/Image/google+.png')} style={{width:50, height:50,marginLeft:10}}/>
+          </TouchableOpacity>
+        </View>
+
+        </ScrollView>
+
+        
       </View>
       <TouchableOpacity onPress={()=>{
           navigation.navigate('Signup');

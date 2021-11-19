@@ -6,14 +6,14 @@ export default StyleSheet.create({
         
         backgroundColor:'#fff',
       
-        borderRadius:5,
-        shadowColor: '#000',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
-        elevation: 5,  
-        borderBottomLeftRadius:25,
-        borderBottomRightRadius:25,
+        // borderRadius:5,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 1, height: 1 },
+        // shadowOpacity: 0.4,
+        // shadowRadius: 3,
+        // elevation: 5,  
+        // borderBottomLeftRadius:25,
+        // borderBottomRightRadius:25,
         
     },
     footerPart:{
@@ -88,17 +88,44 @@ export default StyleSheet.create({
         marginTop:-5,
         marginRight:5
     },
-    socialLoginOuter:
-    {
-        flexDirection:'row', 
-        justifyContent:'center',
-        alignItems:'center',
-        marginBottom:10
+    otpBoxOuter:{
+        width:Dimensions.get('window').width-150,
+        alignSelf:'center'
+       },
+       otpBoxStyle:{ 
+           height: 55, 
+           width: 55, 
+        //    borderWidth: 1,  
+           borderRadius: 5,
+           marginTop:30,
+           marginBottom:60,
+           alignSelf:'center' 
+       },
+      
+    signupText1:{
+        color:'#AB0000',
+        fontFamily:'Poppins-Regular',
+        fontSize:16,
+        marginBottom:5,
+        alignSelf:'center'
     },
-    socialLoginText:{
+    signupText2:{
+        color:'#000',
+        fontFamily:'Poppins-Bold',
+        fontSize:16,
+        alignSelf:'center'
+    },
+    resendButton:{
+      
+        alignSelf:'flex-end',
+        marginRight:10
+    },
+    resendButtonText:{
+        color:'#AB0000',
         fontFamily:'Poppins-Medium',
-        color:'#620000',
         fontSize:14,
-    }
+        alignSelf:'center',
+        textDecorationLine:"underline"
+    },
 
 });

@@ -173,6 +173,14 @@ export default StyleSheet.create({
         fontFamily: "Poppins-Regular",
         color:'#A20101',
         fontSize:14
+    },
+    sortIcon:{
+        fontSize:24
+    },
+    sortingText:{
+        fontFamily: "Poppins-Medium",
+        color:'#A20101',
+        fontSize:14
     }
     
 
