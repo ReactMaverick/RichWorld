@@ -8,6 +8,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
 import SplashScreen from 'react-native-splash-screen'
 
+//import store 
+import { Provider } from 'react-redux'
+import store from './src/redux/store'
 
 import HomeScreen from './src/screens/HomeScreen'
 import Notifications from './src/screens/Notifications'
@@ -61,7 +64,7 @@ function MyDrawer() {
       <Drawer.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
       <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
       <Drawer.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
-      <Drawer.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />      
+      <Drawer.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
       <Drawer.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
       <Drawer.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Drawer.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
@@ -74,13 +77,13 @@ function MyDrawer() {
       <Drawer.Screen name="Account" component={Account} options={{ headerShown: false }} />
       <Drawer.Screen name="MyOrder" component={MyOrder} options={{ headerShown: false }} />
       <Drawer.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />
-      <Drawer.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />     
+      <Drawer.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />
       <Drawer.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Drawer.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
-      <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} /> 
-      <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} /> 
-      
-      
+      <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
+      <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} />
+
+
     </Drawer.Navigator>
   );
 }
@@ -93,7 +96,7 @@ function Stack1() {
       <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
       <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
       <Stack.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
-      <Stack.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />      
+      <Stack.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
       <Stack.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
       <Stack.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Stack.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
@@ -102,21 +105,21 @@ function Stack1() {
       <Stack.Screen name="TermsCondition" component={TermsCondition} options={{ headerShown: false }} />
       <Stack.Screen name="PrivecyPolicy" component={PrivecyPolicy} options={{ headerShown: false }} />
       <Stack.Screen name="Faq" component={Faq} options={{ headerShown: false }} />
-      <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />      
+      <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} />
       <Stack.Screen name="MyOrder" component={MyOrder} options={{ headerShown: false }} />
       <Stack.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />
-      <Stack.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />      
+      <Stack.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />   
-      <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />           
-      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />   
-      <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />  
-      <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />   
-        
-        
+      <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
+      <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
+      <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
+      <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
+
+
     </Stack.Navigator>
   )
 
@@ -130,9 +133,12 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack1 />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack1 />
+      </NavigationContainer>
+    </Provider>
+
   );
 
 

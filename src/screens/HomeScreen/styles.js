@@ -111,7 +111,7 @@ export default StyleSheet.create({
     slide: {
         height: 180,
         width: Dimensions.get('window').width,
-        backgroundColor: '#9DD6EB'
+       // backgroundColor: '#9DD6EB'
     },
 
     text: {
@@ -120,7 +120,9 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
     productSlideImage: {
-        width: Dimensions.get('window').width
+        width: Dimensions.get('window').width,
+        height:180,
+        resizeMode: 'stretch'
     },
     viewAllBtn:{
         flexDirection:'row',
