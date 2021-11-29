@@ -105,25 +105,6 @@ export default StyleSheet.create({
 
     },
 
-    wrapper: {
-        height: 180,
-    },
-    slide: {
-        height: 180,
-        width: Dimensions.get('window').width,
-       // backgroundColor: '#9DD6EB'
-    },
-
-    text: {
-        color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold'
-    },
-    productSlideImage: {
-        width: Dimensions.get('window').width,
-        height:180,
-        resizeMode: 'stretch'
-    },
     viewAllBtn:{
         flexDirection:'row',
         backgroundColor:'#AB0000',
@@ -135,6 +116,25 @@ export default StyleSheet.create({
         color: '#fff',
         fontFamily: 'Poppins-Bold',
         fontSize: 12,
+    },
+    wrapper: {
+        height: Dimensions.get('window').height/3,
+    },
+    slide: {
+        height: Dimensions.get('window').height/3,
+        width: Dimensions.get('window').width,
+       // backgroundColor: '#9DD6EB'
+    },
+
+    text: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
+    productSlideImage: {
+        width: Dimensions.get('window').width,
+        height:Dimensions.get('window').height/3,
+        resizeMode: 'stretch'
     }
 
 

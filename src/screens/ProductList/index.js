@@ -1,4 +1,4 @@
-import React, { useState, useEffect,createRef } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -11,16 +11,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
 
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ActionSheet from "react-native-actions-sheet";
 const actionSheetRef = createRef();
-function ProductList({ navigation }) {
-
+function ProductList({ navigation, route }) {
+  const { title1, title2, products } = route.params;
   const [modalVisible, setFilterModalVisible] = useState(false);
   const [data, setSliderData] = useState(10);
   let actionSheet;
 
   useEffect(() => {
-  }, [navigation]);
+  }, []);
 
   return (
     <>
@@ -28,8 +29,8 @@ function ProductList({ navigation }) {
 
       <View style={styles.filterBar}>
         <View style={styles.filterTextBox}>
-          <Text style={styles.CategoryText1}>Sport </Text>
-          <Text style={styles.CategoryText2}>Socks</Text>
+          <Text style={styles.CategoryText1}>{title1} </Text>
+          <Text style={styles.CategoryText2}>{title2}</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={() => {
@@ -48,14 +49,14 @@ function ProductList({ navigation }) {
 
       <ScrollView>
         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
+          
+            {products.map((item) => (
+                <ProductBox navigation={navigation} item={item} />
+
+              ))}
+          
+
+
         </View>
       </ScrollView>
 
@@ -181,14 +182,14 @@ function ProductList({ navigation }) {
 
 
       <ActionSheet ref={actionSheetRef}>
-         <View style={{backgroundColor:'#fff',padding:10}}>
-           <Text style={styles.sortingText}>New Arrival</Text>
-           <Text style={styles.sortingText}>Price: Low to High </Text>
-           <Text style={styles.sortingText}>Price: High to Low</Text>
-           <Text style={styles.sortingText}>Discount: High to Low </Text>
-           <Text style={styles.sortingText}>Rating: High to Low </Text>
-         </View>
-        </ActionSheet>
+        <View style={{ backgroundColor: '#fff', padding: 10 }}>
+          <Text style={styles.sortingText}>New Arrival</Text>
+          <Text style={styles.sortingText}>Price: Low to High </Text>
+          <Text style={styles.sortingText}>Price: High to Low</Text>
+          <Text style={styles.sortingText}>Discount: High to Low </Text>
+          <Text style={styles.sortingText}>Rating: High to Low </Text>
+        </View>
+      </ActionSheet>
     </>
   )
 
@@ -196,33 +197,45 @@ function ProductList({ navigation }) {
 
 
 
-function ProductBox({ navigation }) {
-  return (
-    <TouchableOpacity onPress={() => {
-      navigation.navigate('ProductDetails');
-    }} style={styles.productBox}>
-      <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
-      <Text style={styles.productTitle}>Husskinzl: Men’s socks</Text>
-      <Rating
-        startingValue={2}
-        ratingCount={5}
-        showRating={false}
-        imageSize={20}
-        style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-      />
-      <View style={styles.priceBox}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.sellingPrice}>₹26.50 </Text>
-          <Text style={styles.mrpPrice}>₹45.85</Text>
+function ProductBox({ navigation, item }) {
+ 
+  if(item!=undefined){
+    return (
+      <TouchableOpacity onPress={() => {
+        navigation.navigate('ProductDetails');
+      }} style={styles.productBox}>
+        <Image style={styles.productImage} source={{ uri: item.image_path }} />
+        <Text style={styles.productTitle}>{item.products_model}</Text>
+        <Rating
+          startingValue={item.avg_review==null?0:item.avg_review}
+          ratingCount={5}
+          showRating={false}
+          imageSize={20}
+          style={{ alignSelf: 'flex-start', marginLeft: 5 }}
+        />
+        <View style={styles.priceBox}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
+            <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+          </View>
+          <View style={styles.cartIconBox}>
+            <AntDesign name="shoppingcart" style={styles.cartIcon} />
+          </View>
+  
         </View>
-        <View style={styles.cartIconBox}>
-          <AntDesign name="shoppingcart" style={styles.cartIcon} />
-        </View>
-
+  
+      </TouchableOpacity>
+    )
+  }else{
+    return(
+      <SkeletonPlaceholder>
+      <View style={styles.productBox}>       
       </View>
-
-    </TouchableOpacity>
-  )
+    </SkeletonPlaceholder>
+    )
+   
+  }
+ 
 }
 
 

@@ -6,11 +6,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
-import SplashScreen from 'react-native-splash-screen'
 
-//import store 
-import { Provider } from 'react-redux'
-import store from './src/redux/store'
+
+
 
 import HomeScreen from './src/screens/HomeScreen'
 import Notifications from './src/screens/Notifications'
@@ -40,6 +38,7 @@ import Checkout from "./src/screens/Checkout";
 import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
 import OtpScreen from "./src/screens/OtpScreen";
+import Category from './src/screens/Category';
 
 
 
@@ -82,7 +81,8 @@ function MyDrawer() {
       <Drawer.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} />
-
+      <Drawer.Screen name="Category" component={Category} options={{ headerShown: false }} />
+      
 
     </Drawer.Navigator>
   );
@@ -118,6 +118,8 @@ function Stack1() {
       <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
       <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
+      <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
+      
 
 
     </Stack.Navigator>
@@ -129,15 +131,15 @@ function Stack1() {
 export default function App() {
 
   useEffect(() => {
-    SplashScreen.hide();
+    
   }, []);
 
   return (
-    <Provider store={store}>
+   
       <NavigationContainer>
         <Stack1 />
       </NavigationContainer>
-    </Provider>
+  
 
   );
 
