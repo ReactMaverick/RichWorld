@@ -68,7 +68,7 @@ function ProductList({ navigation, route }) {
   useEffect(() => {
     _getProductList(filterParam);
 
-  }, []);
+  }, [navigation, route]);
 
   return (
     <>

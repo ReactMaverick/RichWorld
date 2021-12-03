@@ -219,7 +219,7 @@ function Brands({ navigation, products }) {
     return (
       <View style={styles.outerProductBox}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('ProductDetails')
+          navigation.navigate('ProductList',{ title1: products[0].brands_name, title2: "", filterParam: { 'brands_id': products[0].brands_id }})
         }} style={styles.productLeft}>
           <Image style={styles.leftImage} source={{ uri: products[0].brands_image_path }} />
           <Text style={styles.productTitle}>{products[0].brands_name}</Text>
@@ -228,7 +228,7 @@ function Brands({ navigation, products }) {
 
         <View style={styles.productRight}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductDetails')
+           navigation.navigate('ProductList',{ title1: products[1].brands_name, title2: "", filterParam: { 'brands_id': products[1].brands_id }})
           }} style={[styles.productInner, { marginBottom: 10 }]}>
             <Image style={styles.rightImage} source={{ uri: products[1].brands_image_path }} />
             <Text style={styles.productTitle}>{products[1].brands_name}</Text>
@@ -236,7 +236,7 @@ function Brands({ navigation, products }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductDetails')
+            navigation.navigate('ProductList',{ title1: products[1].brands_name, title2: "", filterParam: { 'brands_id': products[1].brands_id }})
           }} style={styles.productInner}>
             <Image style={styles.rightImage} source={{ uri: products[2].brands_image_path }} />
             <Text style={styles.productTitle}>{products[2].brands_name}</Text>

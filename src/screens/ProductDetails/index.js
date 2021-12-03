@@ -51,11 +51,12 @@ function ProductDetails({ navigation, route }) {
 
 
   useEffect(() => {
+   
     DeviceInfo.getAndroidId().then((androidId) => {
 
       _productDetails(androidId, products_id, products_attributes_prices_id)
     });
-  }, [navigation]);
+  }, [navigation,route]);
 
   return (
     <>
