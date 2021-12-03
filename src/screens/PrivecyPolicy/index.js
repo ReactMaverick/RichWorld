@@ -4,13 +4,41 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
+import { GET_PRIVACY_POLICY } from '../../config/ApiConfig'
 function PrivecyPolicy({ navigation }) {
 
 
 
+  const [policy, setPolicy] = useState()
+  const _getData = async () => {
+    fetch(GET_PRIVACY_POLICY, {
+      method: "GET",
+    })
+      .then((response) => {
+      
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+     
+        if (status == 200) {
+          // console.log(status, response);
+          setPolicy(response.privacyPolicyDetails.cms_text)
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error",error))
+      .finally(() => {
+        
+       });
+  }
+
+
   useEffect(() => {
+    _getData();
   }, [navigation]);
-  
   return (
     <>
      <Header navigation={navigation} />
@@ -22,7 +50,7 @@ function PrivecyPolicy({ navigation }) {
       <View style={styles.card}>
 
       <HTMLView
-        value={'Vivamus a lectus feugiat, feugiat ex ac, mollis massa. Duis malesuada efficitur sapien, eu blandit risus pharetra eget. Nunc elementum tellus ligula, at vestibulum lorem auctor vel. Pellentesque volutpat tempus imperdiet. Aenean ut malesuada augue. In commodo vitae felis eu ornare.'}
+        value={policy}
         stylesheet={styles}
       />
       </View>

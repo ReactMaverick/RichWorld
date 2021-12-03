@@ -99,6 +99,13 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Medium',
         color:'#620000',
         fontSize:14,
+    },
+    errorMessage:{
+        fontSize:14,
+        fontFamily:'Poppins-Bold',
+        color:'red',
+        textAlign:'center',
+        margin:10
     }
 
 });

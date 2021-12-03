@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions, ImageBackground } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -10,17 +10,64 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
-
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ActionSheet from "react-native-actions-sheet";
+import { POST_PRODUCT } from '../../config/ApiConfig';
+
 const actionSheetRef = createRef();
 function ProductList({ navigation, route }) {
-  const { title1, title2, products } = route.params;
+  const { title1, title2, filterParam } = route.params;
   const [modalVisible, setFilterModalVisible] = useState(false);
   const [data, setSliderData] = useState(10);
+ 
+  const [isLoading, setIsLoading] = useState(true);
+  const [Products, setProducts] = useState([]);
+
   let actionSheet;
 
+
+  const _getProductList = async (filterParam) => {
+
+    const formData = new FormData();
+
+
+    for (let key in filterParam) {
+      formData.append(key, filterParam[key]);
+    }
+  
+    fetch(POST_PRODUCT, {
+      method: "POST",
+     
+      body: formData
+    })
+
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+
+        if (status == 200) {
+         
+          setProducts(response.products.product_data);
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
+
+
   useEffect(() => {
+    _getProductList(filterParam);
+
   }, []);
 
   return (
@@ -49,12 +96,74 @@ function ProductList({ navigation, route }) {
 
       <ScrollView>
         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-          
-            {products.map((item) => (
-                <ProductBox navigation={navigation} item={item} />
 
+
+          {isLoading ?
+            <>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+            </>
+            :
+            <>
+              {Products.map((item, key) => (
+
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate('ProductDetails');
+                }} style={styles.productBox} key={key}>
+                 
+                  <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
+                    <TouchableOpacity onLongPress={()=>{
+                      console.log("long press");
+                    }}>
+                    <AntDesign name="hearto" style={styles.heartIcon} />
+                    </TouchableOpacity>
+                  
+                    </ImageBackground>
+                  <Text style={styles.productTitle}>{item.products_model}</Text>
+                  <Rating
+                    startingValue={item.avg_review == null ? 0 : item.avg_review}
+                    ratingCount={5}
+                    showRating={false}
+                    imageSize={20}
+                    readonly={true}
+                    style={{ alignSelf: 'flex-start', marginLeft: 5 }}
+                  />
+                  <View style={styles.priceBox}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
+                      <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+                    </View>
+                    <View style={styles.cartIconBox}>
+                      <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                    </View>
+
+                  </View>
+
+                </TouchableOpacity>
               ))}
-          
+            </>
+
+          } 
+
+
 
 
         </View>
@@ -195,48 +304,6 @@ function ProductList({ navigation, route }) {
 
 }
 
-
-
-function ProductBox({ navigation, item }) {
- 
-  if(item!=undefined){
-    return (
-      <TouchableOpacity onPress={() => {
-        navigation.navigate('ProductDetails');
-      }} style={styles.productBox}>
-        <Image style={styles.productImage} source={{ uri: item.image_path }} />
-        <Text style={styles.productTitle}>{item.products_model}</Text>
-        <Rating
-          startingValue={item.avg_review==null?0:item.avg_review}
-          ratingCount={5}
-          showRating={false}
-          imageSize={20}
-          style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-        />
-        <View style={styles.priceBox}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
-            <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
-          </View>
-          <View style={styles.cartIconBox}>
-            <AntDesign name="shoppingcart" style={styles.cartIcon} />
-          </View>
-  
-        </View>
-  
-      </TouchableOpacity>
-    )
-  }else{
-    return(
-      <SkeletonPlaceholder>
-      <View style={styles.productBox}>       
-      </View>
-    </SkeletonPlaceholder>
-    )
-   
-  }
- 
-}
 
 
 export default ProductList;

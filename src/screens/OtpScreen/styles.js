@@ -127,5 +127,12 @@ export default StyleSheet.create({
         alignSelf:'center',
         textDecorationLine:"underline"
     },
+    errorMessage:{
+        fontSize:14,
+        fontFamily:'Poppins-Bold',
+        color:'red',
+        textAlign:'center',
+        margin:10
+    }
 
 });

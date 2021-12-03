@@ -17,18 +17,21 @@ function HomeScreen({ navigation }) {
   const [category, setCategory] = useState([])
 
 
+
   const _getHomeData = async () => {
     fetch(GET_HOME, {
       method: "GET",
     })
       .then((response) => {
+
         const statusCode = response.status;
         const data = response.json();
         return Promise.all([statusCode, data]);
       })
       .then(([status, response]) => {
+
         if (status == 200) {
-          //console.log(status, response.feature_product.product_data);
+          // console.log(status, response.sliders);
           setFeature_product(response.feature_product.product_data);
           setTopseller(response.top_seller.product_data);
           setSlide(response.sliders)
@@ -38,8 +41,10 @@ function HomeScreen({ navigation }) {
           console.log(status, response);
         }
       })
-      .catch((error) => console.log(error))
-      .finally(() => { });
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+
+      });
   }
 
 
@@ -58,9 +63,16 @@ function HomeScreen({ navigation }) {
         {sliders.length > 0 ?
           <Swiper style={styles.wrapper} showsButtons={false} autoplay={true} autoplayTimeout={5} activeDotColor={'#AB0000'}>
             {sliders.map((item) => (
-              <View key={item.id} style={styles.slide}>
+              <TouchableOpacity onPress={() => {
+                if (item.type == "product") {
+
+                }
+                if (item.type == "category") {
+                  navigation.navigate('ProductList', { title1: item.slider_content_desc, title2: "", filterParam: { 'categories_id': item.url } })
+                }
+              }} key={item.id} style={styles.slide}>
                 <Image source={{ uri: item.path }} style={styles.productSlideImage} />
-              </View>
+              </TouchableOpacity>
 
             ))}
 
@@ -79,21 +91,21 @@ function HomeScreen({ navigation }) {
 
 
 
-        <SectionTitle Title1="FEATURE" title2="PRODUCTS" navigation={navigation} products={feature_product} />
+        <SectionTitle Title1="FEATURE" title2="PRODUCTS" navigation={navigation} navigationType={'featureProduct'} filterParam={{ 'type': 'is_feature' }} />
         <ProductBox navigation={navigation} products={feature_product} />
 
-        <SectionTitle Title1="BRAND" title2="PRODUCTS" navigation={navigation} />
+        <SectionTitle Title1="BRAND" title2="PRODUCTS" navigation={navigation} navigationType={'brand'} filterParam={{}} />
         <Brands navigation={navigation} products={brands} />
 
 
 
 
-        <CategorySectionTitle Title1="POPULAR" title2="CATEGORIES" navigation={navigation}  />
-        <CategoryItem navigation={navigation} category={category}  />
-        
+        <SectionTitle Title1="POPULAR" title2="CATEGORIES" navigation={navigation} navigationType={'category'} filterParam={{}} />
+        <CategoryItem navigation={navigation} category={category} />
 
 
-        <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" navigation={navigation} />
+
+        <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" navigation={navigation} navigationType={'bestSeller'} filterParam={{ 'type': 'topseller' }} />
         <ProductBox navigation={navigation} products={topSeller} />
 
       </ScrollView>
@@ -105,24 +117,8 @@ function HomeScreen({ navigation }) {
 
 
 
-function CategorySectionTitle({ Title1, title2, navigation }) {
-  return (
-    <View style={styles.titleBox}>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.titleStyle1}>{Title1} </Text>
-        <Text style={styles.titleStyle2}>{title2}</Text>
-      </View>
-      <TouchableOpacity style={styles.viewAllBtn} onPress={() => {
-        navigation.navigate('Category',{title1:Title1,title2:title2})
-      }}>
-        <Text style={styles.viewAllBtnText}>View All</Text>
-        <AntDesign name="rightcircleo" style={styles.titleIcon} />
-      </TouchableOpacity>
-    </View>
-  )
-}
 
-function SectionTitle({ Title1, title2, navigation,products }) {
+function SectionTitle({ Title1, title2, navigation, navigationType, filterParam }) {
   return (
     <View style={styles.titleBox}>
       <View style={{ flexDirection: 'row' }}>
@@ -130,7 +126,17 @@ function SectionTitle({ Title1, title2, navigation,products }) {
         <Text style={styles.titleStyle2}>{title2}</Text>
       </View>
       <TouchableOpacity style={styles.viewAllBtn} onPress={() => {
-        navigation.navigate('ProductList',{title1:Title1,title2:title2,products:products})
+        if (navigationType == "category") {
+          navigation.navigate('Category', { title1: Title1, title2: title2 })
+        } else if (navigationType == "featureProduct") {
+          navigation.navigate('ProductList', { title1: Title1, title2: title2, filterParam: filterParam })
+        } else if (navigationType == "brand") {
+          navigation.navigate('Brands', { title1: Title1, title2: title2 })
+        } else if (navigationType == "bestSeller") {
+          navigation.navigate('ProductList', { title1: Title1, title2: title2, filterParam: filterParam })
+        }
+
+
       }}>
         <Text style={styles.viewAllBtnText}>View All</Text>
         <AntDesign name="rightcircleo" style={styles.titleIcon} />
@@ -140,15 +146,16 @@ function SectionTitle({ Title1, title2, navigation,products }) {
 }
 
 function ProductBox({ navigation, products }) {
+
   if (products.length < 3) {
     return (
       <SkeletonPlaceholder>
-      <View style={styles.wrapper}>
-        <View style={styles.slide}>
+        <View style={styles.wrapper}>
+          <View style={styles.slide}>
+          </View>
         </View>
-      </View>
 
-    </SkeletonPlaceholder>
+      </SkeletonPlaceholder>
 
 
     )
@@ -156,7 +163,7 @@ function ProductBox({ navigation, products }) {
     return (
       <View style={styles.outerProductBox}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('ProductDetails')
+          navigation.navigate('ProductDetails', { products_id: products[0].products_id, products_attributes_prices_id: products[0].products_attributes_prices_id })
         }} style={styles.productLeft}>
           <Image style={styles.leftImage} source={{ uri: products[0].image_path }} />
           <Text style={styles.productTitle}>{products[0].products_model}</Text>
@@ -168,7 +175,7 @@ function ProductBox({ navigation, products }) {
 
         <View style={styles.productRight}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductDetails')
+            navigation.navigate('ProductDetails', { products_id: products[1].products_id, products_attributes_prices_id: products[1].products_attributes_prices_id })
           }} style={[styles.productInner, { marginBottom: 10 }]}>
             <Image style={styles.rightImage} source={{ uri: products[1].image_path }} />
             <Text style={styles.productTitle}>{products[1].products_model}</Text>
@@ -179,7 +186,7 @@ function ProductBox({ navigation, products }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductDetails')
+            navigation.navigate('ProductDetails', { products_id: products[2].products_id, products_attributes_prices_id: products[2].products_attributes_prices_id })
           }} style={styles.productInner}>
             <Image style={styles.rightImage} source={{ uri: products[2].image_path }} />
             <Text style={styles.productTitle}>{products[2].products_model}</Text>
@@ -201,12 +208,12 @@ function Brands({ navigation, products }) {
   if (products.length < 3) {
     return (
       <SkeletonPlaceholder>
-      <View style={styles.wrapper}>
-        <View style={styles.slide}>
+        <View style={styles.wrapper}>
+          <View style={styles.slide}>
+          </View>
         </View>
-      </View>
 
-    </SkeletonPlaceholder>
+      </SkeletonPlaceholder>
     )
   } else {
     return (
@@ -216,7 +223,7 @@ function Brands({ navigation, products }) {
         }} style={styles.productLeft}>
           <Image style={styles.leftImage} source={{ uri: products[0].brands_image_path }} />
           <Text style={styles.productTitle}>{products[0].brands_name}</Text>
-          
+
         </TouchableOpacity>
 
         <View style={styles.productRight}>
@@ -225,7 +232,7 @@ function Brands({ navigation, products }) {
           }} style={[styles.productInner, { marginBottom: 10 }]}>
             <Image style={styles.rightImage} source={{ uri: products[1].brands_image_path }} />
             <Text style={styles.productTitle}>{products[1].brands_name}</Text>
-            
+
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
@@ -233,7 +240,7 @@ function Brands({ navigation, products }) {
           }} style={styles.productInner}>
             <Image style={styles.rightImage} source={{ uri: products[2].brands_image_path }} />
             <Text style={styles.productTitle}>{products[2].brands_name}</Text>
-           
+
           </TouchableOpacity>
         </View>
       </View>
@@ -243,46 +250,46 @@ function Brands({ navigation, products }) {
 }
 
 
-function CategoryItem({ navigation,category }) {
+function CategoryItem({ navigation, category }) {
   if (category.length < 3) {
     return (
       <SkeletonPlaceholder>
-      <View style={styles.wrapper}>
-        <View style={styles.slide}>
+        <View style={styles.wrapper}>
+          <View style={styles.slide}>
+          </View>
         </View>
-      </View>
 
-    </SkeletonPlaceholder>
+      </SkeletonPlaceholder>
     )
   } else {
-  return (
-    <View style={styles.outerProductBox}>
-      <TouchableOpacity onPress={() => {
-        navigation.navigate('ProductList')
-      }} style={styles.productLeft}>
-        <Image style={styles.leftImageCategory} source={{uri:category[0].imgpath}} />
-        <Text style={styles.productTitle}>{category[0].name}</Text>
-
-      </TouchableOpacity>
-      <View style={styles.productRight}>
+    return (
+      <View style={styles.outerProductBox}>
         <TouchableOpacity onPress={() => {
           navigation.navigate('ProductList')
-        }} style={[styles.productInner, { marginBottom: 10 }]}>
-          <Image style={styles.rightImageCategory} source={{uri:category[1].imgpath}} />
-          <Text style={styles.productTitle}> {category[1].name}</Text>
+        }} style={styles.productLeft}>
+          <Image style={styles.leftImageCategory} source={{ uri: category[0].imgpath }} />
+          <Text style={styles.productTitle}>{category[0].name}</Text>
 
         </TouchableOpacity>
+        <View style={styles.productRight}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('ProductList')
+          }} style={[styles.productInner, { marginBottom: 10 }]}>
+            <Image style={styles.rightImageCategory} source={{ uri: category[1].imgpath }} />
+            <Text style={styles.productTitle}> {category[1].name}</Text>
 
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('ProductList')
-        }} style={styles.productInner}>
-          <Image style={styles.rightImageCategory} source={{uri:category[2].imgpath}}  />
-          <Text style={styles.productTitle}> {category[2].name}</Text>
+          </TouchableOpacity>
 
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('ProductList')
+          }} style={styles.productInner}>
+            <Image style={styles.rightImageCategory} source={{ uri: category[2].imgpath }} />
+            <Text style={styles.productTitle}> {category[2].name}</Text>
+
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  )
-      }
+    )
+  }
 }
 export default HomeScreen;

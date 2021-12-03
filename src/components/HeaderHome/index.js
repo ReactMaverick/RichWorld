@@ -5,12 +5,13 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-
+import { DrawerActions } from '@react-navigation/native';
 function HeaderHome({ navigation }) {
 
 
 
   useEffect(() => {
+   
   }, [navigation]);
 
   return (
@@ -37,7 +38,8 @@ function HeaderHome({ navigation }) {
       <View style={styles.headerall}>
         <View style={styles.subheader}>
           <TouchableOpacity onPress={() => {
-            navigation.openDrawer();
+            
+            navigation.dispatch(DrawerActions.openDrawer())
           }}>
             <Entypo name="menu" style={styles.menuIcon} />
           </TouchableOpacity>

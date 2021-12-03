@@ -5,11 +5,56 @@ import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-function ProductDetails({ navigation }) {
+import DeviceInfo from 'react-native-device-info';
+import { GET_PRODUCT_DETAILS } from '../../config/ApiConfig'
 
+function ProductDetails({ navigation, route }) {
+  const { products_id, products_attributes_prices_id } = route.params;
   const [tab, setTab] = useState(1);
+  const [productImage, setProductImage] = useState([]);
+  const [productDetails, setProductDetails] = useState([]);
+  const [highListedImage, setHighListedImage] = useState();
+
+
+  const _productDetails = async (deviceId, products_id, products_attributes_prices_id) => {
+    fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&session_id=' + deviceId, {
+      method: "GET",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+
+        if (status == 200) {
+          // console.log(status, response.detail.product_data[0]['images']);
+          setProductImage(response.detail.product_data[0]['images']);
+          setProductDetails(response.detail.product_data[0]);
+          if(response.detail.product_data[0]['images'].length>0){
+            setHighListedImage(response.detail.product_data[0]['images'][0].image_path)
+          }else{
+            setHighListedImage(response.detail.product_data[0].image_path)
+          }
+          
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+
+      });
+  }
+
 
   useEffect(() => {
+    DeviceInfo.getAndroidId().then((androidId) => {
+
+      _productDetails(androidId, products_id, products_attributes_prices_id)
+    });
   }, [navigation]);
 
   return (
@@ -17,46 +62,52 @@ function ProductDetails({ navigation }) {
       <Header navigation={navigation} />
       <View style={styles.filterBar}>
         <View style={styles.filterTextBox}>
-          <Text style={styles.CategoryText1}>Sport </Text>
-          <Text style={styles.CategoryText2}>Socks</Text>
+          <Text style={styles.CategoryText1}>{productDetails.brands_name} </Text>
+          {/* <Text style={styles.CategoryText2}>Socks</Text> */}
         </View>
 
       </View>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} nestedScrollEnabled={true}>
         <View style={styles.productImageSection}>
-          <Image source={require('../../assets/Image/Product1.png')} style={styles.productZoomImage} />
+          <Image source={{uri:highListedImage}} style={styles.productZoomImage} />
           <View style={styles.imageThumbSection}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <TouchableOpacity>
-                <Image source={require('../../assets/Image/Product1.png')} style={styles.productThumb} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Image source={require('../../assets/Image/Product1.png')} style={styles.productThumb} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Image source={require('../../assets/Image/Product1.png')} style={styles.productThumb} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Image source={require('../../assets/Image/Product1.png')} style={styles.productThumb} />
-              </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+              {productImage.length > 0 ?
+                <>
+                  {productImage.map((item,key) => (
+                    <TouchableOpacity key={key} onPress={()=>{
+                      setHighListedImage(item.image_path)
+                    }}>
+                      <Image source={{ uri: item.image_path }} style={styles.productThumb} />
+                    </TouchableOpacity>
+
+                  ))}
+                </>
+                :
+                <>
+                  <TouchableOpacity >
+                    <Image source={{ uri: productDetails.image_path }} style={styles.productThumb} />
+                  </TouchableOpacity>
+                </>}
 
 
             </ScrollView>
           </View>
         </View>
-        <Text style={styles.productTitle}>Husskinzl: Men’s socks</Text>
+        <Text style={styles.productTitle}>{productDetails.products_model}</Text>
         <View style={styles.productDetails}>
           <View style={styles.ratingSection}>
             <View style={styles.ratingText}>
-              <Text style={styles.sellingPrice}>₹26.50 </Text>
-              <Text style={styles.mrpPrice}>₹45.85</Text>
+              <Text style={styles.sellingPrice}>₹{productDetails.discounted_price}  </Text>
+              <Text style={styles.mrpPrice}>₹{productDetails.products_price} </Text>
             </View>
             <View style={styles.ratingStar}>
               <Rating
-                startingValue={5}
+                startingValue={productDetails.avg_review==null?0:productDetails.avg_review}
                 ratingCount={5}
                 showRating={false}
                 imageSize={20}
+                readonly={true}
                 style={{ alignSelf: 'flex-end', marginLeft: 5 }}
               />
               <Text style={styles.reviewText}>(62 Reviews)</Text>
@@ -64,7 +115,7 @@ function ProductDetails({ navigation }) {
 
 
           </View>
-          <Text style={styles.descriptionText}>Nulla eleifend pulvinar purus, molestie euismod odio imperdiet ac. Ut sit amet erat nec nibh </Text>
+          <Text style={styles.descriptionText}>{productDetails.products_name} </Text>
           <View style={styles.attribute}>
             <Text style={styles.attributeLeft}>Color :</Text>
             <View style={styles.attributeRight}>
@@ -120,7 +171,7 @@ function ProductDetails({ navigation }) {
 
         <View style={{ margin: 10 }}>
           <HTMLView
-            value={'<ul><li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li><br/><li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li><br/><li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li></ul>'}
+            value={productDetails.products_special_instructions}
             stylesheet={styles}
           />
         </View>
@@ -166,7 +217,7 @@ function ProductDetails({ navigation }) {
           <View style={styles.tabContent1}>
 
             <HTMLView
-              value={'Crafted in premium watch quality, fenix Chronos is the first Garmin timepiece to combine a durable metal case with integrated performance GPS to support navigation and sport. In the tradition of classic tool watches it features a tough design and a set of modern meaningful tools.advanced performance metrics for endurance sports, Garmin quality navigation features and smart notifications. In fenix Chronos top-tier performance meets sophisticated design in a highly evolved timepiece that fits your style anywhere, anytime. Solid brushed 316L stainless steel case with brushed stainless steel bezel and integrated EXOTM antenna for GPS + GLONASS support. High-strength scratch resistant sapphire crystal. Brown vintage leather strap with hand-sewn contrast stitching and nubuck inner lining and quick release mechanism.'}
+              value={productDetails.products_description}
               stylesheet={styles}
             />
           </View>
@@ -199,7 +250,7 @@ function ProductDetails({ navigation }) {
             <Text style={styles.pincodeCheckTitle}>Add a Review</Text>
             <View style={styles.addReviewBox}>
 
-            
+
 
               <Rating
                 startingValue={5}
@@ -210,17 +261,17 @@ function ProductDetails({ navigation }) {
               />
 
 
-<View style={styles.reviewAddTextBox}>
-<TextInput
-                placeholder={''}
-                style={[styles.textInput]}
-                multiline={true}
-                numberOfLines={4}
-              // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
-              />
-</View>
+              <View style={styles.reviewAddTextBox}>
+                <TextInput
+                  placeholder={''}
+                  style={[styles.textInput]}
+                  multiline={true}
+                  numberOfLines={4}
+                // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+                />
+              </View>
 
-             
+
 
               <TouchableOpacity style={styles.btnOuter}>
                 <Text style={styles.btnTxt}>Submit</Text>

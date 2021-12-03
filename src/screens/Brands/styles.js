@@ -6,7 +6,7 @@ export default StyleSheet.create({
 
     productBox :{
         width:Dimensions.get('window').width/2-20,
-        height:Dimensions.get('window').width/2+50,
+        height:Dimensions.get('window').width/2,
         backgroundColor:'#fff',
         margin:10,
         borderRadius:5,
@@ -19,7 +19,7 @@ export default StyleSheet.create({
     },
     productImage:{
         width:Dimensions.get('window').width/2-20,
-        height:'60%',
+        height:'80%',
         borderTopLeftRadius:5,
         borderTopRightRadius:5
     },
@@ -181,11 +181,6 @@ export default StyleSheet.create({
         fontFamily: "Poppins-Medium",
         color:'#A20101',
         fontSize:14
-    },
-    heartIcon:{
-        fontSize:25,
-        margin:10,
-        alignSelf:'flex-end'
     }
     
 

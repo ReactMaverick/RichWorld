@@ -39,6 +39,8 @@ import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
 import OtpScreen from "./src/screens/OtpScreen";
 import Category from './src/screens/Category';
+import Brands from './src/screens/Brands';
+
 
 
 
@@ -82,6 +84,8 @@ function MyDrawer() {
       <Drawer.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} />
       <Drawer.Screen name="Category" component={Category} options={{ headerShown: false }} />
+      <Drawer.Screen name="Brands" component={Brands} options={{ headerShown: false }} />
+      
       
 
     </Drawer.Navigator>
@@ -119,6 +123,7 @@ function Stack1() {
       <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
       <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
+      <Stack.Screen name="Brands" component={Brands} options={{ headerShown: false }} />
       
 
 
