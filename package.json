@@ -17,6 +17,7 @@
     "@react-navigation/drawer": "^6.1.4",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
+    "dateformat": "^5.0.2",
     "react": "17.0.1",
     "react-native": "0.64.0",
     "react-native-actions-sheet": "^0.5.7",

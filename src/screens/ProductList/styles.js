@@ -185,7 +185,8 @@ export default StyleSheet.create({
     heartIcon:{
         fontSize:25,
         margin:10,
-        alignSelf:'flex-end'
+        alignSelf:'flex-end',
+        color: '#620000'
     }
     
 

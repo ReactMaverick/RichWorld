@@ -10,6 +10,10 @@ export const GET_PRIVACY_POLICY = BASE_URL + 'privacyPolicy';
 export const POST_SIGNUP = BASE_URL + 'signUp';
 export const POST_SIGNIN = BASE_URL + 'signIn';
 export const POST_PROCESS_SIGNUP = BASE_URL + 'processSignup';
+export const ADD_WISHLIST = BASE_URL + 'addWishlist';
+export const VIEW_WISHLIST = BASE_URL + 'viewWishlist?customers_id=';
+export const FAQ = BASE_URL + 'faq';
+export const NOTIFICATION_LIST = BASE_URL + 'notificationList?customers_id=';
 
 
 

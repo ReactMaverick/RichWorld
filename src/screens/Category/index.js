@@ -25,6 +25,7 @@ function Category({ navigation, route }) {
       .then(([status, response]) => {
         if (status == 200) {
           // console.log(status, response);
+          console.log(JSON.stringify(response.allCategory, null, " "));
           setCategory(response.allCategory);
         } else {
           console.log(status, response);
@@ -78,7 +79,9 @@ function Category({ navigation, route }) {
             :
             <>
               {allCategory.map((item) => (
-                <TouchableOpacity key={item.id} style={styles.productBox}>
+                <TouchableOpacity key={item.id} onPress={() => {
+                  navigation.navigate('ProductList',{ title1: item.name, title2: "", filterParam: { 'categories_id': item.id }})
+                }} style={styles.productBox}>
                   <Image style={styles.productImage} source={{ uri: item.imgpath }} />
                   <Text style={styles.productTitle}>{item.name}</Text>
                 </TouchableOpacity>

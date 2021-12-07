@@ -78,7 +78,9 @@ function Brands({ navigation, route }) {
             :
             <>
               {allBrands.map((item) => (
-                <TouchableOpacity key={item.brands_id} style={styles.productBox}>
+                <TouchableOpacity key={item.brands_id} onPress={() => {
+                  navigation.navigate('ProductList',{ title1: item.brands_name, title2: "", filterParam: { 'brands_id': item.brands_id }})
+                }} style={styles.productBox}>
                   <Image style={styles.productImage} source={{ uri: item.brands_image_path }} />
                   <Text style={styles.productTitle}>{item.brands_name}</Text>
                 </TouchableOpacity>

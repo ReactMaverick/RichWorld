@@ -3,10 +3,13 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
+import { FAQ } from '../../config/ApiConfig';
 import AccordionComponent from "../../components/AccordionComponent";
 
 function Faq({ navigation }) {
- 
+  const [isLoading, setIsLoading] = useState(true);
+  const [faqList, setFaqList] = useState([]);
+
 const SECTIONS = [
   {
     title: 'Registration',
@@ -18,7 +21,33 @@ const SECTIONS = [
   },
 ];
 
+const _getFaqs = async () => {
+
+  fetch(FAQ, {
+    method: "get",
+  })
+    .then((response) => {
+
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    })
+    .then(([status, response]) => {
+      if (status == 200) {
+        // console.log(JSON.stringify(response.faq_list, null, " "));
+        setFaqList(response.faq_list);
+      } else {
+        console.log(status, response);
+      }
+    })
+    .catch((error) => console.log("error", error))
+    .finally(() => {
+      setIsLoading(false)
+    });
+}
+
   useEffect(() => {
+    _getFaqs()
   }, [navigation]);
   
   return (
@@ -31,7 +60,7 @@ const SECTIONS = [
         
       <View style={styles.card}>
      
-      <AccordionComponent item={SECTIONS}  />
+      <AccordionComponent item={faqList}  />
       </View>
 
       </ScrollView>

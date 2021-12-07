@@ -39,8 +39,8 @@ export default StyleSheet.create({
     },
     userImage:{
         margin:10,
-        height:Dimensions.get('window').width/3,
-        height:Dimensions.get('window').width/3+20
+        width:Dimensions.get('window').width-50,
+        height:Dimensions.get('window').width/3+50
     },
     outerBtn:{
         
@@ -59,7 +59,8 @@ export default StyleSheet.create({
         fontSize:14
     },
     leftBox:{
-        marginTop:10
+        padding:10,
+
     },
     leftText1:{
         fontFamily:'Poppins-Bold',

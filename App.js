@@ -97,7 +97,7 @@ function Stack1() {
   return (
     <Stack.Navigator  >
       <Stack.Screen name="Home" component={MyDrawer} options={{ headerShown: false }} />
-      <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} />
       <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />
       <Stack.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
       <Stack.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
@@ -115,15 +115,15 @@ function Stack1() {
       <Stack.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />
       <Stack.Screen name="MyPurchased" component={MyPurchased} options={{ headerShown: false }} />
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
-      <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
+      <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} /> */}
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
       <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
       <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
-      <Stack.Screen name="Brands" component={Brands} options={{ headerShown: false }} />
+      <Stack.Screen name="Brands" component={Brands} options={{ headerShown: false }} /> */}
       
 
 

@@ -125,6 +125,7 @@ function SlideMenu({ navigation }) {
                  <TouchableOpacity onPress={() => {
                     AsyncStorage.clear().then(()=>{
                         setIsLogin(true)
+                        navigation.navigate('HomeScreen');
                     })
                 }} style={styles.menuItem}>
     

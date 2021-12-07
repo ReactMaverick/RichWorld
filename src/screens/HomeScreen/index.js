@@ -236,7 +236,7 @@ function Brands({ navigation, products }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductList',{ title1: products[1].brands_name, title2: "", filterParam: { 'brands_id': products[1].brands_id }})
+            navigation.navigate('ProductList',{ title1: products[2].brands_name, title2: "", filterParam: { 'brands_id': products[2].brands_id }})
           }} style={styles.productInner}>
             <Image style={styles.rightImage} source={{ uri: products[2].brands_image_path }} />
             <Text style={styles.productTitle}>{products[2].brands_name}</Text>
@@ -265,7 +265,7 @@ function CategoryItem({ navigation, category }) {
     return (
       <View style={styles.outerProductBox}>
         <TouchableOpacity onPress={() => {
-          navigation.navigate('ProductList')
+          navigation.navigate('ProductList',{ title1: category[0].name, title2: "", filterParam: { 'categories_id': category[0].id }})
         }} style={styles.productLeft}>
           <Image style={styles.leftImageCategory} source={{ uri: category[0].imgpath }} />
           <Text style={styles.productTitle}>{category[0].name}</Text>
@@ -273,7 +273,7 @@ function CategoryItem({ navigation, category }) {
         </TouchableOpacity>
         <View style={styles.productRight}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductList')
+            navigation.navigate('ProductList',{ title1: category[1].name, title2: "", filterParam: { 'categories_id': category[1].id }})
           }} style={[styles.productInner, { marginBottom: 10 }]}>
             <Image style={styles.rightImageCategory} source={{ uri: category[1].imgpath }} />
             <Text style={styles.productTitle}> {category[1].name}</Text>
@@ -281,7 +281,7 @@ function CategoryItem({ navigation, category }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('ProductList')
+            navigation.navigate('ProductList',{ title1: category[2].name, title2: "", filterParam: { 'categories_id': category[2].id }})
           }} style={styles.productInner}>
             <Image style={styles.rightImageCategory} source={{ uri: category[2].imgpath }} />
             <Text style={styles.productTitle}> {category[2].name}</Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions, ImageBackground } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions, ImageBackground, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -12,21 +12,27 @@ import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ActionSheet from "react-native-actions-sheet";
-import { POST_PRODUCT } from '../../config/ApiConfig';
+import { POST_PRODUCT, ADD_WISHLIST } from '../../config/ApiConfig';
+import DeviceInfo from 'react-native-device-info';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const actionSheetRef = createRef();
 function ProductList({ navigation, route }) {
   const { title1, title2, filterParam } = route.params;
   const [modalVisible, setFilterModalVisible] = useState(false);
   const [data, setSliderData] = useState(10);
- 
+
   const [isLoading, setIsLoading] = useState(true);
   const [Products, setProducts] = useState([]);
+  const [isLogin, setIsLogin] = useState(true);
+  const [userData, setUserData] = useState({});
 
   let actionSheet;
 
+ 
 
-  const _getProductList = async (filterParam) => {
+  const _getProductList = async (filterParam, androidId, user_id) => {
 
     const formData = new FormData();
 
@@ -34,10 +40,11 @@ function ProductList({ navigation, route }) {
     for (let key in filterParam) {
       formData.append(key, filterParam[key]);
     }
-  
+    formData.append('session_id', androidId);
+    formData.append('customers_id', user_id);
     fetch(POST_PRODUCT, {
       method: "POST",
-     
+
       body: formData
     })
 
@@ -50,7 +57,7 @@ function ProductList({ navigation, route }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-         
+          // console.log(JSON.stringify(response.products.product_data, null, " "));
           setProducts(response.products.product_data);
 
         } else {
@@ -63,17 +70,71 @@ function ProductList({ navigation, route }) {
       });
   }
 
+  const _addToWishlist = ( products_id, products_attributes_prices_id, key) =>{
+    setIsLoading(true)
+    const formData = new FormData();
+    
+    formData.append('customers_id', userData.id);
+    formData.append('products_id', products_id);
+    formData.append('products_attributes_prices_id', products_attributes_prices_id);
 
+    fetch(ADD_WISHLIST, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      }).then(([status, response]) => {
+        if (status == 200) {
+         
+          var ProductsData = Products;
+          if(response.result.success == 1){
+            ProductsData[key].isLiked = 0;
+          }else if(response.result.success == 2){
+            ProductsData[key].isLiked = 1;
+          }
+        
+          setProducts(ProductsData);
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
 
   useEffect(() => {
-    _getProductList(filterParam);
+ 
 
-  }, [navigation, route]);
+   
+      AsyncStorage.getItem('userData').then((userData) => {
+     
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          _getProductList(filterParam, "",userDetails.id);
+        } else {
+          setIsLogin(false)
+           DeviceInfo.getAndroidId().then((androidId) => {
+            _getProductList(filterParam, androidId,"");
+          });
+        }
+      })
+      
+    
+
+
+  }, [navigation, route,useState]);
 
   return (
     <>
+    
       <Header navigation={navigation} />
-
+      {isLoading?<ActivityIndicator size="large" color="#AB0000" />:<></>}    
       <View style={styles.filterBar}>
         <View style={styles.filterTextBox}>
           <Text style={styles.CategoryText1}>{title1} </Text>
@@ -126,17 +187,25 @@ function ProductList({ navigation, route }) {
               {Products.map((item, key) => (
 
                 <TouchableOpacity onPress={() => {
-                  navigation.navigate('ProductDetails');
+                  navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
                 }} style={styles.productBox} key={key}>
-                 
+
                   <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
-                    <TouchableOpacity onLongPress={()=>{
+
+                    {isLogin ? <TouchableOpacity onPress={() => {
                       console.log("long press");
+                      _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
                     }}>
-                    <AntDesign name="hearto" style={styles.heartIcon} />
-                    </TouchableOpacity>
-                  
-                    </ImageBackground>
+                      <>
+                        {item.isLiked != 0 ? 
+                          <AntDesign name="heart" style={styles.heartIcon} />
+                        :
+                          <AntDesign name="hearto" style={styles.heartIcon} />
+                        }
+                      </>
+                    </TouchableOpacity> : <></>}
+
+                  </ImageBackground>
                   <Text style={styles.productTitle}>{item.products_model}</Text>
                   <Rating
                     startingValue={item.avg_review == null ? 0 : item.avg_review}
@@ -161,7 +230,7 @@ function ProductList({ navigation, route }) {
               ))}
             </>
 
-          } 
+          }
 
 
 

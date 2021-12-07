@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Accordion from 'react-native-collapsible/Accordion';
 import { View,Text} from 'react-native';
 import styles from "./styles";
+import HTMLView from 'react-native-htmlview';
 
 export default class AccordionComponent extends Component {
   constructor(props){
@@ -19,7 +20,7 @@ export default class AccordionComponent extends Component {
   _renderHeader = (section) => {
     return (
       <View style={styles.header}>
-        <Text style={styles.headerText}>{section.title}</Text>
+        <Text style={styles.headerText}>{section.faq_title}</Text>
       </View>
     );
   };
@@ -27,7 +28,10 @@ export default class AccordionComponent extends Component {
   _renderContent = (section) => {
     return (
       <View style={styles.content}>
-        <Text  style={styles.contentText}>{section.content}</Text>
+        <HTMLView
+        value={section.faq_desc}
+        stylesheet={styles.contentText}
+      />
       </View>
     );
   };
