@@ -61,10 +61,11 @@ export default StyleSheet.create({
         width: '70%',
 
     },
-    userImage: {
-        margin: 10,
-        height: Dimensions.get('window').width / 3,
-        height: Dimensions.get('window').width / 3 + 20
+    userImage:{
+        flex:1,
+        margin:10,
+        width:Dimensions.get('window').width/2,
+        height:Dimensions.get('window').width/3+50
     },
     outerBtn: {
 

@@ -5,15 +5,132 @@ import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import DeviceInfo from 'react-native-device-info';
+import { VIEW_CART, UPDATE_CART_QUANTITY } from '../../config/ApiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ActionSheet from "react-native-actions-sheet";
+import { useIsFocused } from "@react-navigation/native";
 const actionSheetRef = createRef();
 function MyCart({ navigation }) {
 
   const [check, setCheck] = useState(1);
+  const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+  const [cartList, setCartList] = useState([]);
+  const [android_id, setAndroidId] = useState("");
 
+
+  const _getCartList = async (customers_id,session_id) => {
+    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
+      method: "get",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          // console.log(JSON.stringify(response, null, " "));
+          setCartList(response.cart)
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
+  const _updateCartQuantity = (customers_basket_id, products_id, customers_basket_quantity, AttributeIds) => {
+
+    const formData = new FormData();
+    formData.append('customers_basket_id', customers_basket_id);
+    formData.append('products_id', products_id);
+    formData.append('cart_quantity', customers_basket_quantity);
+    formData.append('AttributeIds', AttributeIds);
+    fetch(UPDATE_CART_QUANTITY, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+
+        if (status == 200) {
+          console.log(JSON.stringify(response, null, " "));
+          if (response.status) {
+            if (isLogin) {
+              _getCartList(userData.id, "");
+            } else {
+              _getCartList("",android_id);
+            }
+          }
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
+  const stringFormat = (str) =>{
+    if(str.length > 50 ){
+      return str.substring(0,50)+'...';
+    }else{
+      return str;
+    }
+  }
+  // min_order : 1
+  // max_order : 8
+  const _minusQuantity = (key, customers_basket_id, products_id, AttributeIds) =>{
+    var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) - 1;
+      if(customers_basket_quantity >= cartList[key].min_order){
+        _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+      }
+  }
+  const _plusQuantity = (key, customers_basket_id, products_id, AttributeIds) =>{
+    var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) + 1;
+      if(customers_basket_quantity <= cartList[key].max_order){
+        _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+      }
+  }
+  const _discountCalculation = (final_price,prodDiscountRate) =>{
+        final_price = parseInt(final_price);
+        var discountedPrice = final_price - ((final_price*prodDiscountRate)/100);
+        console.log(discountedPrice);
+        return discountedPrice.toFixed(2);;
+  }
   useEffect(() => {
-  }, [navigation]);
+  
+    if (isFocused) {
+    
+    AsyncStorage.getItem('userData').then((userData) => {
+      if (userData != null) {
+        setIsLogin(true)
+        setUserData(JSON.parse(userData))
+        var userDetails = JSON.parse(userData)
+        _getCartList(userDetails.id, "");
+      } else {
+        setIsLogin(false)
+        DeviceInfo.getAndroidId().then((androidId) => {
+          setAndroidId(androidId)
+          _getCartList("",androidId)
+        });
+      }
+    })}
+  }, [navigation, isFocused]);
 
   return (
     <>
@@ -39,101 +156,45 @@ function MyCart({ navigation }) {
             </TouchableOpacity></View>
         </View>
 
-        <View style={styles.outerBox}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Image source={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
-            <View style={styles.leftBox}>
-              <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-              <Text style={styles.leftText2}>₹260.00</Text>
+        {cartList.map((item, key) => (
+        <View style={styles.outerBox} key={key}>
+        <View style={{ flexDirection:'row' }}>
+          <Image source={{ uri: "https://demo.richworld.online/images/media/2021/09/uZakD16503.png" }} style={styles.userImage } />
+          <View style={styles.leftBox}>
+            <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
+            <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price,item.prodDiscountRate)}</Text>
 
-              <View style={styles.quantityOuter}>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-                <View style={styles.quantityInner}><Text>1</Text></View>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-              </View>
-              <AntDesign name="delete"  style={styles.deleteIcon} />
-
+            <View style={styles.quantityOuter}>
+              <TouchableOpacity onPress={() => {
+                _minusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+              }} style={styles.quantityInnerBtn}>
+                <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
+              </TouchableOpacity>
+              <View style={styles.quantityInner}><Text>{item.customers_basket_quantity}</Text></View>
+              <TouchableOpacity onPress={() => {
+                _plusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+              }}  style={styles.quantityInnerBtn}>
+                <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
+              </TouchableOpacity>
             </View>
+            <AntDesign name="delete"  style={styles.deleteIcon} />
+
           </View>
-
-          {/* <View style={styles.outerBtn}>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
-              <Text style={styles.btnTxt}>Remove</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-              <Text style={styles.btnTxt}>Move to Wishlist</Text>
-            </TouchableOpacity>
-          </View> */}
         </View>
 
 
+        {/* <View style={styles.outerBtn}>
+          <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
+            <Text style={styles.btnTxt}>Remove</Text>
+          </TouchableOpacity>
 
-        <View style={styles.outerBox}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Image source={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
-            <View style={styles.leftBox}>
-              <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-              <Text style={styles.leftText2}>₹260.00</Text>
-              <View style={styles.quantityOuter}>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-                <View style={styles.quantityInner}><Text>1</Text></View>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-              </View>
-              <AntDesign name="delete"  style={styles.deleteIcon} />
-            </View>
-          </View>
-
-          {/* <View style={styles.outerBtn}>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
-              <Text style={styles.btnTxt}>Remove</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-              <Text style={styles.btnTxt}>Move to Wishlist</Text>
-            </TouchableOpacity>
-          </View> */}
+          <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
+            <Text style={styles.btnTxt}>Move to Wishlist</Text>
+          </TouchableOpacity>
+        </View> */}
         </View>
-
-
-
-        <View style={styles.outerBox}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Image source={require('../../assets/Image/cartUse.png')} style={styles.userImage} />
-            <View style={styles.leftBox}>
-              <Text style={styles.leftText1}>Simple Black T-Shirt	</Text>
-              <Text style={styles.leftText2}>₹260.00</Text>
-              <View style={styles.quantityOuter}>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-                <View style={styles.quantityInner}><Text>1</Text></View>
-                <View style={styles.quantityInnerBtn}>
-                  <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
-                </View>
-              </View>
-              <AntDesign name="delete"  style={styles.deleteIcon} />
-            </View>
-          </View>
-
-          {/* <View style={styles.outerBtn}>
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
-              <Text style={styles.btnTxt}>Remove</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-              <Text style={styles.btnTxt}>Move to Wishlist</Text>
-            </TouchableOpacity>
-          </View> */}
-        </View>
+        ))}
+        
 
         <View style={styles.outerBoxPrice}>
           <Text style={styles.priceTitle}>

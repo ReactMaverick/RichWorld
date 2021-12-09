@@ -5,16 +5,139 @@ import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Modal from "react-native-modal";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MY_ADDRESS, ADD_MY_ADDRESS, UPDATE_SHIPPING_ADDRESS } from '../../config/ApiConfig';
 function MyAddress({ navigation }) {
 
 
   const [addressModal, setAddressModal] = useState(false);
+  const [addAddressModal, setAddAddressModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+  const [billingAddressList, setBillingAddress] = useState({});
+  const [shippingAddressList, setShippingAddressList] = useState([]);
 
-  const toggleAddressModal = () => {
+  const [addressBookId, setAddressBookId] = useState('')
+  const [entryStreetAddress, setEntryStreetAddress] = useState('')
+  const [entryCity, setEntryCity] = useState('')
+  const [entryState, setEntryState] = useState('')
+  const [entryPostcode, setEntryPostcode] = useState('')
+  const [entryPhone, setEntryPhone] = useState('')
+  const [entryEmail, setEntryEmail] = useState('')
+  const [entryFirstname, setEntryFirstname] = useState('')
+
+  const toggleAddressModal = (addressBookId) => {
+    setAddressBookId(addressBookId);
     setAddressModal(!addressModal);
   };
+  const toggleAddAddressModal = () => {
+    setAddAddressModal(!addAddressModal);
+  };
+  const _getMyAdderss = (user_id) => {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('user_id', user_id);
+    fetch(MY_ADDRESS, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        // console.log(response.userShippingAddressList)
+        setBillingAddress(response.userBillingAddress);
+        setShippingAddressList(response.userShippingAddressList);
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+  const _addShippingAddress = () => {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('user_id', userData.id);
+    formData.append('address_type', 'shipping');
+    formData.append('entry_firstname', entryFirstname);
+    formData.append('entry_street_address', entryStreetAddress);
+    formData.append('entry_city', entryCity);
+    formData.append('entry_state', entryState);
+    formData.append('entry_postcode', entryPostcode);
+    formData.append('entry_phone', entryPhone);
+    formData.append('entry_email', entryEmail);
+    fetch(ADD_MY_ADDRESS, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        console.log(response.userShippingAddressList)
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
 
+  const _updateShippingAddress = () => {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('address_book_id', userData.id);
+    formData.append('address_type', 'shipping');
+    formData.append('entry_firstname', entryFirstname);
+    formData.append('entry_street_address', entryStreetAddress);
+    formData.append('entry_city', entryCity);
+    formData.append('entry_state', entryState);
+    formData.append('entry_postcode', entryPostcode);
+    formData.append('entry_phone', entryPhone);
+    formData.append('entry_email', entryEmail);
+    fetch(UPDATE_SHIPPING_ADDRESS, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        console.log(response.userShippingAddressList)
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+  const _setAddressData = async (address) => {
+    setAddressBookId(address.address_book_id);
+    setEntryStreetAddress(address.entry_street_address);
+    setEntryCity(address.entry_city);
+    setEntryState(address.entry_state);
+    setEntryPostcode(address.entry_postcode);
+    setEntryPhone(address.entry_phone);
+    setEntryEmail(address.entry_email);
+    setEntryFirstname(address.entry_firstname);
+    
+  }
   useEffect(() => {
+    AsyncStorage.getItem('userData').then((userData) => {
+      if (userData != null) {
+        setIsLogin(true)
+        setUserData(JSON.parse(userData))
+        var userDetails = JSON.parse(userData)
+        _getMyAdderss(userDetails.id);
+      } else {
+        setIsLogin(false)
+      }
+    })
   }, [navigation]);
 
   return (
@@ -24,39 +147,57 @@ function MyAddress({ navigation }) {
         <Text style={styles.CategoryText2}>Privacy Policy</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-
+      
         <View style={styles.card}>
           <View style={[styles.headerSection,{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}]}>
             <Text style={styles.headerTitle}>Billing Address</Text>
             <AntDesign name="enviromento" style={styles.downicon} />
           </View>
-          <View style={styles.headerSection}>
-          <Text style={styles.text1}>Bhavesh sharma</Text>
-          <Text style={styles.text2}>987 test Address, 57 Road, TN, INDIA, 600033</Text>
-          <Text style={styles.text2}>Mobile: (91) 9561459321</Text>
-          </View>
-          <TouchableOpacity onPress={toggleAddressModal} >
-          <Text style={styles.editText} >Edit Address</Text>
-          </TouchableOpacity>
-          
+            <View style={styles.headerSection}>
+            <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
+            <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
+            <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
+            </View>
+            <TouchableOpacity onPress={()=>{
+            
+_setAddressData(billingAddressList).then(()=>{
+ 
+  toggleAddressModal()
+})
+            }}              
+               >
+            <Text style={styles.editText} >Edit Address</Text>
+            </TouchableOpacity>
+            
         </View>
+      
+        
 
-
-        <View style={styles.card}>
+        
+          <View style={styles.card}>
           <View style={[styles.headerSection,{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}]}>
             <Text style={styles.headerTitle}>Shipping Address</Text>
-            <AntDesign name="enviromento" style={styles.downicon} />
+              <TouchableOpacity onPress={
+                toggleAddAddressModal
+                } >
+              <Text style={styles.editText} >Add Address</Text>
+              </TouchableOpacity>
           </View>
-          <View style={styles.headerSection}>
-          <Text style={styles.text1}>Bhavesh sharma</Text>
-          <Text style={styles.text2}>987 test Address, 57 Road, TN, INDIA, 600033</Text>
-          <Text style={styles.text2}>Mobile: (91) 9561459321</Text>
-          </View>
-          
-          <TouchableOpacity onPress={toggleAddressModal} >
-          <Text style={styles.editText} >Edit Address</Text>
-          </TouchableOpacity>
+          {shippingAddressList.map((item, key) => (
+            <View key={key}>
+              <View style={styles.headerSection}>
+              <Text style={styles.text1}>{item.entry_firstname}</Text>
+              <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+              <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
+              </View>
+              <TouchableOpacity onPress={toggleAddressModal} >
+              <Text style={styles.editText} >Edit Address</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
+        
+        
 
       </ScrollView>
       <Footer navigation={navigation} />
@@ -64,7 +205,7 @@ function MyAddress({ navigation }) {
 
 
       <Modal isVisible={addressModal} onBackdropPress={toggleAddressModal}  >
-        <View style={styles.cancelPopup}>
+        <ScrollView style={styles.cancelPopup}>
           <View style={styles.headerPopup}>
             <Text style={styles.CategoryText2}>Edit Address</Text>
             <TouchableOpacity onPress={toggleAddressModal}>
@@ -78,42 +219,43 @@ function MyAddress({ navigation }) {
             <TextInput
               placeholder={'Full Name'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+              value={entryFirstname}
+              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}           
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Street Address'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}           
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Town / City'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+              onChangeText={(entryCity) => setEntryCity(entryCity)}           
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'State'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            onChangeText={(entryState) => setEntryState(entryState)}           
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Postcode / ZIP'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}           
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Phone'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            onChangeText={(entryPhone) => setEntryPhone(entryPhone)}           
             />
           </View>
 
@@ -121,16 +263,87 @@ function MyAddress({ navigation }) {
             <TextInput
               placeholder={'Email Address'}
               style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+            onChangeText={(entryEmail) => setEntryEmail(entryEmail)}           
             />
           </View>
          
-          <TouchableOpacity style={styles.btnOuter}>
+          <TouchableOpacity onPress={() => {
+            _updateShippingAddress()
+          }} style={styles.btnOuter}>
             <Text style={styles.btnMessage}>Send </Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </Modal>
+      
+      <Modal isVisible={addAddressModal} onBackdropPress={toggleAddAddressModal}  >
+        <ScrollView style={styles.cancelPopup}>
+          <View style={styles.headerPopup}>
+            <Text style={styles.CategoryText2}>Add Address</Text>
+            <TouchableOpacity onPress={toggleAddAddressModal}>
+              <AntDesign name="close" style={styles.closeBtn} />
+            </TouchableOpacity>
 
+
+          </View>
+         
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Full Name'}
+              style={[styles.textInput]}
+              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}           
+            />
+          </View>
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Street Address'}
+              style={[styles.textInput]}
+              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}           
+            />
+          </View>
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Town / City'}
+              style={[styles.textInput]}
+              onChangeText={(entryCity) => setEntryCity(entryCity)}           
+            />
+          </View>
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'State'}
+              style={[styles.textInput]}
+            onChangeText={(entryState) => setEntryState(entryState)}           
+            />
+          </View>
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Postcode / ZIP'}
+              style={[styles.textInput]}
+            onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}           
+            />
+          </View>
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Phone'}
+              style={[styles.textInput]}
+            onChangeText={(entryPhone) => setEntryPhone(entryPhone)}           
+            />
+          </View>
+
+          <View style={styles.textInputOuter}>
+            <TextInput
+              placeholder={'Email Address'}
+              style={[styles.textInput]}
+            onChangeText={(entryEmail) => setEntryEmail(entryEmail)}           
+            />
+          </View>
+         
+          <TouchableOpacity onPress={() => {
+            _addShippingAddress()
+          }} style={styles.btnOuter}>
+            <Text style={styles.btnMessage}>Send </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </Modal>
 
     </>
   )

@@ -117,8 +117,9 @@ export default StyleSheet.create({
         borderColor:'#620000'
     },
     attrbox:{
-        width:30,
-        height:30,
+        // width:30,
+        paddingHorizontal:10,
+        paddingVertical:5,
         borderColor:'#620000',
         borderWidth:1,
         marginLeft:10,

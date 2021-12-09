@@ -14,6 +14,12 @@ export const ADD_WISHLIST = BASE_URL + 'addWishlist';
 export const VIEW_WISHLIST = BASE_URL + 'viewWishlist?customers_id=';
 export const FAQ = BASE_URL + 'faq';
 export const NOTIFICATION_LIST = BASE_URL + 'notificationList?customers_id=';
+export const ADD_TO_CART = BASE_URL + 'addToCart';
+export const VIEW_CART = BASE_URL + 'viewCart?';
+export const UPDATE_CART_QUANTITY = BASE_URL + 'updateCartQuantity';
+export const MY_ADDRESS = BASE_URL + 'myAddress';
+export const ADD_MY_ADDRESS = BASE_URL + 'addMyAddress';
+export const UPDATE_SHIPPING_ADDRESS = BASE_URL + 'updateMyAddress';
 
 
 

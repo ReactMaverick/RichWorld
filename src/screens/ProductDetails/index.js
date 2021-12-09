@@ -6,18 +6,26 @@ import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART } from '../../config/ApiConfig'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProductDetails({ navigation, route }) {
   const { products_id, products_attributes_prices_id } = route.params;
   const [tab, setTab] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const [productImage, setProductImage] = useState([]);
   const [productDetails, setProductDetails] = useState([]);
+  const [productAttributes, setProductAttributes] = useState([]);
   const [highListedImage, setHighListedImage] = useState();
+  const [basePath, setBasePath] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [androidId, setAndroidId] = useState("");
 
 
-  const _productDetails = async (deviceId, products_id, products_attributes_prices_id) => {
-    fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&session_id=' + deviceId, {
+  const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
+
+    fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&customers_id=' + customers_id + '&session_id=' + deviceId, {
       method: "GET",
     })
       .then((response) => {
@@ -32,12 +40,13 @@ function ProductDetails({ navigation, route }) {
           // console.log(status, response.detail.product_data[0]['images']);
           setProductImage(response.detail.product_data[0]['images']);
           setProductDetails(response.detail.product_data[0]);
+          setProductAttributes(response.detail.product_data[0].attributes);
           if(response.detail.product_data[0]['images'].length>0){
             setHighListedImage(response.detail.product_data[0]['images'][0].image_path)
           }else{
             setHighListedImage(response.detail.product_data[0].image_path)
           }
-          
+          setBasePath(response.base_path);
 
         } else {
           console.log(status, response);
@@ -48,14 +57,56 @@ function ProductDetails({ navigation, route }) {
 
       });
   }
+  const _addToCart = (quantity) => {
+    // setIsLoading(true)
+    const formData = new FormData();
+    var customers_id = "";
+    var session_id = "";
+    if( isLogin ){
+      customers_id = userData.id;
+    }else{
+      session_id = androidId;
+    }
+    formData.append('customers_id', customers_id);
+    formData.append('session_id', session_id);
+    formData.append('products_id', products_id);
+    formData.append('prod_attributeids', productDetails.prod_attributeids);
+    formData.append('quantity', quantity);
 
+    fetch(ADD_TO_CART, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        console.log("response", response)
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
 
   useEffect(() => {
-   
-    DeviceInfo.getAndroidId().then((androidId) => {
-
-      _productDetails(androidId, products_id, products_attributes_prices_id)
-    });
+   AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          _productDetails(userDetails.id,"", products_id, products_attributes_prices_id)
+        } else {
+          setIsLogin(false)
+          DeviceInfo.getAndroidId().then((androidId) => {
+            setAndroidId(androidId)
+            _productDetails("",androidId, products_id, products_attributes_prices_id)
+          });
+        }
+      })
+    
   }, [navigation,route]);
 
   return (
@@ -117,7 +168,25 @@ function ProductDetails({ navigation, route }) {
 
           </View>
           <Text style={styles.descriptionText}>{productDetails.products_name} </Text>
-          <View style={styles.attribute}>
+          {productAttributes.map((item,key) => (
+            <View style={styles.attribute} key={key}>
+              <Text style={styles.attributeLeft}>{item.option.name} :</Text>
+              <View style={styles.attributeRight}>
+                {item.values.map((item2,key2) => (
+                  <View style={{ flexDirection:'row', flexWrap:'wrap'}} key={key2}>
+                  {item.option.show_image == 1?
+                  <Image source={{ uri: basePath + "/" + item2.option_image }} style={styles.attrimg} />
+                  :
+                  <View style={styles.attrbox}><Text style={styles.attrboxTxt}>{item2.value}</Text></View>
+                  }
+                  </View>
+                ))}
+              </View>
+            </View>
+          ))}
+          
+          
+          {/* <View style={styles.attribute}>
             <Text style={styles.attributeLeft}>Color :</Text>
             <View style={styles.attributeRight}>
               <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
@@ -148,7 +217,7 @@ function ProductDetails({ navigation, route }) {
 
             </View>
 
-          </View>
+          </View> */}
         </View>
         <Text style={styles.pincodeCheckTitle}>Delivery Pincode Availability :</Text>
         <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-between' }}>
@@ -285,7 +354,9 @@ function ProductDetails({ navigation, route }) {
       </ScrollView>
       <View style={styles.attToCartBtn}>
         <View style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Buy Now</Text></View>
-        <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Add to cart</Text></View>
+        <TouchableOpacity onPress={() => {
+            _addToCart(1)
+          }}style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Add to cart</Text></TouchableOpacity>
       </View>
     </>
   )
