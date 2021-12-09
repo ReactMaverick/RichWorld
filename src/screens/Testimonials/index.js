@@ -21,7 +21,7 @@ function Testimonials({ navigation }) {
         })
         .then(([status, response]) => {
             if (status == 200) {
-                console.log(JSON.stringify(response.testimonial_list, null, " "));
+                // console.log(JSON.stringify(response.testimonial_list, null, " "));
                 setTestimonials(response.testimonial_list);
             } else {
                 console.log(status, response);
@@ -44,15 +44,15 @@ function Testimonials({ navigation }) {
         <Text style={styles.CategoryText2}>Testimonials</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-
-        <View style={styles.card}>
+        {testimonials.map((item,key)=>(
+          <View style={styles.card}>
           <View style={styles.imageouter}>
-            <Image style={styles.userImage} source={require('../../assets/Image/profile.jpg')} />
+            <Image style={styles.userImage} source={{uri:item.profile_image}} />
             <View style={{ flex: 1 }}>
-              <Text style={styles.userName}>John Snow</Text>
+              <Text style={styles.userName}>{item.customers_name}</Text>
               <Text style={styles.date}>March 14,2021</Text>
               <Rating
-                startingValue={4}
+                startingValue={item.reviews_rating}
                 ratingCount={5}
                 showRating={false}
                 imageSize={20}
@@ -61,52 +61,13 @@ function Testimonials({ navigation }) {
             </View>
           </View>
           <HTMLView
-            value={'Vivamus a lectus feugiat, feugiat ex ac, mollis massa. Duis malesuada efficitur sapien, eu blandit risus pharetra eget. Nunc elementum tellus ligula, at vestibulum lorem auctor vel. Pellentesque volutpat tempus imperdiet. Aenean ut malesuada augue. In commodo vitae felis eu ornare.'}
+            value={item.reviews_text}
             stylesheet={styles}
           />
         </View>
+        ))}
+        
 
-        <View style={styles.card}>
-          <View style={styles.imageouter}>
-            <Image style={styles.userImage} source={require('../../assets/Image/profile.jpg')} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.userName}>John Snow</Text>
-              <Text style={styles.date}>March 14,2021</Text>
-              <Rating
-                startingValue={4}
-                ratingCount={5}
-                showRating={false}
-                imageSize={20}
-                style={{ alignSelf: 'flex-start' }}
-              />
-            </View>
-          </View>
-          <HTMLView
-            value={'Vivamus a lectus feugiat, feugiat ex ac, mollis massa. Duis malesuada efficitur sapien, eu blandit risus pharetra eget. Nunc elementum tellus ligula, at vestibulum lorem auctor vel. Pellentesque volutpat tempus imperdiet. Aenean ut malesuada augue. In commodo vitae felis eu ornare.'}
-            stylesheet={styles}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <View style={styles.imageouter}>
-            <Image style={styles.userImage} source={require('../../assets/Image/profile.jpg')} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.userName}>John Snow</Text>
-              <Text style={styles.date}>March 14,2021</Text>
-              <Rating
-                startingValue={4}
-                ratingCount={5}
-                showRating={false}
-                imageSize={20}
-                style={{ alignSelf: 'flex-start' }}
-              />
-            </View>
-          </View>
-          <HTMLView
-            value={'Vivamus a lectus feugiat, feugiat ex ac, mollis massa. Duis malesuada efficitur sapien, eu blandit risus pharetra eget. Nunc elementum tellus ligula, at vestibulum lorem auctor vel. Pellentesque volutpat tempus imperdiet. Aenean ut malesuada augue. In commodo vitae felis eu ornare.'}
-            stylesheet={styles}
-          />
-        </View>
 
       </ScrollView>
       <Footer navigation={navigation} />

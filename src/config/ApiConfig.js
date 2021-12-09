@@ -26,6 +26,8 @@ export const MY_PURCHASED = BASE_URL + 'myPurchased';
 export const SUBMIT_RATTINGS = BASE_URL + 'submitRaitings';
 export const REWARDS = BASE_URL + 'myLoyaltyPoint';
 export const TESTIMOIALS = BASE_URL + 'testimonials';
+export const CONTACT_US = BASE_URL + 'contactUs';
+export const CONTACT_US_REQUEST = BASE_URL + 'contactUsMessage';
 
 
 
