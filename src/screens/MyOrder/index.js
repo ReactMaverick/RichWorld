@@ -4,12 +4,77 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MY_ORDERS } from '../../config/ApiConfig';
 function MyOrder({ navigation }) {
 
   const [tab, setTab] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+  const [orderList, setOrderList] = useState([]);
 
+  const _getOrders = async (user_id) => {
+    const formData = new FormData();
+    formData.append('user_id', user_id);
+    fetch(MY_ORDERS, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          // console.log(JSON.stringify(response, null, " "));
+          // console.log(response.orderList);
+          setOrderList(response.orderList);
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
+  const stringFormat = (str) =>{
+    if(str.length > 50 ){
+      return str.substring(0,50)+'...';
+    }else{
+      return str;
+    }
+  }
+
+  const _calculateSubtotal = (totalUsedLp,pricePerLp,order_price,coupon_amount,shipping_cost,total_tax) =>{
+    var order_show_LP = parseFloat(totalUsedLp);
+    var order_show_LP_value = parseFloat(order_show_LP*pricePerLp);
+    var subtotal = parseFloat(order_price) + parseFloat(coupon_amount) - parseFloat(shipping_cost) - parseFloat(total_tax);
+    return subtotal - order_show_LP_value;
+  }
+  
+  const _calculateOrderTotal = (totalUsedLp,pricePerLp,order_price) =>{
+    var order_show_LP = parseFloat(totalUsedLp);
+    var order_show_LP_value = parseFloat(order_show_LP*pricePerLp);
+    return parseFloat(order_price) - order_show_LP_value;
+  }
 
   useEffect(() => {
+    AsyncStorage.getItem('userData').then((userData) => {
+      if (userData != null) {
+        setIsLogin(true)
+        setUserData(JSON.parse(userData))
+        var userDetails = JSON.parse(userData)
+        _getOrders(userDetails.id);
+      } else {
+        setIsLogin(false)
+        navigation.navigate('Login');
+      }
+    })
   }, [navigation]);
 
   return (
@@ -19,107 +84,71 @@ function MyOrder({ navigation }) {
         <Text style={styles.CategoryText2}>My Orders</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-
-        <TouchableOpacity onPress={() => {
-          setTab(1)
-        }} style={styles.card}>
-          <View style={styles.headerBox}>
-            <Text style={styles.headerText}>Delivery Timing 10 May, 3.00PM - 6.00PM</Text>
-            <AntDesign name="down" style={styles.downIcon} />
-          </View>
-          {tab == 1 ?
-            <View >
-              <View style={styles.productDetails}>
-                <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
-                <View style={{ paddingLeft: 10 }}>
-                  <Text style={styles.title1}>Indian Makerel / Ayila</Text>
-                  <Text style={styles.title2}>On the way</Text>
-                  <Text style={styles.title2}>2 Items?</Text>
-                </View>
-              </View>
-
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText}>Sub Total</Text>
-                <Text style={styles.priceText}>₹26.50</Text>
-              </View>
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText}>Delivery Charges</Text>
-                <Text style={styles.priceText}>₹00.00</Text>
-              </View>
-
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText1}>Total</Text>
-                <Text style={styles.priceText1}>₹26.50</Text>
-              </View>
-              <View style={styles.trackOrderOuter}>
-                <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>
-                <View style={styles.priceOuter}>
-                  <Text style={styles.priceText}>Dispatch</Text>
-                  <Text style={styles.priceText}>12,Jan 2021, 11 AM</Text>
-                </View>
-
-                <View style={styles.priceOuter}>
-                  <Text style={styles.priceText}>Completed</Text>
-                  <Text style={styles.priceText}>13,Jan 2021, 11 AM</Text>
-                </View>
-              </View>
-
-
-
+        {orderList.map((item, key) => (
+          <TouchableOpacity onPress={() => {
+            setTab(key)
+          }} style={styles.card} key={key}>
+            <View style={styles.headerBox}>
+              <Text style={styles.headerText}>Purchase Date {item.date_purchased}</Text>
+              <AntDesign name="down" style={styles.downIcon} />
             </View>
-            : <></>}
-        </TouchableOpacity>
+            {tab == key ?
+              <View >
+                {item.products.map((item2, key2) => (
+                  <View style={styles.productDetails} key={key2}>
+                    <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
+                    <View style={{ paddingLeft: 10 }}>
+                      <Text style={styles.title1}>{stringFormat(item2.products_name)}</Text>
+                      <Text style={styles.title2}>{item.orders_status}</Text>
+                      <Text style={styles.title2}>{item2.products_quantity}</Text>
+                    </View>
+                  </View>
+                ))}
 
-        <TouchableOpacity onPress={() => {
-          setTab(2)
-        }} style={styles.card}>
-          <View style={styles.headerBox}>
-            <Text style={styles.headerText}>Delivery Timing 10 May, 3.00PM - 6.00PM</Text>
-            <AntDesign name="down" style={styles.downIcon} />
-          </View>
-          {tab == 2 ?
-            <View >
-              <View style={styles.productDetails}>
-                <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
-                <View style={{ paddingLeft: 10 }}>
-                  <Text style={styles.title1}>Indian Makerel / Ayila</Text>
-                  <Text style={styles.title2}>On the way</Text>
-                  <Text style={styles.title2}>2 Items?</Text>
-                </View>
-              </View>
 
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText}>Sub Total</Text>
-                <Text style={styles.priceText}>₹26.50</Text>
-              </View>
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText}>Delivery Charges</Text>
-                <Text style={styles.priceText}>₹00.00</Text>
-              </View>
-
-              <View style={styles.priceOuter}>
-                <Text style={styles.priceText1}>Total</Text>
-                <Text style={styles.priceText1}>₹26.50</Text>
-              </View>
-              <View style={styles.trackOrderOuter}>
-                <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>
                 <View style={styles.priceOuter}>
-                  <Text style={styles.priceText}>Dispatch</Text>
-                  <Text style={styles.priceText}>12,Jan 2021, 11 AM</Text>
+                  <Text style={styles.priceText}>Sub Total</Text>
+                  <Text style={styles.priceText}>₹{_calculateSubtotal(item.totalUsedLp,item.pricePerLp,item.order_price,item.coupon_amount,item.shipping_cost,item.total_tax)}</Text>
+                </View>
+                <View style={styles.priceOuter}>
+                  <Text style={styles.priceText}>Used Loyalty Point</Text>
+                  <Text style={styles.priceText}>{item.totalUsedLp}</Text>
+                </View>
+                <View style={styles.priceOuter}>
+                  <Text style={styles.priceText}>Total Tax</Text>
+                  <Text style={styles.priceText}>₹{item.total_tax}</Text>
+                </View>
+                <View style={styles.priceOuter}>
+                  <Text style={styles.priceText}>Discount(Coupon)</Text>
+                  <Text style={styles.priceText}>₹{item.coupon_amount}</Text>
+                </View>
+                <View style={styles.priceOuter}>
+                  <Text style={styles.priceText}>Delivery Charges</Text>
+                  <Text style={styles.priceText}>₹{item.shipping_cost}</Text>
                 </View>
 
                 <View style={styles.priceOuter}>
-                  <Text style={styles.priceText}>Completed</Text>
-                  <Text style={styles.priceText}>13,Jan 2021, 11 AM</Text>
+                  <Text style={styles.priceText1}>Total</Text>
+                  <Text style={styles.priceText1}>₹{_calculateOrderTotal(item.totalUsedLp,item.pricePerLp,item.order_price)}</Text>
                 </View>
+                <View style={styles.trackOrderOuter}>
+                  <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>
+
+                  {item.orders_status_history.map((item3, key3) => (
+                    <View style={styles.priceOuter} key={key3}>
+                      <Text style={styles.priceText}>{item3.orders_status_name}</Text>
+                      <Text style={styles.priceText}>{item3.date_added}</Text>
+                    </View>
+                  ))}
+
+                </View>
+
+
+
               </View>
-
-
-
-            </View>
-            : <></>}
-        </TouchableOpacity>
-
+              : <></>}
+          </TouchableOpacity>
+        ))}
 
 
       </ScrollView>

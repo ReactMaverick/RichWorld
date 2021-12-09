@@ -1,5 +1,5 @@
-import React, { useState, useEffect,createRef } from "react";
-import { View, ScrollView, Share, Image, Text, TouchableOpacity, ImageBackground} from 'react-native';
+import React, { useState, useEffect, createRef } from "react";
+import { View, ScrollView, Share, Image, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -8,20 +8,35 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Entypo from 'react-native-vector-icons/Entypo'
 import ActionSheet from "react-native-actions-sheet";
 import ImagePicker from 'react-native-image-crop-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
 const actionSheetRef = createRef();
 function Myaccount({ navigation }) {
 
   const [profileImage, setProfileImage] = useState();
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+  const [isLogin, setIsLogin] = useState(false);
+
   let actionSheet;
 
   useEffect(() => {
+    AsyncStorage.getItem('userData').then((userData) => {
+      if (userData != null) {
+        // console.log(userData);
+        setIsLogin(true)
+        setUserData(JSON.parse(userData))
+      } else {
+        setIsLogin(false)
+        navigation.navigate('Login');
+      }
+    })
   }, [navigation]);
 
-  
-  
-  
-  const _uploadProfileImage = async (image) => {
+
+
+
+  // const _uploadProfileImage = async (image) => {
   //   const imagePath = image.path;
   //  const arr= imagePath.split("/")
   //   setisLoading(true);
@@ -60,6 +75,40 @@ function Myaccount({ navigation }) {
   //     .finally(() => setisLoading(false));
 
 
+  // }
+
+  const _uploadProfileImage = async (image) => {
+    // setisLoading(true);
+    const imagePath = image.path;
+    const arr = imagePath.split("/")
+    const formData = new FormData();
+    formData.append('images', {
+      uri: Platform.OS === 'ios' ? `file:///${image.path}` : image.path,
+      type: image.mime,
+      name: arr[arr.length - 2]
+    });
+    formData.append('user_id', userData.id);
+
+    fetch(UPDATE_ACCOUNT, {
+      method: "POST",
+      headers: {
+              'Content-Type':'multipart/form-data',      
+      },
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        console.log(response)
+        // console.log(response)
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
   }
 
   const onShare = async () => {
@@ -86,118 +135,117 @@ function Myaccount({ navigation }) {
   return (
     <>
       <Header navigation={navigation} />
-      <ScrollView style={{ flex: 1}}>
-      <View style={[styles.headerSection,{backgroundColor:'#AB0000'}]} >
-      <Image source={require('../../assets/Image/accountBackGround.png')} style={styles.headerSection} />
-      </View>
-         
-           
-          <Image source={require('../../assets/Image/profile.jpg')} style={styles.userImage} />
-         
-            <Text style={styles.userName}>Jazy Dewo</Text>
-            <TouchableOpacity onPress={() => {
-            actionSheetRef.current?.setModalVisible();
-          }}>
-            <Entypo name="camera" style={styles.camera} />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('Account');
-          }} style={styles.menuItem}>
-            <FontAwesome name="user-circle" style={styles.menuIcon} />
-            <Text style={styles.menuText}>My account</Text>
-          </TouchableOpacity>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={[styles.headerSection, { backgroundColor: '#AB0000' }]} >
+          <Image source={require('../../assets/Image/accountBackGround.png')} style={styles.headerSection} />
+        </View>
 
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('MyOrder');
-          }} style={styles.menuItem}>
-            <FontAwesome name="cube" style={styles.menuIcon} />
-            <Text style={styles.menuText}>My Orders</Text>
-          </TouchableOpacity>
+        <Image source={{ uri: userData.customer_image }} style={styles.userImage} />
+
+        <Text style={styles.userName}>{userData.first_name}</Text>
+        <TouchableOpacity onPress={() => {
+          actionSheetRef.current?.setModalVisible();
+        }}>
+          <Entypo name="camera" style={styles.camera} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('Account');
+        }} style={styles.menuItem}>
+          <FontAwesome name="user-circle" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My account</Text>
+        </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('Wishlist');
-          }} style={styles.menuItem}>
-            <FontAwesome name="heart-o" style={styles.menuIcon} />
-            <Text style={styles.menuText}>My Wishlist</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('MyOrder');
+        }} style={styles.menuItem}>
+          <FontAwesome name="cube" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My Orders</Text>
+        </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('MyAddress');
-          }} style={styles.menuItem}>
-            <FontAwesome name="map-marker" style={styles.menuIcon} />
-            <Text style={styles.menuText}>My Address</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('Wishlist');
+        }} style={styles.menuItem}>
+          <FontAwesome name="heart-o" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My Wishlist</Text>
+        </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('MyPurchased');
-          }} style={styles.menuItem}>
-            <FontAwesome name="inr" style={styles.menuIcon} />
-            <Text style={styles.menuText}>My purchased</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            onShare()
-          }} style={styles.menuItem}>
-            <FontAwesome name="user" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Refer Friends</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('Settings');
-          }} style={styles.menuItem}>
-            <FontAwesome name="gear" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Account Setting</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('MyAddress');
+        }} style={styles.menuItem}>
+          <FontAwesome name="map-marker" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My Address</Text>
+        </TouchableOpacity>
 
 
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('Login');
-          }} style={styles.menuItem}>
-            <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Login</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('MyPurchased');
+        }} style={styles.menuItem}>
+          <FontAwesome name="inr" style={styles.menuIcon} />
+          <Text style={styles.menuText}>My purchased</Text>
+        </TouchableOpacity>
 
-    
+        <TouchableOpacity onPress={() => {
+          onShare()
+        }} style={styles.menuItem}>
+          <FontAwesome name="user" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Refer Friends</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('Settings');
+        }} style={styles.menuItem}>
+          <FontAwesome name="gear" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Account Setting</Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('Login');
+        }} style={styles.menuItem}>
+          <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
+          <Text style={styles.menuText}>Login</Text>
+        </TouchableOpacity>
+
+
       </ScrollView>
       <Footer navigation={navigation} />
 
       <ActionSheet ref={actionSheetRef}>
-          <TouchableOpacity onPress={() => {
-            
-            ImagePicker.openCamera({
-              width: 300,
-              height: 400,
-              cropping: true,
-            }).then(image => {
+        <TouchableOpacity onPress={() => {
 
-              _uploadProfileImage(image)
-              setProfileImage(image.path);
-              actionSheetRef.current?.hide();
-              
-            });
-          }} style={[styles.outerBtn, { marginTop: 10 }]}>
-            <Text style={styles.btnText}>Take Picture</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            ImagePicker.openPicker({
-              width: 300,
-              height: 400,
-              cropping: true
-            }).then(image => {
-             _uploadProfileImage(image)
-         //  console.log(image);
-              setProfileImage(image.path);
-              actionSheetRef.current?.hide();
-            });
-          }} style={styles.outerBtn}>
-            <Text style={styles.btnText}>Select Image</Text>
-          </TouchableOpacity>
-        </ActionSheet>
+          ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+          }).then(image => {
+            _uploadProfileImage(image)
+            setProfileImage(image.path);
+            actionSheetRef.current?.hide();
+
+          });
+        }} style={[styles.outerBtn, { marginTop: 10 }]}>
+          <Text style={styles.btnText}>Take Picture</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+          }).then(image => {
+            _uploadProfileImage(image)
+            //  console.log(image);
+            setProfileImage(image.path);
+            actionSheetRef.current?.hide();
+          });
+        }} style={styles.outerBtn}>
+          <Text style={styles.btnText}>Select Image</Text>
+        </TouchableOpacity>
+      </ActionSheet>
     </>
   )
 
