@@ -21,6 +21,7 @@ function ProductDetails({ navigation, route }) {
   const [isLogin, setIsLogin] = useState(false);
   const [userData, setUserData] = useState({});
   const [androidId, setAndroidId] = useState("");
+  const [activeAttributeIds, setActiveAttributeIds] = useState("");
 
 
   const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
@@ -40,6 +41,8 @@ function ProductDetails({ navigation, route }) {
           // console.log(status, response.detail.product_data[0]['images']);
           setProductImage(response.detail.product_data[0]['images']);
           setProductDetails(response.detail.product_data[0]);
+          setActiveAttributeIds(response.detail.product_data[0].attributes_ids);
+          console.log(response.detail.product_data[0].attributes_ids)
           setProductAttributes(response.detail.product_data[0].attributes);
           if(response.detail.product_data[0]['images'].length>0){
             setHighListedImage(response.detail.product_data[0]['images'][0].image_path)
@@ -91,8 +94,12 @@ function ProductDetails({ navigation, route }) {
       });
   }
 
+  const _changeActiveAttributeIds= (old_products_attributes_id,new_products_attributes_id) => {
+    var attributes_ids = activeAttributeIds.replace(old_products_attributes_id, new_products_attributes_id);
+    console.log(attributes_ids)
+    setActiveAttributeIds(attributes_ids);
+  }
 
-  
   useEffect(() => {
    AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
@@ -181,13 +188,15 @@ if(isLoading){
               <Text style={styles.attributeLeft}>{item.option.name} :</Text>
               <View style={styles.attributeRight}>
                 {item.values.map((item2,key2) => (
-                  <View style={{ flexDirection:'row', flexWrap:'wrap'}} key={key2}>
+                  <TouchableOpacity onPress={() => {
+                    _changeActiveAttributeIds(item.values1[0].products_attributes_id, item2.products_attributes_id)
+                }} style={{ flexDirection:'row', flexWrap:'wrap'}} key={key2}>
                   {item.option.show_image == 1?
-                  <Image source={{ uri: basePath + "/" + item2.option_image }} style={styles.attrimg} />
+                  <Image source={{ uri: basePath + "/" + item2.option_image }} style={ activeAttributeIds.includes(item2.products_attributes_id)? styles.attrimgActive : styles.attrimg } />
                   :
-                  <View style={styles.attrbox}><Text style={styles.attrboxTxt}>{item2.value}</Text></View>
+                  <View style={ activeAttributeIds.includes(item2.products_attributes_id)? styles.attrboxActive : styles.attrbox }><Text style={ activeAttributeIds.includes(item2.products_attributes_id)? styles.attrboxTxtActive : styles.attrboxTxt }>{item2.value}</Text></View>
                   }
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>

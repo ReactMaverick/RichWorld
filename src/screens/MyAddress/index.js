@@ -27,8 +27,7 @@ function MyAddress({ navigation }) {
   const [entryEmail, setEntryEmail] = useState('')
   const [entryFirstname, setEntryFirstname] = useState('')
 
-  const toggleAddressModal = (addressBookId) => {
-    setAddressBookId(addressBookId);
+  const toggleAddressModal = () => {
     setAddressModal(!addressModal);
   };
   const toggleAddAddressModal = () => {
@@ -78,11 +77,13 @@ function MyAddress({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
-        console.log(response.userShippingAddressList)
+        console.log(response)
+        _getMyAdderss(userData.id)
       }
     })
       .catch((error) => console.log("error", error))
       .finally(() => {
+        // toggleAddAddressModal()
         setIsLoading(false)
       });
   }
@@ -90,8 +91,7 @@ function MyAddress({ navigation }) {
   const _updateShippingAddress = () => {
     setIsLoading(true)
     const formData = new FormData();
-    formData.append('address_book_id', userData.id);
-    formData.append('address_type', 'shipping');
+    formData.append('address_book_id', addressBookId);
     formData.append('entry_firstname', entryFirstname);
     formData.append('entry_street_address', entryStreetAddress);
     formData.append('entry_city', entryCity);
@@ -108,14 +108,17 @@ function MyAddress({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
-        console.log(response.userShippingAddressList)
+        console.log(response)
+        _getMyAdderss(userData.id)
       }
     })
       .catch((error) => console.log("error", error))
       .finally(() => {
-        setIsLoading(false)
+        toggleAddressModal()
+        // setIsLoading(false)
       });
   }
+
   const _setAddressData = async (address) => {
     setAddressBookId(address.address_book_id);
     setEntryStreetAddress(address.entry_street_address);
@@ -125,8 +128,8 @@ function MyAddress({ navigation }) {
     setEntryPhone(address.entry_phone);
     setEntryEmail(address.entry_email);
     setEntryFirstname(address.entry_firstname);
-    
   }
+
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
@@ -147,57 +150,61 @@ function MyAddress({ navigation }) {
         <Text style={styles.CategoryText2}>Privacy Policy</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
-      
+
         <View style={styles.card}>
-          <View style={[styles.headerSection,{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}]}>
+          <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
             <Text style={styles.headerTitle}>Billing Address</Text>
             <AntDesign name="enviromento" style={styles.downicon} />
           </View>
-            <View style={styles.headerSection}>
+          <View style={styles.headerSection}>
             <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
             <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
             <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
-            </View>
-            <TouchableOpacity onPress={()=>{
-            
-_setAddressData(billingAddressList).then(()=>{
- 
-  toggleAddressModal()
-})
-            }}              
-               >
+            <Text style={styles.text2}>Email: {billingAddressList.entry_email}</Text>
+          </View>
+          <TouchableOpacity onPress={() => {
+            _setAddressData(billingAddressList).then(() => {
+              toggleAddressModal()
+            })
+          }}
+          >
             <Text style={styles.editText} >Edit Address</Text>
-            </TouchableOpacity>
-            
-        </View>
-      
-        
+          </TouchableOpacity>
 
-        
-          <View style={styles.card}>
-          <View style={[styles.headerSection,{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}]}>
+        </View>
+
+
+
+
+        <View style={styles.card}>
+          <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
             <Text style={styles.headerTitle}>Shipping Address</Text>
-              <TouchableOpacity onPress={
-                toggleAddAddressModal
-                } >
+            <TouchableOpacity onPress={
+              toggleAddAddressModal
+            } >
               <Text style={styles.editText} >Add Address</Text>
-              </TouchableOpacity>
+            </TouchableOpacity>
           </View>
           {shippingAddressList.map((item, key) => (
             <View key={key}>
               <View style={styles.headerSection}>
-              <Text style={styles.text1}>{item.entry_firstname}</Text>
-              <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
-              <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
+                <Text style={styles.text1}>{item.entry_firstname}</Text>
+                <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+                <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
+                <Text style={styles.text2}>Email: {item.entry_email}</Text>
               </View>
-              <TouchableOpacity onPress={toggleAddressModal} >
-              <Text style={styles.editText} >Edit Address</Text>
+              <TouchableOpacity onPress={() => {
+                _setAddressData(item).then(() => {
+                  toggleAddressModal()
+                })
+              }}>
+                <Text style={styles.editText} >Edit Address</Text>
               </TouchableOpacity>
             </View>
           ))}
         </View>
-        
-        
+
+
 
       </ScrollView>
       <Footer navigation={navigation} />
@@ -214,48 +221,53 @@ _setAddressData(billingAddressList).then(()=>{
 
 
           </View>
-         
+
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Full Name'}
               style={[styles.textInput]}
               value={entryFirstname}
-              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}           
+              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Street Address'}
               style={[styles.textInput]}
-              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}           
+              value={entryStreetAddress}
+              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Town / City'}
               style={[styles.textInput]}
-              onChangeText={(entryCity) => setEntryCity(entryCity)}           
+              value={entryCity}
+              onChangeText={(entryCity) => setEntryCity(entryCity)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'State'}
               style={[styles.textInput]}
-            onChangeText={(entryState) => setEntryState(entryState)}           
+              value={entryState}
+              onChangeText={(entryState) => setEntryState(entryState)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Postcode / ZIP'}
               style={[styles.textInput]}
-            onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}           
+              value={entryPostcode}
+              onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Phone'}
               style={[styles.textInput]}
-            onChangeText={(entryPhone) => setEntryPhone(entryPhone)}           
+              value={entryPhone}
+              onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
             />
           </View>
 
@@ -263,10 +275,11 @@ _setAddressData(billingAddressList).then(()=>{
             <TextInput
               placeholder={'Email Address'}
               style={[styles.textInput]}
-            onChangeText={(entryEmail) => setEntryEmail(entryEmail)}           
+              value={entryEmail}
+              onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
             />
           </View>
-         
+
           <TouchableOpacity onPress={() => {
             _updateShippingAddress()
           }} style={styles.btnOuter}>
@@ -274,7 +287,7 @@ _setAddressData(billingAddressList).then(()=>{
           </TouchableOpacity>
         </ScrollView>
       </Modal>
-      
+
       <Modal isVisible={addAddressModal} onBackdropPress={toggleAddAddressModal}  >
         <ScrollView style={styles.cancelPopup}>
           <View style={styles.headerPopup}>
@@ -285,47 +298,47 @@ _setAddressData(billingAddressList).then(()=>{
 
 
           </View>
-         
+
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Full Name'}
               style={[styles.textInput]}
-              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}           
+              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Street Address'}
               style={[styles.textInput]}
-              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}           
+              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Town / City'}
               style={[styles.textInput]}
-              onChangeText={(entryCity) => setEntryCity(entryCity)}           
+              onChangeText={(entryCity) => setEntryCity(entryCity)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'State'}
               style={[styles.textInput]}
-            onChangeText={(entryState) => setEntryState(entryState)}           
+              onChangeText={(entryState) => setEntryState(entryState)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Postcode / ZIP'}
               style={[styles.textInput]}
-            onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}           
+              onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
             />
           </View>
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Phone'}
               style={[styles.textInput]}
-            onChangeText={(entryPhone) => setEntryPhone(entryPhone)}           
+              onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
             />
           </View>
 
@@ -333,10 +346,10 @@ _setAddressData(billingAddressList).then(()=>{
             <TextInput
               placeholder={'Email Address'}
               style={[styles.textInput]}
-            onChangeText={(entryEmail) => setEntryEmail(entryEmail)}           
+              onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
             />
           </View>
-         
+
           <TouchableOpacity onPress={() => {
             _addShippingAddress()
           }} style={styles.btnOuter}>

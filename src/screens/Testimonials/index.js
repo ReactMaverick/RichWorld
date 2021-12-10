@@ -5,11 +5,36 @@ import Footer from "../../components/Footer";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
+import { TESTIMOIALS } from '../../config/ApiConfig';
 function Testimonials({ navigation }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [testimonials, setTestimonials] = useState([]);
 
-
+  const _getTestimonials = async () => {
+    fetch(TESTIMOIALS, {
+        method: "get",
+    })
+        .then((response) => {
+            const statusCode = response.status;
+            const data = response.json();
+            return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+            if (status == 200) {
+                console.log(JSON.stringify(response.testimonial_list, null, " "));
+                setTestimonials(response.testimonial_list);
+            } else {
+                console.log(status, response);
+            }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+            setIsLoading(false)
+        });
+}
 
   useEffect(() => {
+    _getTestimonials();
   }, [navigation]);
 
   return (

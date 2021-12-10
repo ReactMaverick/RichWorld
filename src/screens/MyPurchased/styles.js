@@ -38,6 +38,7 @@ export default StyleSheet.create({
         
     },
     userImage:{
+        flex:1,
         margin:10,
         height:Dimensions.get('window').width/3,
         height:Dimensions.get('window').width/3+20
@@ -59,6 +60,7 @@ export default StyleSheet.create({
         fontSize:14
     },
     leftBox:{
+        flex:1,
         marginTop:10
     },
     leftText1:{

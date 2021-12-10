@@ -116,6 +116,14 @@ export default StyleSheet.create({
         borderWidth:1,
         borderColor:'#620000'
     },
+    attrimgActive:{
+        height:40,
+        width:40,
+        borderRadius:20,
+        marginLeft:10,
+        borderWidth:3,
+        borderColor:'#620000'
+    },
     attrbox:{
         // width:30,
         paddingHorizontal:10,
@@ -126,6 +134,23 @@ export default StyleSheet.create({
         justifyContent:'center',
         alignItems:'center'
 
+    },
+    attrboxActive:{
+        // width:30,
+        paddingHorizontal:10,
+        paddingVertical:5,
+        backgroundColor:'#620000',
+        borderWidth:1,
+        marginLeft:10,
+        justifyContent:'center',
+        alignItems:'center'
+
+    },
+    attrboxTxt:{
+        color:'#000',
+    },
+    attrboxTxtActive:{
+        color:'#fff',
     },
     quantityPlusBox:{
         width:30,
