@@ -27,7 +27,7 @@ function Login({ navigation }) {
   
 
 
-  const _signIn = () => {
+  const _signIn = async () => {
     
     if (username == '') {
       setErrorMessage("Enter Email/Phone");
@@ -40,6 +40,7 @@ function Login({ navigation }) {
       formData.append('password', password);
       formData.append('session_id', deviceToken);
 
+     
 
 
       fetch(POST_SIGNIN, {
@@ -57,18 +58,20 @@ function Login({ navigation }) {
         })
         .then(([status, response]) => {
            // console.log(response);
-          setUsername();
-          setPassword();
+         
           if (status == 200) {
             if(response.status==false){
               setErrorMessage(response.message);
             }else{
+              setUsername();
+              setPassword();
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
                 navigation.navigate('HomeScreen');
               })
             }
             
           } else {
+
             if (response.error != undefined) {
 
               setErrorMessage(response.error);

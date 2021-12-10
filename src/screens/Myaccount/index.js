@@ -9,10 +9,12 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import ActionSheet from "react-native-actions-sheet";
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from "@react-navigation/native";
 import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
 const actionSheetRef = createRef();
 function Myaccount({ navigation }) {
 
+  const isFocused = useIsFocused();
   const [profileImage, setProfileImage] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
@@ -21,64 +23,26 @@ function Myaccount({ navigation }) {
   let actionSheet;
 
   useEffect(() => {
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        // console.log(userData);
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-      } else {
-        setIsLogin(false)
-        navigation.navigate('Login');
-      }
-    })
-  }, [navigation]);
+    if (isFocused) {
+
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          // console.log(userData);
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+        } else {
+          setIsLogin(false)
+          navigation.navigate('Login');
+        }
+      })
+    }
+  }, [navigation, isFocused]);
 
 
-
-
-  // const _uploadProfileImage = async (image) => {
-  //   const imagePath = image.path;
-  //  const arr= imagePath.split("/")
-  //   setisLoading(true);
-  //   const formData = new FormData();
-  //   formData.append('profile_pic', {
-  //     uri:Platform.OS === 'ios' ? `file:///${image.path}` : image.path,
-  //     type: image.mime,
-  //     name: arr[arr.length-2]
-  //   });
-  //   fetch(POST_UPLOAD_PROFILE_PIC , {
-  //     method: "POST",
-  //     headers: {
-  //       'Authorization': 'Bearer ' + userDetails.token,
-  //       'Content-Type':'multipart/form-data',          
-  //     },
-  //     body: formData
-  //   })
-  //     .then((response) => {
-  //        // console.log(response);
-  //       const statusCode = response.status;
-  //       const data = response.json();
-  //       return Promise.all([statusCode, data]);
-  //     })
-  //     .then(([status, response]) => {      
-  //       if (status == 200) {
-  //           //console.log(response);
-  //           var newUrl = response.img_basepath+'/'+response.profile_pic_path;
-  //           var user_data = userDetails;
-  //           user_data.user.profile_pic = newUrl;
-  //           AsyncStorage.setItem("userData",JSON.stringify(user_data));
-  //       } else {
-  //         console.log(status, response);
-  //       }
-  //     })
-  //     .catch((error) => console.log(error))
-  //     .finally(() => setisLoading(false));
-
-
-  // }
 
   const _uploadProfileImage = async (image) => {
     // setisLoading(true);
+    console.log(image.path);
     const imagePath = image.path;
     const arr = imagePath.split("/")
     const formData = new FormData();
@@ -89,10 +53,11 @@ function Myaccount({ navigation }) {
     });
     formData.append('user_id', userData.id);
 
+
     fetch(UPDATE_ACCOUNT, {
       method: "POST",
       headers: {
-              'Content-Type':'multipart/form-data',      
+        'Content-Type': 'multipart/form-data',
       },
       body: formData
     }).then((response) => {
@@ -203,13 +168,27 @@ function Myaccount({ navigation }) {
           <Text style={styles.menuText}>Account Setting</Text>
         </TouchableOpacity>
 
+        {isLogin ?
+          <TouchableOpacity onPress={() => {
+            AsyncStorage.clear().then(() => {
+              setIsLogin(true)
+              navigation.navigate('HomeScreen');
+            })
+          }} style={styles.menuItem}>
 
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('Login');
-        }} style={styles.menuItem}>
-          <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Login</Text>
-        </TouchableOpacity>
+            <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
+            <Text style={styles.menuText}>Logout</Text>
+          </TouchableOpacity>
+          :
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('Login');
+          }} style={styles.menuItem}>
+            <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Login</Text>
+          </TouchableOpacity>
+          
+        }
+
 
 
       </ScrollView>
