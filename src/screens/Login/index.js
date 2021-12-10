@@ -7,7 +7,18 @@ import DeviceInfo from 'react-native-device-info';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import auth from '@react-native-firebase/auth';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
+GoogleSignin.configure({
+  webClientId: '521633579635-41t9q2kkjoj0q0opptpve1b89gcp04bv.apps.googleusercontent.com',
+  
+});
+
+
 function Login({ navigation }) {
+
+  
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMsg, setErrorMessage] = useState("")
@@ -72,6 +83,53 @@ function Login({ navigation }) {
 
     }
   }
+
+
+  const onFacebookButtonPress = async() =>{
+    
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+  
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
+  
+    // Once signed in, get the users AccesToken
+    const data = await AccessToken.getCurrentAccessToken();
+  
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
+  
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    
+  
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+  }
+
+  const onGoogleButtonPress = async()=> {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      //this.setState({ userInfo });
+    } catch (error) {
+      console.log(error.code,error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  }
+
+
   useEffect(() => {
     DeviceInfo.getAndroidId().then((androidId) => {
       setDeviceToken(androidId);
@@ -127,12 +185,16 @@ function Login({ navigation }) {
           <View style={styles.socialLoginOuter}>
             <Text style={styles.socialLoginText}>Login with</Text>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('HomeScreen');
+              // navigation.navigate('HomeScreen');
+              onFacebookButtonPress().then((result) => {
+                console.log('Signed in with Facebook!',result)
+              })
             }}>
               <Image source={require('../../assets/Image/fb.png')} style={{ width: 47, height: 47, marginLeft: 10 }} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-              navigation.navigate('HomeScreen');
+            onGoogleButtonPress()
+   
             }}>
               <Image source={require('../../assets/Image/google+.png')} style={{ width: 50, height: 50, marginLeft: 10 }} />
             </TouchableOpacity>

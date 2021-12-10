@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput,ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
@@ -24,7 +24,7 @@ function ProductDetails({ navigation, route }) {
 
 
   const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
-
+    setIsLoading(true)
     fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&customers_id=' + customers_id + '&session_id=' + deviceId, {
       method: "GET",
     })
@@ -54,11 +54,11 @@ function ProductDetails({ navigation, route }) {
       })
       .catch((error) => console.log("error", error))
       .finally(() => {
-
+        setIsLoading(false)
       });
   }
   const _addToCart = (quantity) => {
-    // setIsLoading(true)
+     setIsLoading(true)
     const formData = new FormData();
     var customers_id = "";
     var session_id = "";
@@ -91,6 +91,8 @@ function ProductDetails({ navigation, route }) {
       });
   }
 
+
+  
   useEffect(() => {
    AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
@@ -108,7 +110,13 @@ function ProductDetails({ navigation, route }) {
       })
     
   }, [navigation,route]);
-
+if(isLoading){
+  return(
+    <>
+    <ActivityIndicator size="large" color="#AB0000" />
+    </>
+  )
+}else{
   return (
     <>
       <Header navigation={navigation} />
@@ -360,6 +368,8 @@ function ProductDetails({ navigation, route }) {
       </View>
     </>
   )
+}
+ 
 
 }
 

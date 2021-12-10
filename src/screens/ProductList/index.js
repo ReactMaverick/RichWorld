@@ -30,10 +30,10 @@ function ProductList({ navigation, route }) {
 
   let actionSheet;
 
- 
+
 
   const _getProductList = async (filterParam, androidId, user_id) => {
-
+    setIsLoading(true)
     const formData = new FormData();
 
 
@@ -70,10 +70,10 @@ function ProductList({ navigation, route }) {
       });
   }
 
-  const _addToWishlist = ( products_id, products_attributes_prices_id, key) =>{
+  const _addToWishlist = (products_id, products_attributes_prices_id, key) => {
     setIsLoading(true)
     const formData = new FormData();
-    
+
     formData.append('customers_id', userData.id);
     formData.append('products_id', products_id);
     formData.append('products_attributes_prices_id', products_attributes_prices_id);
@@ -82,24 +82,24 @@ function ProductList({ navigation, route }) {
       method: "POST",
       body: formData
     }).then((response) => {
-        const statusCode = response.status;
-        const data = response.json();
-        return Promise.all([statusCode, data]);
-      }).then(([status, response]) => {
-        if (status == 200) {
-         
-          var ProductsData = Products;
-          if(response.result.success == 1){
-            ProductsData[key].isLiked = 0;
-          }else if(response.result.success == 2){
-            ProductsData[key].isLiked = 1;
-          }
-        
-          setProducts(ProductsData);
-        } else {
-          console.log(status, response);
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+
+        var ProductsData = Products;
+        if (response.result.success == 1) {
+          ProductsData[key].isLiked = 0;
+        } else if (response.result.success == 2) {
+          ProductsData[key].isLiked = 1;
         }
-      })
+
+        setProducts(ProductsData);
+      } else {
+        console.log(status, response);
+      }
+    })
       .catch((error) => console.log("error", error))
       .finally(() => {
         setIsLoading(false)
@@ -107,269 +107,279 @@ function ProductList({ navigation, route }) {
   }
 
   useEffect(() => {
- 
-
-   
-      AsyncStorage.getItem('userData').then((userData) => {
-     
-        if (userData != null) {
-          setIsLogin(true)
-          setUserData(JSON.parse(userData))
-          var userDetails = JSON.parse(userData)
-          _getProductList(filterParam, "",userDetails.id);
-        } else {
-          setIsLogin(false)
-           DeviceInfo.getAndroidId().then((androidId) => {
-            _getProductList(filterParam, androidId,"");
-          });
-        }
-      })
-      
-    
 
 
-  }, [navigation, route,useState]);
 
-  return (
-    <>
-    
-      <Header navigation={navigation} />
-      {isLoading?<ActivityIndicator size="large" color="#AB0000" />:<></>}    
-      <View style={styles.filterBar}>
-        <View style={styles.filterTextBox}>
-          <Text style={styles.CategoryText1}>{title1} </Text>
-          <Text style={styles.CategoryText2}>{title2}</Text>
+    AsyncStorage.getItem('userData').then((userData) => {
+
+      if (userData != null) {
+        setIsLogin(true)
+        setUserData(JSON.parse(userData))
+        var userDetails = JSON.parse(userData)
+        _getProductList(filterParam, "", userDetails.id);
+      } else {
+        setIsLogin(false)
+        DeviceInfo.getAndroidId().then((androidId) => {
+          _getProductList(filterParam, androidId, "");
+        });
+      }
+    })
+
+
+
+
+  }, [navigation, route, useState]);
+
+
+
+  if (isLoading) {
+    return (
+      <>
+        <ActivityIndicator size="large" color="#AB0000" />
+      </>
+    )
+  } else {
+
+    return (
+      <>
+        <Header navigation={navigation} />
+        {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
+        <View style={styles.filterBar}>
+          <View style={styles.filterTextBox}>
+            <Text style={styles.CategoryText1}>{title1} </Text>
+            <Text style={styles.CategoryText2}>{title2}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => {
+              actionSheetRef.current?.setModalVisible();
+            }}>
+              <Ionicons name="swap-vertical" style={styles.sortIcon} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setFilterModalVisible(true)}>
+              <Image source={require('../../assets/Image/filter.png')} style={styles.filterIcon} />
+            </TouchableOpacity>
+
+          </View>
+
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity onPress={() => {
-            actionSheetRef.current?.setModalVisible();
-          }}>
-            <Ionicons name="swap-vertical" style={styles.sortIcon} />
-          </TouchableOpacity>
 
-          <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setFilterModalVisible(true)}>
-            <Image source={require('../../assets/Image/filter.png')} style={styles.filterIcon} />
-          </TouchableOpacity>
-
-        </View>
-
-      </View>
-
-      <ScrollView>
-        <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+        <ScrollView>
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
 
 
-          {isLoading ?
-            <>
-              <SkeletonPlaceholder>
-                <View style={styles.productBox}>
-                </View>
-              </SkeletonPlaceholder>
-              <SkeletonPlaceholder>
-                <View style={styles.productBox}>
-                </View>
-              </SkeletonPlaceholder>
-              <SkeletonPlaceholder>
-                <View style={styles.productBox}>
-                </View>
-              </SkeletonPlaceholder>
-              <SkeletonPlaceholder>
-                <View style={styles.productBox}>
-                </View>
-              </SkeletonPlaceholder>
-              <SkeletonPlaceholder>
-                <View style={styles.productBox}>
-                </View>
-              </SkeletonPlaceholder>
-            </>
-            :
-            <>
-              {Products.map((item, key) => (
+            {isLoading ?
+              <>
+                <SkeletonPlaceholder>
+                  <View style={styles.productBox}>
+                  </View>
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <View style={styles.productBox}>
+                  </View>
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <View style={styles.productBox}>
+                  </View>
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <View style={styles.productBox}>
+                  </View>
+                </SkeletonPlaceholder>
+                <SkeletonPlaceholder>
+                  <View style={styles.productBox}>
+                  </View>
+                </SkeletonPlaceholder>
+              </>
+              :
+              <>
+                {Products.map((item, key) => (
 
-                <TouchableOpacity onPress={() => {
-                  navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
-                }} style={styles.productBox} key={key}>
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
+                  }} style={styles.productBox} key={key}>
 
-                  <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
+                    <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
 
-                    {isLogin ? <TouchableOpacity onPress={() => {
-                      console.log("long press");
-                      _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
-                    }}>
-                      <>
-                        {item.isLiked != 0 ? 
-                          <AntDesign name="heart" style={styles.heartIcon} />
-                        :
-                          <AntDesign name="hearto" style={styles.heartIcon} />
-                        }
-                      </>
-                    </TouchableOpacity> : <></>}
+                      {isLogin ? <TouchableOpacity onPress={() => {
+                        console.log("long press");
+                        _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
+                      }}>
+                        <>
+                          {item.isLiked != 0 ?
+                            <AntDesign name="heart" style={styles.heartIcon} />
+                            :
+                            <AntDesign name="hearto" style={styles.heartIcon} />
+                          }
+                        </>
+                      </TouchableOpacity> : <></>}
 
-                  </ImageBackground>
-                  <Text style={styles.productTitle}>{item.products_model}</Text>
-                  <Rating
-                    startingValue={item.avg_review == null ? 0 : item.avg_review}
-                    ratingCount={5}
-                    showRating={false}
-                    imageSize={20}
-                    readonly={true}
-                    style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-                  />
-                  <View style={styles.priceBox}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
-                      <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+                    </ImageBackground>
+                    <Text style={styles.productTitle}>{item.products_model}</Text>
+                    <Rating
+                      startingValue={item.avg_review == null ? 0 : item.avg_review}
+                      ratingCount={5}
+                      showRating={false}
+                      imageSize={20}
+                      readonly={true}
+                      style={{ alignSelf: 'flex-start', marginLeft: 5 }}
+                    />
+                    <View style={styles.priceBox}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
+                        <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+                      </View>
+                      <View style={styles.cartIconBox}>
+                        <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                      </View>
+
                     </View>
-                    <View style={styles.cartIconBox}>
-                      <AntDesign name="shoppingcart" style={styles.cartIcon} />
-                    </View>
 
-                  </View>
+                  </TouchableOpacity>
+                ))}
+              </>
 
-                </TouchableOpacity>
-              ))}
-            </>
-
-          }
+            }
 
 
-
-
-        </View>
-      </ScrollView>
-
-      <Footer navigation={navigation} />
-
-
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-
-          setFilterModalVisible(!modalVisible);
-        }}
-      >
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
-          <View style={styles.filterAreaMain}>
-
-            <View style={styles.filterArea}>
-              <Text style={styles.filterAreaText}>FILTER</Text>
-              <TouchableOpacity onPress={() => {
-                setFilterModalVisible(!modalVisible)
-              }}>
-                <Text style={styles.filterClearText}>Clear All</Text>
-              </TouchableOpacity>
-
-            </View>
-            <ScrollView style={{ flex: 1 }}>
-              <View style={styles.filterOptionsMain}>
-                <View style={styles.filterOptions}>
-                  <Text style={styles.filterOptionsText}>Categories</Text>
-                  <Feather name="chevron-down" style={styles.dropdownIcon} />
-
-                </View>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Men</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Men</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Women</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Kids</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                </View>
-
-              </View>
-
-              <View style={styles.filterOptionsMain}>
-                <View style={styles.filterOptions}>
-                  <Text style={styles.filterOptionsText}>Price Filter</Text>
-                  <Feather name="chevron-down" style={styles.dropdownIcon} />
-
-                </View>
-                <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{data}</Text>
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-
-                  <Text style={styles.rangeText}>₹0</Text>
-
-                  <Slider
-                    maximumValue={100}
-                    minimumValue={0}
-                    minimumTrackTintColor="#A20101"
-                    maximumTrackTintColor="#A20101"
-                    step={1}
-                    value={data}
-                    onValueChange={
-                      (sliderValue) => setSliderData(sliderValue)
-                    }
-                    thumbTintColor="#1B5E20"
-                    style={{ width: Dimensions.get('window').width - 100, height: 40 }}
-                  />
-                  <Text style={styles.rangeText}>₹100</Text>
-                </View>
-
-              </View>
-
-              <View style={styles.filterOptionsMain}>
-                <View style={styles.filterOptions}>
-                  <Text style={styles.filterOptionsText}>Brands</Text>
-                  <Feather name="chevron-down" style={styles.dropdownIcon} />
-
-                </View>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Hussking</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                  <View style={styles.filterOptionsSection1}>
-                    <Text style={styles.filterOptionsTextOptions}>Genteel</Text>
-                    <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                  </View>
-                </View>
-
-              </View>
-            </ScrollView>
-            <View style={styles.outerBtn}>
-              <TouchableOpacity onPress={() => {
-                setFilterModalVisible(!modalVisible)
-              }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
-                <Text style={styles.btnTxt}>Cancel</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-                <Text style={styles.btnTxt}>Search</Text>
-              </TouchableOpacity>
-            </View>
 
 
           </View>
-        </View>
-      </Modal>
+        </ScrollView>
+
+        <Footer navigation={navigation} />
+
+
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+
+            setFilterModalVisible(!modalVisible);
+          }}
+        >
+          <View style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View style={styles.filterAreaMain}>
+
+              <View style={styles.filterArea}>
+                <Text style={styles.filterAreaText}>FILTER</Text>
+                <TouchableOpacity onPress={() => {
+                  setFilterModalVisible(!modalVisible)
+                }}>
+                  <Text style={styles.filterClearText}>Clear All</Text>
+                </TouchableOpacity>
+
+              </View>
+              <ScrollView style={{ flex: 1 }}>
+                <View style={styles.filterOptionsMain}>
+                  <View style={styles.filterOptions}>
+                    <Text style={styles.filterOptionsText}>Categories</Text>
+                    <Feather name="chevron-down" style={styles.dropdownIcon} />
+
+                  </View>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Men</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Men</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Women</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Kids</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                  </View>
+
+                </View>
+
+                <View style={styles.filterOptionsMain}>
+                  <View style={styles.filterOptions}>
+                    <Text style={styles.filterOptionsText}>Price Filter</Text>
+                    <Feather name="chevron-down" style={styles.dropdownIcon} />
+
+                  </View>
+                  <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{data}</Text>
+                  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+
+                    <Text style={styles.rangeText}>₹0</Text>
+
+                    <Slider
+                      maximumValue={100}
+                      minimumValue={0}
+                      minimumTrackTintColor="#A20101"
+                      maximumTrackTintColor="#A20101"
+                      step={1}
+                      value={data}
+                      onValueChange={
+                        (sliderValue) => setSliderData(sliderValue)
+                      }
+                      thumbTintColor="#1B5E20"
+                      style={{ width: Dimensions.get('window').width - 100, height: 40 }}
+                    />
+                    <Text style={styles.rangeText}>₹100</Text>
+                  </View>
+
+                </View>
+
+                <View style={styles.filterOptionsMain}>
+                  <View style={styles.filterOptions}>
+                    <Text style={styles.filterOptionsText}>Brands</Text>
+                    <Feather name="chevron-down" style={styles.dropdownIcon} />
+
+                  </View>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Hussking</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                    <View style={styles.filterOptionsSection1}>
+                      <Text style={styles.filterOptionsTextOptions}>Genteel</Text>
+                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    </View>
+                  </View>
+
+                </View>
+              </ScrollView>
+              <View style={styles.outerBtn}>
+                <TouchableOpacity onPress={() => {
+                  setFilterModalVisible(!modalVisible)
+                }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
+                  <Text style={styles.btnTxt}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
+                  <Text style={styles.btnTxt}>Search</Text>
+                </TouchableOpacity>
+              </View>
+
+
+            </View>
+          </View>
+        </Modal>
 
 
 
 
-      <ActionSheet ref={actionSheetRef}>
-        <View style={{ backgroundColor: '#fff', padding: 10 }}>
-          <Text style={styles.sortingText}>New Arrival</Text>
-          <Text style={styles.sortingText}>Price: Low to High </Text>
-          <Text style={styles.sortingText}>Price: High to Low</Text>
-          <Text style={styles.sortingText}>Discount: High to Low </Text>
-          <Text style={styles.sortingText}>Rating: High to Low </Text>
-        </View>
-      </ActionSheet>
-    </>
-  )
+        <ActionSheet ref={actionSheetRef}>
+          <View style={{ backgroundColor: '#fff', padding: 10 }}>
+            <Text style={styles.sortingText}>New Arrival</Text>
+            <Text style={styles.sortingText}>Price: Low to High </Text>
+            <Text style={styles.sortingText}>Price: High to Low</Text>
+            <Text style={styles.sortingText}>Discount: High to Low </Text>
+            <Text style={styles.sortingText}>Rating: High to Low </Text>
+          </View>
+        </ActionSheet>
+      </>
+    )
+  }
 
 }
 
