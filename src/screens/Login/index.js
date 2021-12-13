@@ -141,6 +141,10 @@ function Login({ navigation }) {
             toggleOtpModal()
           } else {
             //add user details to localstorage
+            AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
+              navigation.navigate('HomeScreen');
+            })
+
           }
         } else {
 
