@@ -29,6 +29,7 @@ export const TESTIMOIALS = BASE_URL + 'testimonials';
 export const CONTACT_US = BASE_URL + 'contactUs';
 export const CONTACT_US_REQUEST = BASE_URL + 'contactUsMessage';
 
+
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
 export const FORGET_PASSWORD_OTP_CHECK = BASE_URL + 'passwordOtpCheck';
 export const RESEND_OTP = BASE_URL + 'resendOtp';
