@@ -30,7 +30,7 @@ function Search({ navigation }) {
     setResult(result_text)
     if (result_text.length >= 3) {
       console.log(result_text);
-      fetch(SEARCH_SUGGESSION + result_text, {
+      fetch(SEARCH_SUGGESSION + result_text.toLowerCase(), {
         method: "get"
       })
         .then((response) => {
