@@ -32,16 +32,16 @@ import MyPurchased from './src/screens/MyPurchased'
 import Blog from './src/screens/Blog'
 import BlogDetails from './src/screens/BlogDetails'
 import Login from './src/screens/Login'
+import ForgetPassword from './src/screens/ForgetPassword'
 import Signup from "./src/screens/Signup";
 import Search from "./src/screens/Search";
 import Checkout from "./src/screens/Checkout";
 import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
 import OtpScreen from "./src/screens/OtpScreen";
+import OtpScreenForgetPass from "./src/screens/OtpScreenForgetPass";
 import Category from './src/screens/Category';
 import Brands from './src/screens/Brands';
-
-
 
 
 
@@ -86,8 +86,8 @@ function MyDrawer() {
       <Drawer.Screen name="Rewards" component={Rewards} options={{ headerShown: false }} />
       <Drawer.Screen name="Category" component={Category} options={{ headerShown: false }} />
       <Drawer.Screen name="Brands" component={Brands} options={{ headerShown: false }} />
-      
-      
+
+
 
     </Drawer.Navigator>
   );
@@ -118,14 +118,16 @@ function Stack1() {
       <Stack.Screen name="Blog" component={Blog} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} /> */}
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{ headerShown: false }} />
       <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
-       <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
-     {/* <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
+      <Stack.Screen name="OtpScreenForgetPass" component={OtpScreenForgetPass} options={{ headerShown: false }} />
+      <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
       <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
       <Stack.Screen name="Brands" component={Brands} options={{ headerShown: false }} /> */}
-      
+
 
 
     </Stack.Navigator>
@@ -137,15 +139,15 @@ function Stack1() {
 export default function App() {
 
   useEffect(() => {
-    
+
   }, []);
 
   return (
-   
-      <NavigationContainer>
-        <Stack1 />
-      </NavigationContainer>
-  
+
+    <NavigationContainer>
+      <Stack1 />
+    </NavigationContainer>
+
 
   );
 

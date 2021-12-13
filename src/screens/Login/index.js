@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image,ActivityIndicator } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { POST_SIGNIN } from '../../config/ApiConfig'
@@ -9,26 +9,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 GoogleSignin.configure({
   webClientId: '521633579635-41t9q2kkjoj0q0opptpve1b89gcp04bv.apps.googleusercontent.com',
-  
+
 });
 
 
 function Login({ navigation }) {
 
-  
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMsg, setErrorMessage] = useState("")
   const [deviceToken, setDeviceToken] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  
+
 
 
   const _signIn = async () => {
-    
+
     if (username == '') {
       setErrorMessage("Enter Email/Phone");
     } else if (password == '') {
@@ -40,7 +40,7 @@ function Login({ navigation }) {
       formData.append('password', password);
       formData.append('session_id', deviceToken);
 
-     
+
 
 
       fetch(POST_SIGNIN, {
@@ -57,19 +57,19 @@ function Login({ navigation }) {
           return Promise.all([statusCode, data]);
         })
         .then(([status, response]) => {
-           // console.log(response);
-         
+          // console.log(response);
+
           if (status == 200) {
-            if(response.status==false){
+            if (response.status == false) {
               setErrorMessage(response.message);
-            }else{
+            } else {
               setUsername();
               setPassword();
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
                 navigation.navigate('HomeScreen');
               })
             }
-            
+
           } else {
 
             if (response.error != undefined) {
@@ -88,38 +88,38 @@ function Login({ navigation }) {
   }
 
 
-  const onFacebookButtonPress = async() =>{
-    
+  const onFacebookButtonPress = async () => {
+
     // Attempt login with permissions
     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-  
+
     if (result.isCancelled) {
       throw 'User cancelled the login process';
     }
-  
+
     // Once signed in, get the users AccesToken
     const data = await AccessToken.getCurrentAccessToken();
-  
+
     if (!data) {
       throw 'Something went wrong obtaining access token';
     }
-  
+
     // Create a Firebase credential with the AccessToken
     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-    
-  
+
+
     // Sign-in the user with the credential
     return auth().signInWithCredential(facebookCredential);
   }
 
-  const onGoogleButtonPress = async()=> {
+  const onGoogleButtonPress = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
       //this.setState({ userInfo });
     } catch (error) {
-      console.log(error.code,error);
+      console.log(error.code, error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -136,16 +136,16 @@ function Login({ navigation }) {
   useEffect(() => {
     DeviceInfo.getAndroidId().then((androidId) => {
       setDeviceToken(androidId);
-    
+
     });
   }, [navigation]);
 
   return (
     <>
-      <View style={styles.backGround}>    
-      {isLoading?<ActivityIndicator size="large" color="#AB0000" />:<></>}         
+      <View style={styles.backGround}>
+        {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <ScrollView showsVerticalScrollIndicator={false}>
-      
+
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>Sign In</Text>
           </ImageBackground>
@@ -174,7 +174,11 @@ function Login({ navigation }) {
                 }}
               />
             </View>
-            <Text style={[styles.footerText, { alignSelf: 'center' }]}>Forgot password?</Text>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('ForgetPassword');
+            }}>
+              <Text style={[styles.footerText, { alignSelf: 'center' }]}>Forgot password?</Text>
+            </TouchableOpacity>
 
           </View>
 
@@ -190,14 +194,14 @@ function Login({ navigation }) {
             <TouchableOpacity onPress={() => {
               // navigation.navigate('HomeScreen');
               onFacebookButtonPress().then((result) => {
-                console.log('Signed in with Facebook!',result)
+                console.log('Signed in with Facebook!', result)
               })
             }}>
               <Image source={require('../../assets/Image/fb.png')} style={{ width: 47, height: 47, marginLeft: 10 }} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-            onGoogleButtonPress()
-   
+              onGoogleButtonPress()
+
             }}>
               <Image source={require('../../assets/Image/google+.png')} style={{ width: 50, height: 50, marginLeft: 10 }} />
             </TouchableOpacity>

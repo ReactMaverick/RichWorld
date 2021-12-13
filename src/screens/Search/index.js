@@ -3,13 +3,16 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInpu
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
 import styles from "./styles";
-
+import { SEARCH_SUGGESSION } from '../../config/ApiConfig'
 import Voice from '@react-native-community/voice';
 
 function Search({ navigation }) {
 
   const [tab, setTab] = useState(1);
   const [result, setResult] = useState('')
+  const [products, setProducts] = useState([])
+  const [tagvalue, setTagvalue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
 
@@ -23,12 +26,45 @@ function Search({ navigation }) {
 
   }, [navigation]);
 
+  const _search_suggession = async (result_text) => {
+    setResult(result_text)
+    if (result_text.length >= 3) {
+      console.log(result_text);
+      fetch(SEARCH_SUGGESSION + result_text, {
+        method: "get"
+      })
+        .then((response) => {
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            if (response.tagvalue.length > 0) {
+              setTagvalue(response.tagvalue);
+              setProducts([]);
+            } else {
+              setTagvalue('');
+              setProducts(response.product);
+            }
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false)
+        });
+    } else {
+      setProducts([]);
+    }
 
+  }
   const onSpeechStartHandler = (e) => {
     console.log("start handler==>>>", e)
   }
   const onSpeechEndHandler = (e) => {
-   // setLoading(false)
+    // setLoading(false)
     console.log("stop handler", e)
   }
 
@@ -39,7 +75,7 @@ function Search({ navigation }) {
   }
 
   const startRecording = async () => {
-   // setLoading(true)
+    // setLoading(true)
     try {
       await Voice.start('en-Us')
     } catch (error) {
@@ -60,11 +96,12 @@ function Search({ navigation }) {
 
       <View style={styles.searchSection}>
         <AntDesign name="search1" style={styles.searchIcon} />
-        <TextInput 
-        style={styles.searchSectionText} 
-        autoFocus={true} 
-        placeholder="Search your products, brands...."
-        onChangeText={(result) => setResult(result)}
+        <TextInput
+          style={styles.searchSectionText}
+          autoFocus={true}
+          placeholder="Search your products, brands...."
+          value={result}
+          onChangeText={(result) => _search_suggession(result)}
         />
         <TouchableOpacity style={styles.searchBoxAudio}
           onPressIn={() => {
@@ -79,40 +116,34 @@ function Search({ navigation }) {
       </View>
 
       <View style={styles.searchMainSection}>
-
-
-        <View style={styles.searchResult}>
-          <View>
-            <Image source={require('../../assets/Image/ProductImg.png')} style={styles.searchImage} />
-          </View>
-          <View>
-            <Text style={styles.searchResultText}>Lorem Ipsum has been the industry's </Text>
-            <Text style={styles.searchResultTextCat}>Lorem Ipsum </Text>
-          </View>
+        {tagvalue.length > 0 ?
+          < TouchableOpacity onPress={() => {
+            navigation.navigate('ProductList', { title1: tagvalue, title2: "", filterParam: { 'search': tagvalue } })
+          }}  style={styles.searchResult} >
+        
+        <View>
+          <Text style={styles.searchResultText}>{tagvalue} </Text>
         </View>
-
-        <View style={styles.searchResult}>
-          <View>
-            <Image source={require('../../assets/Image/ProductImg.png')} style={styles.searchImage} />
-          </View>
-          <View>
-            <Text style={styles.searchResultText}>Lorem Ipsum has been the industry's </Text>
-            <Text style={styles.searchResultTextCat}>Lorem Ipsum </Text>
-          </View>
+      </TouchableOpacity>
+      : 
+      products.map((item, key) => (
+      <TouchableOpacity onPress={() => {
+        navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id })
+      }} style={styles.searchResult} key={key} >
+        <View>
+          <Image source={{ uri: item.image_path }} style={styles.searchImage} />
         </View>
-
-        <View style={styles.searchResult}>
-          <View>
-            <Image source={require('../../assets/Image/ProductImg.png')} style={styles.searchImage} />
-          </View>
-          <View>
-            <Text style={styles.searchResultText}>Lorem Ipsum has been the industry's </Text>
-            <Text style={styles.searchResultTextCat}>Lorem Ipsum </Text>
-          </View>
+        <View>
+          <Text style={styles.searchResultText}>{item.products_name} </Text>
+          <Text style={styles.searchResultTextCat}>{item.categories_name} </Text>
         </View>
+      </TouchableOpacity>
+      ))
+      }
 
 
-      </View>
+
+    </View>
     </>
   )
 

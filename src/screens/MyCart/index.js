@@ -21,6 +21,12 @@ function MyCart({ navigation }) {
   const [isLogin, setIsLogin] = useState(false);
   const [cartList, setCartList] = useState([]);
   const [android_id, setAndroidId] = useState("");
+  
+  const [subTotal, setSubTotal] = useState(0);
+  const [loyalttyPoint, setLoyalttyPoint] = useState(0);
+  const [totalTax, setTotalTax] = useState(0);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [deliveryCharges, setDeliveryCharges] = useState(0);
 
 
   const _getCartList = async (customers_id,session_id) => {
@@ -37,6 +43,8 @@ function MyCart({ navigation }) {
         if (status == 200) {
           // console.log(JSON.stringify(response, null, " "));
           setCartList(response.cart)
+          // _calculateAmounts(response.cart,response.shipping_detail)
+
         } else {
           console.log(status, response);
         }
@@ -66,7 +74,7 @@ function MyCart({ navigation }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          console.log(JSON.stringify(response, null, " "));
+          // console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             if (isLogin) {
               _getCartList(userData.id, "");
@@ -109,7 +117,7 @@ function MyCart({ navigation }) {
   const _discountCalculation = (final_price,prodDiscountRate) =>{
         final_price = parseInt(final_price);
         var discountedPrice = final_price - ((final_price*prodDiscountRate)/100);
-        console.log(discountedPrice);
+        // console.log(discountedPrice);
         return discountedPrice.toFixed(2);;
   }
   useEffect(() => {
@@ -159,7 +167,7 @@ function MyCart({ navigation }) {
         {cartList.map((item, key) => (
         <View style={styles.outerBox} key={key}>
         <View style={{ flexDirection:'row' }}>
-          <Image source={{ uri: "https://demo.richworld.online/images/media/2021/09/uZakD16503.png" }} style={styles.userImage } />
+          <Image source={{ uri: item.image_path }} style={styles.userImage } />
           <View style={styles.leftBox}>
             <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
             <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price,item.prodDiscountRate)}</Text>
@@ -227,28 +235,28 @@ function MyCart({ navigation }) {
             <View style={styles.priceLine}></View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Sub Total</Text>
-              <Text style={styles.priceItemText}>₹2600.00</Text>
+              <Text style={styles.priceItemText}>₹{subTotal}</Text>
             </View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
               <View style={{flexDirection:'row',alignItems:'center'}}>
-              <Text style={styles.priceItemText}>4</Text>
+              <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
               <Image source={require('../../assets/Image/loyalty.png')} style={{width:30,height:30,marginLeft:5}} />
               </View>
               
             </View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Total Tax</Text>
-              <Text style={styles.priceItemText}>₹20.00</Text>
+              <Text style={styles.priceItemText}>₹{totalTax}</Text>
             </View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Discount(Coupon)</Text>
-              <Text style={[styles.priceItemText, { color: 'red' }]}>-₹700.00</Text>
+              <Text style={[styles.priceItemText, { color: 'red' }]}>-₹{couponDiscount}</Text>
             </View>
 
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Delivery Charges</Text>
-              <Text style={[styles.priceItemText, { color: 'red' }]}>FREE</Text>
+              <Text style={[styles.priceItemText, { color: 'red' }]}>{deliveryCharges}</Text>
             </View>
             <View style={styles.priceLine}></View>
 
