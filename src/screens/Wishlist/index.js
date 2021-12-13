@@ -3,7 +3,7 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
-import { VIEW_WISHLIST, ADD_WISHLIST, ADD_TO_CART } from '../../config/ApiConfig';
+import { VIEW_WISHLIST, ADD_WISHLIST } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 function Wishlist({ navigation }) {
@@ -66,40 +66,14 @@ function Wishlist({ navigation }) {
         setIsLoading(false)
       });
   }
-  const _addToCart = (products_id, attributes_ids,quantity) => {
-    setIsLoading(true)
-   const formData = new FormData();
-   var customers_id = "";
-   var session_id = "";
-   if( isLogin ){
-     customers_id = userData.id;
-   }else{
-     session_id = androidId;
-   }
 
-   formData.append('customers_id', customers_id);
-   formData.append('session_id', session_id);
-   formData.append('products_id', products_id);
-   formData.append('prod_attributeids', attributes_ids);
-   formData.append('quantity', quantity); 
-   console.log(JSON.stringify(formData, null, " "));
-   fetch(ADD_TO_CART, {
-     method: "POST",
-     body: formData
-   }).then((response) => {
-     const statusCode = response.status;
-     const data = response.json();
-     return Promise.all([statusCode, data]);
-   }).then(([status, response]) => {
-     if (status == 200) {
-       console.log("response", response)
-     }
-   })
-     .catch((error) => console.log("error", error))
-     .finally(() => {
-       setIsLoading(false)
-     });
- }
+  const stringFormat = (str) =>{
+    if(str.length > 50 ){
+      return str.substring(0,50)+'...';
+    }else{
+      return str;
+    }
+  }
   useEffect(() => {
     if (isFocused) {
       AsyncStorage.getItem('userData').then((userData) => {
@@ -125,11 +99,10 @@ function Wishlist({ navigation }) {
       <ScrollView style={{ flex: 1 }}>
         {Products.map((item, key) => (
           <View style={styles.outerBox} key={key}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1,flexDirection:"row" }}>
               <Image source={{ uri: basePath + "/" + item.image_path }} style={styles.userImage} />
-
               <View style={styles.leftBox}>
-                <Text style={styles.leftText1}>{item.products_name}	</Text>
+                <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
                 <Text style={styles.leftText2}>₹{item.discounted_price}</Text>
               </View>
             </View>
@@ -140,18 +113,10 @@ function Wishlist({ navigation }) {
               }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
                 <Text style={styles.btnTxt}>Remove</Text>
               </TouchableOpacity>
-              {item.defaultStock <=0 ?
-              <View style={[styles.btn, { backgroundColor: '#000000' }]}>
-              <Text style={styles.btnTxt}>Out Of Stock</Text>
-            </View>
-              :
-              <TouchableOpacity onPress={() => {
-                _addToCart(item.products_id, item.attributes_ids, 1)
-              }} style={[styles.btn, { backgroundColor: '#000000' }]}>
+
+              <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
                 <Text style={styles.btnTxt}>Add to cart</Text>
               </TouchableOpacity>
-            }
-              
             </View>
           </View>
         ))}

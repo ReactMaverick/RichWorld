@@ -110,6 +110,7 @@ function Signup({ navigation }) {
                 style={[styles.textInput]}
                 onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
                 keyboardType={'phone-pad'}
+                maxLength={10}
                 onFocus={() => {
                   setErrorMessage('')
                 }}

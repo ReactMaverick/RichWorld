@@ -27,7 +27,7 @@ function Myaccount({ navigation }) {
 
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
-          // console.log(userData);
+         //  console.log(userData);
           setIsLogin(true)
           setUserData(JSON.parse(userData))
         } else {
@@ -36,13 +36,13 @@ function Myaccount({ navigation }) {
         }
       })
     }
-  }, [navigation, isFocused]);
+  }, [navigation, isFocused,userData]);
 
 
 
   const _uploadProfileImage = async (image) => {
     // setisLoading(true);
-    console.log(image.path);
+    //console.log(image.path);
     const imagePath = image.path;
     const arr = imagePath.split("/")
     const formData = new FormData();
@@ -66,8 +66,13 @@ function Myaccount({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
-        console.log(response)
-        // console.log(response)
+       // console.log(response)
+        
+        let tempUserData = userData;
+        tempUserData.customer_image = response.base_path+'/'+response.user_details.customer_image;
+        setUserData(tempUserData);
+        AsyncStorage.setItem('userData', JSON.stringify(tempUserData))
+
       }
     })
       .catch((error) => console.log("error", error))
