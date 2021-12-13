@@ -27,6 +27,7 @@ function MyCart({ navigation }) {
   const [totalTax, setTotalTax] = useState(0);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
 
   const _getCartList = async (customers_id,session_id) => {
@@ -43,7 +44,7 @@ function MyCart({ navigation }) {
         if (status == 200) {
           // console.log(JSON.stringify(response, null, " "));
           setCartList(response.cart)
-          // _calculateAmounts(response.cart,response.shipping_detail)
+          _calculateAmounts(response.cart,response.shipping_detail)
 
         } else {
           console.log(status, response);
@@ -53,6 +54,63 @@ function MyCart({ navigation }) {
       .finally(() => {
         setIsLoading(false)
       });
+  }
+
+  // _calculateAmounts
+  const _calculateAmounts = (cart, shipping_detail) => {
+    var finalCuponDiscount = 0;
+    var totalTax = 0;
+    var userLoyaltyPoint = 0;
+    var total_used_lp = 0;
+    var beforeDiscTaxableAmountTotal = 0;
+    var afterDiscTaxableAmountTotal = 0;
+    var allProductTotal = 0;
+    var coupon_discount_percent = 0;
+
+    cart.map((item, key) => {
+      if (item.prodDiscountRate!='') {
+        var tPrice = item.final_price * item.customers_basket_quantity;
+        var disc = ((item.final_price*item.prodDiscountRate)/100)*item.customers_basket_quantity;
+        var sellingPrice = tPrice-disc;
+    }else{
+      var tPrice = item.final_price * item.customers_basket_quantity;
+      var disc = 0;
+      var sellingPrice = tPrice-disc;
+    }
+    var initSellingPrice = sellingPrice;
+    var beforeDiscTaxableAmount = sellingPrice;
+
+    if (item.proTaxType!='' && item.taxRate!='') {
+        if (item.proTaxType=='Inclusive') {
+            beforeDiscTaxableAmount = (initSellingPrice/(1+(item.taxRate/100)));
+        }
+    }
+
+    beforeDiscTaxableAmountTotal = beforeDiscTaxableAmountTotal+beforeDiscTaxableAmount;
+
+    if (coupon_discount_percent>0) {
+        var cuponDiscount = beforeDiscTaxableAmount*(coupon_discount_percent/100);
+    }else{
+        var cuponDiscount = 0;
+    }
+    var afterDiscTaxableAmount = beforeDiscTaxableAmount-cuponDiscount;
+
+    finalCuponDiscount = finalCuponDiscount+cuponDiscount;
+    afterDiscTaxableAmountTotal = afterDiscTaxableAmountTotal+afterDiscTaxableAmount;
+
+    if (item.proTaxType!='' && item.taxRate!='') {
+        var tax = afterDiscTaxableAmount*(item.taxRate/100);
+    }else{
+      var tax = 0;
+    }
+    
+    totalTax = totalTax+tax;
+
+    var productTotal = afterDiscTaxableAmount+tax;
+    allProductTotal = allProductTotal+productTotal;
+    })
+    // console.log("allProductTotal: ",allProductTotal);
+    discountedPrice.toFixed(2)
   }
 
   const _updateCartQuantity = (customers_basket_id, products_id, customers_basket_quantity, AttributeIds) => {
@@ -118,7 +176,7 @@ function MyCart({ navigation }) {
         final_price = parseInt(final_price);
         var discountedPrice = final_price - ((final_price*prodDiscountRate)/100);
         // console.log(discountedPrice);
-        return discountedPrice.toFixed(2);;
+        return discountedPrice.toFixed(2);
   }
   useEffect(() => {
   
@@ -129,6 +187,7 @@ function MyCart({ navigation }) {
         setIsLogin(true)
         setUserData(JSON.parse(userData))
         var userDetails = JSON.parse(userData)
+        setLoyalttyPoint(parseInt(userDetails.userLoyaltyPoint));
         _getCartList(userDetails.id, "");
       } else {
         setIsLogin(false)
@@ -262,14 +321,14 @@ function MyCart({ navigation }) {
 
             <View style={styles.priceItem}>
               <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
-              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹1900.00</Text>
+              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹{totalPrice}</Text>
             </View>
           </View>
 
         </View>
         <View style={styles.outerBoxCheckout}>
           <View>
-            <Text style={styles.priceAmount}>₹1900.00</Text>
+            <Text style={styles.priceAmount}>₹{totalPrice}</Text>
           </View>
           <TouchableOpacity onPress={() => {
             navigation.navigate('Checkout');
