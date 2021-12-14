@@ -40,17 +40,17 @@ export default StyleSheet.create({
         justifyContent: "flex-start",
         flexDirection: 'row',
         alignItems: 'center',
-        padding:10,
+        padding: 10,
     },
-    searchBoxAudio:{
-        backgroundColor:"#AB0000",
+    searchBoxAudio: {
+        backgroundColor: "#AB0000",
         height: '100%',
         paddingLeft: 15,
         paddingRight: 2,
         flexDirection: 'row',
         alignItems: 'center',
     },
-    menuIconMic:{
+    menuIconMic: {
         flexDirection: 'row',
         alignItems: 'center',
         fontSize: 24,
@@ -105,6 +105,23 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    countOuter: {
+        
+        marginTop:-10,
+        marginLeft:-3,
+        width: 20,
+        height: 20,
+        backgroundColor: '#AB0000',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex:1
+
+    },
+    countText: {
+        fontSize: 10,
+        color:'#fff'
     }
 
 });

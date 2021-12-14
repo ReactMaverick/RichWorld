@@ -32,6 +32,7 @@ function MyCart({ navigation }) {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
+  
 
   const _getCartList = async (customers_id, session_id) => {
     fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
