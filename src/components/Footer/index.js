@@ -12,9 +12,11 @@ import { useSelector, useDispatch } from "react-redux";
 function Footer({ navigation }) {
     const dispatch = useDispatch();
     
-    const userData = useSelector(
-        (state) => state.authReducer
-    );
+    const userData = useSelector((state) => {
+        
+      return state.authReducer;
+    });
+    //console.log(userData);
   
     useEffect(() => {
         
