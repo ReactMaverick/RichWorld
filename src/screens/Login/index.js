@@ -9,6 +9,7 @@ import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+import { useSelector,useDispatch } from "react-redux";
 
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
@@ -24,6 +25,7 @@ GoogleSignin.configure({
 
 function Login({ navigation }) {
 
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -41,6 +43,15 @@ function Login({ navigation }) {
 
   const [socialOtpCheck, setSocialOtpCheck] = useState(false);
   const [otpInput, setOtp] = useState("");
+
+
+  const setUserData = (item) =>
+  dispatch({
+    type: "LOGINUSER",
+    payload: {
+      item
+    },
+  });
 
 
   const toggleOtpModal = () => {
@@ -85,6 +96,7 @@ function Login({ navigation }) {
             } else {
               setUsername();
               setPassword();
+              setUserData(response.userDetails[0])
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
                 navigation.navigate('HomeScreen');
               })
@@ -141,6 +153,7 @@ function Login({ navigation }) {
             toggleOtpModal()
           } else {
             //add user details to localstorage
+            setUserData(response.userDetails[0])
             AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
               navigation.navigate('HomeScreen');
             })
@@ -250,6 +263,7 @@ function Login({ navigation }) {
             if (response.status == false) {
               setErrorMessage(response.message);
             } else {
+              setUserData(response.userDetails[0])
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
                 navigation.navigate('HomeScreen');
               })

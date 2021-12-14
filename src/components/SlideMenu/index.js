@@ -10,8 +10,26 @@ import Feather from 'react-native-vector-icons/Feather'
 import { DrawerActions } from '@react-navigation/native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 
+
+import { useSelector,useDispatch } from "react-redux";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 function SlideMenu({ navigation }) {
+
+    
+  const dispatch = useDispatch();
+ 
+  const userData = useSelector(
+    (state) => state.authReducer
+);
+
+
+  
+  const setUserData = () =>
+  dispatch({
+    type: "LOGOUT",
+    
+  });
 
     const isDrawerOpen = useDrawerStatus()
     const [isLogin, setIsLogin] = useState(false);
@@ -39,17 +57,28 @@ function SlideMenu({ navigation }) {
 
 
             <TouchableOpacity onPress={() => {
-
-                navigation.dispatch(DrawerActions.toggleDrawer())
-                navigation.navigate('MyCart');
+ if(userData==null){
+    navigation.navigate('Login');
+}else{
+    navigation.dispatch(DrawerActions.toggleDrawer())
+    navigation.navigate('MyCart');
+}
+            
             }} style={styles.menuItem}>
                 <View style={{ width: 30 }}><Entypo name="shopping-cart" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>MyCart</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => {
-                navigation.dispatch(DrawerActions.toggleDrawer())
-                navigation.navigate('Rewards');
+                
+ if(userData==null){
+    navigation.navigate('Login');
+}else{
+    navigation.dispatch(DrawerActions.toggleDrawer())
+    navigation.navigate('Rewards');
+}
+          
+               
             }} style={styles.menuItem}>
                 <View style={{ width: 30 }}><Feather name="gift" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Rewards</Text>
@@ -124,6 +153,7 @@ function SlideMenu({ navigation }) {
                 </TouchableOpacity> :
                  <TouchableOpacity onPress={() => {
                     AsyncStorage.clear().then(()=>{
+                        setUserData();
                         setIsLogin(true)
                         navigation.navigate('HomeScreen');
                     })

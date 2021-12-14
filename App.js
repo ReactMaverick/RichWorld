@@ -43,11 +43,14 @@ import OtpScreenForgetPass from "./src/screens/OtpScreenForgetPass";
 import Category from './src/screens/Category';
 import Brands from './src/screens/Brands';
 
+import configureStore from './src/redux/store'
+import { Provider } from "react-redux";
+
+const store = configureStore();
 
 
 
-
-
+import { useSelector,useDispatch } from "react-redux";
 
 const Drawer = createDrawerNavigator();
 
@@ -143,11 +146,11 @@ export default function App() {
   }, []);
 
   return (
-
-    <NavigationContainer>
-      <Stack1 />
+    <Provider store={store}>
+    <NavigationContainer>     
+      <Stack1 />           
     </NavigationContainer>
-
+    </Provider>
 
   );
 

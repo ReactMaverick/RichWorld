@@ -11,8 +11,27 @@ import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
+import auth from '@react-native-firebase/auth';
 const actionSheetRef = createRef();
+
+
+import { useSelector, useDispatch } from "react-redux";
+
 function Myaccount({ navigation }) {
+
+  const dispatch = useDispatch();
+
+  const logoutData = () =>
+    dispatch({
+      type: "LOGOUT",
+
+    });
+
+
+  const loginData = useSelector(
+    (state) => state.authReducer
+  );
+
 
   const isFocused = useIsFocused();
   const [profileImage, setProfileImage] = useState();
@@ -27,7 +46,7 @@ function Myaccount({ navigation }) {
 
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
-         //  console.log(userData);
+          //  console.log(userData);
           setIsLogin(true)
           setUserData(JSON.parse(userData))
         } else {
@@ -36,7 +55,7 @@ function Myaccount({ navigation }) {
         }
       })
     }
-  }, [navigation, isFocused,userData]);
+  }, [navigation, isFocused, userData]);
 
 
 
@@ -66,10 +85,10 @@ function Myaccount({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
-       // console.log(response)
-        
+        // console.log(response)
+
         let tempUserData = userData;
-        tempUserData.customer_image = response.base_path+'/'+response.user_details.customer_image;
+        tempUserData.customer_image = response.base_path + '/' + response.user_details.customer_image;
         setUserData(tempUserData);
         AsyncStorage.setItem('userData', JSON.stringify(tempUserData))
 
@@ -101,6 +120,14 @@ function Myaccount({ navigation }) {
       alert(error.message);
     }
   };
+  const socialSignOut = async () =>{
+    try{
+    await  auth().signOut();
+    }catch (error) {
+      console.log(error.message);
+    }
+    
+  }
 
   return (
     <>
@@ -175,10 +202,21 @@ function Myaccount({ navigation }) {
 
         {isLogin ?
           <TouchableOpacity onPress={() => {
-            AsyncStorage.clear().then(() => {
-              setIsLogin(true)
-              navigation.navigate('HomeScreen');
-            })
+
+              AsyncStorage.clear().then(() => {
+                logoutData()
+                setIsLogin(true)
+                try{
+                  socialSignOut()
+                }catch(e){
+
+                }
+               
+                navigation.navigate('HomeScreen');
+              })
+            
+
+
           }} style={styles.menuItem}>
 
             <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
@@ -191,7 +229,7 @@ function Myaccount({ navigation }) {
             <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
             <Text style={styles.menuText}>Login</Text>
           </TouchableOpacity>
-          
+
         }
 
 

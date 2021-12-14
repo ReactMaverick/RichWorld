@@ -71,6 +71,7 @@ function Search({ navigation }) {
   const onSpeechResultsHandler = (e) => {
     let text = e.value[0]
     setResult(text)
+    _search_suggession(text)
     console.log("speech result handler", e)
   }
 

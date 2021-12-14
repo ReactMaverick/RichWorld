@@ -137,7 +137,8 @@ function MyCart({ navigation }) {
           _getCartList("",androidId)
         });
       }
-    })}
+    })
+  }
   }, [navigation, isFocused]);
 
   return (
