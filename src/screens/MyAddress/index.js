@@ -17,6 +17,9 @@ function MyAddress({ navigation }) {
   const [isLogin, setIsLogin] = useState(false);
   const [billingAddressList, setBillingAddress] = useState({});
   const [shippingAddressList, setShippingAddressList] = useState([]);
+  const [errorMsg, setErrorMessage] = useState("")
+  const [addErrorMsg, setAddErrorMessage] = useState("")
+
 
   const [addressBookId, setAddressBookId] = useState('')
   const [entryStreetAddress, setEntryStreetAddress] = useState('')
@@ -57,66 +60,102 @@ function MyAddress({ navigation }) {
       });
   }
   const _addShippingAddress = () => {
-    setIsLoading(true)
-    const formData = new FormData();
-    formData.append('user_id', userData.id);
-    formData.append('address_type', 'shipping');
-    formData.append('entry_firstname', entryFirstname);
-    formData.append('entry_street_address', entryStreetAddress);
-    formData.append('entry_city', entryCity);
-    formData.append('entry_state', entryState);
-    formData.append('entry_postcode', entryPostcode);
-    formData.append('entry_phone', entryPhone);
-    formData.append('entry_email', entryEmail);
-    fetch(ADD_MY_ADDRESS, {
-      method: "POST",
-      body: formData
-    }).then((response) => {
-      const statusCode = response.status;
-      const data = response.json();
-      return Promise.all([statusCode, data]);
-    }).then(([status, response]) => {
-      if (status == 200) {
-        console.log(response)
-        _getMyAdderss(userData.id)
-      }
-    })
-      .catch((error) => console.log("error", error))
-      .finally(() => {
-        // toggleAddAddressModal()
-        setIsLoading(false)
-      });
+    if (entryFirstname == '') {
+      setAddErrorMessage("Enter First Name");
+    } else if (entryStreetAddress == '') {
+      setAddErrorMessage("Enter Street Address");
+    } else if (entryCity == '') {
+      setAddErrorMessage("Enter City");
+    } else if (entryState == '') {
+      setAddErrorMessage("Enter State");
+    } else if (entryPostcode == '') {
+      setAddErrorMessage("Enter Postcode");
+    } else if (entryPhone == '') {
+      setAddErrorMessage("Enter Phone");
+    } else if (entryEmail == '') {
+      setAddErrorMessage("Enter Email");
+    } else {
+      setIsLoading(true)
+      const formData = new FormData();
+      formData.append('user_id', userData.id);
+      formData.append('address_type', 'shipping');
+      formData.append('entry_firstname', entryFirstname);
+      formData.append('entry_street_address', entryStreetAddress);
+      formData.append('entry_city', entryCity);
+      formData.append('entry_state', entryState);
+      formData.append('entry_postcode', entryPostcode);
+      formData.append('entry_phone', entryPhone);
+      formData.append('entry_email', entryEmail);
+      fetch(ADD_MY_ADDRESS, {
+        method: "POST",
+        body: formData
+      }).then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      }).then(([status, response]) => {
+        if (status == 200) {
+          console.log(response)
+          _getMyAdderss(userData.id)
+        }
+      })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          // toggleAddAddressModal()
+          setIsLoading(false)
+        });
+    }
+
   }
 
   const _updateShippingAddress = () => {
-    setIsLoading(true)
-    const formData = new FormData();
-    formData.append('address_book_id', addressBookId);
-    formData.append('entry_firstname', entryFirstname);
-    formData.append('entry_street_address', entryStreetAddress);
-    formData.append('entry_city', entryCity);
-    formData.append('entry_state', entryState);
-    formData.append('entry_postcode', entryPostcode);
-    formData.append('entry_phone', entryPhone);
-    formData.append('entry_email', entryEmail);
-    fetch(UPDATE_SHIPPING_ADDRESS, {
-      method: "POST",
-      body: formData
-    }).then((response) => {
-      const statusCode = response.status;
-      const data = response.json();
-      return Promise.all([statusCode, data]);
-    }).then(([status, response]) => {
-      if (status == 200) {
-        console.log(response)
-        _getMyAdderss(userData.id)
-      }
-    })
-      .catch((error) => console.log("error", error))
-      .finally(() => {
-        toggleAddressModal()
-        // setIsLoading(false)
-      });
+    if (addressBookId == '') {
+      setErrorMessage("No Address Selected! ");
+    } else if (entryFirstname == '') {
+      setErrorMessage("Enter First Name");
+    } else if (entryStreetAddress == '') {
+      setErrorMessage("Enter Street Address");
+    } else if (entryCity == '') {
+      setErrorMessage("Enter City");
+    } else if (entryState == '') {
+      setErrorMessage("Enter State");
+    } else if (entryPostcode == '') {
+      setErrorMessage("Enter Postcode");
+    } else if (entryPhone == '') {
+      setErrorMessage("Enter Phone");
+    } else if (entryEmail == '') {
+      setErrorMessage("Enter Email");
+    } else {
+      setIsLoading(true)
+      const formData = new FormData();
+      formData.append('address_book_id', addressBookId);
+      formData.append('entry_firstname', entryFirstname);
+      formData.append('entry_street_address', entryStreetAddress);
+      formData.append('entry_city', entryCity);
+      formData.append('entry_state', entryState);
+      formData.append('entry_postcode', entryPostcode);
+      formData.append('entry_phone', entryPhone);
+      formData.append('entry_email', entryEmail);
+      fetch(UPDATE_SHIPPING_ADDRESS, {
+        method: "POST",
+        body: formData
+      }).then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      }).then(([status, response]) => {
+        if (status == 200) {
+          console.log(response)
+          _getMyAdderss(userData.id)
+        }
+      })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          toggleAddressModal()
+          // setIsLoading(false)
+        });
+    }
+
   }
 
   const _setAddressData = async (address) => {
@@ -218,9 +257,15 @@ function MyAddress({ navigation }) {
             <TouchableOpacity onPress={toggleAddressModal}>
               <AntDesign name="close" style={styles.closeBtn} />
             </TouchableOpacity>
-
-
           </View>
+          {errorMsg != '' ?
+            <View style={styles.headerPopup}>
+              <Text style={styles.errorMessage}>{errorMsg}</Text>
+            </View>
+            :
+            <></>
+          }
+
 
           <View style={styles.textInputOuter}>
             <TextInput
@@ -228,6 +273,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryFirstname}
               onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -236,6 +284,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryStreetAddress}
               onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -244,6 +295,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryCity}
               onChangeText={(entryCity) => setEntryCity(entryCity)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -252,6 +306,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryState}
               onChangeText={(entryState) => setEntryState(entryState)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -260,6 +317,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryPostcode}
               onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -268,6 +328,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryPhone}
               onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
 
@@ -277,6 +340,9 @@ function MyAddress({ navigation }) {
               style={[styles.textInput]}
               value={entryEmail}
               onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+              onFocus={() => {
+                setErrorMessage('')
+              }}
             />
           </View>
 
@@ -298,12 +364,21 @@ function MyAddress({ navigation }) {
 
 
           </View>
-
+          {addErrorMsg != '' ?
+            <View style={styles.headerPopup}>
+              <Text style={styles.errorMessage}>{addErrorMsg}</Text>
+            </View>
+            :
+            <></>
+          }
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Full Name'}
               style={[styles.textInput]}
               onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -311,6 +386,9 @@ function MyAddress({ navigation }) {
               placeholder={'Street Address'}
               style={[styles.textInput]}
               onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -318,6 +396,9 @@ function MyAddress({ navigation }) {
               placeholder={'Town / City'}
               style={[styles.textInput]}
               onChangeText={(entryCity) => setEntryCity(entryCity)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -325,6 +406,9 @@ function MyAddress({ navigation }) {
               placeholder={'State'}
               style={[styles.textInput]}
               onChangeText={(entryState) => setEntryState(entryState)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -332,6 +416,9 @@ function MyAddress({ navigation }) {
               placeholder={'Postcode / ZIP'}
               style={[styles.textInput]}
               onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
           <View style={styles.textInputOuter}>
@@ -339,6 +426,9 @@ function MyAddress({ navigation }) {
               placeholder={'Phone'}
               style={[styles.textInput]}
               onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
 
@@ -347,6 +437,9 @@ function MyAddress({ navigation }) {
               placeholder={'Email Address'}
               style={[styles.textInput]}
               onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
 

@@ -367,7 +367,11 @@ function Login({ navigation }) {
                 }}
               />
             </View>
-            <Text style={[styles.footerText, { alignSelf: 'center' }]}>Forgot password?</Text>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('ForgetPassword');
+            }}>
+              <Text style={[styles.footerText, { alignSelf: 'center' }]}>Forgot password?</Text>
+            </TouchableOpacity>
 
           </View>
 

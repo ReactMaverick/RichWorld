@@ -228,7 +228,24 @@ export default StyleSheet.create({
        margin:10,
        marginTop:'15%',
        color:'#A20101'
+    },
+    errorOuter:{
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 10,
+        backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 15,
+        paddingBottom: 15,
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",},
+    error:{
+        fontFamily: 'Poppins-Regular',
+        color: 'red',
+        fontSize: 14 
     }
-
 
 });

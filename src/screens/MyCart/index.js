@@ -14,22 +14,26 @@ import { useIsFocused } from "@react-navigation/native";
 const actionSheetRef = createRef();
 function MyCart({ navigation }) {
 
-  const [check, setCheck] = useState(1);
+  const [check, setCheck] = useState();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [cartList, setCartList] = useState([]);
+  const [loyaltyPointDetails, setLoyaltyPointDetails] = useState({});
+  const [userShippingAddressList, setUserShippingAddressList] = useState([]);
   const [android_id, setAndroidId] = useState("");
-  
+  const [addressError, setAddressError] = useState(false);
+
   const [subTotal, setSubTotal] = useState(0);
   const [loyalttyPoint, setLoyalttyPoint] = useState(0);
   const [totalTax, setTotalTax] = useState(0);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
 
-  const _getCartList = async (customers_id,session_id) => {
+  const _getCartList = async (customers_id, session_id) => {
     fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
       method: "get",
     })
@@ -43,7 +47,9 @@ function MyCart({ navigation }) {
         if (status == 200) {
           // console.log(JSON.stringify(response, null, " "));
           setCartList(response.cart)
-          // _calculateAmounts(response.cart,response.shipping_detail)
+          setLoyaltyPointDetails(response.loyalty_point_details)
+          setUserShippingAddressList(response.userShippingAddressList)
+          _calculateAmounts(response.cart, response.shipping_detail)
 
         } else {
           console.log(status, response);
@@ -55,6 +61,99 @@ function MyCart({ navigation }) {
       });
   }
 
+  // _calculateAmounts
+  const _calculateAmounts = (cart, shipping_detail) => {
+    var finalCuponDiscount = 0;
+    var totalTax = 0;
+    var userLoyaltyPoint = 0;
+    var total_used_lp = 0;
+    var beforeDiscTaxableAmountTotal = 0;
+    var afterDiscTaxableAmountTotal = 0;
+    var allProductTotal = 0;
+    var coupon_discount_percent = 0;
+
+    if (isLogin) {
+      if (userData.userLoyaltyPoint > loyaltyPointDetails.max_point_per_order) {
+        userLoyaltyPoint = loyaltyPointDetails.max_point_per_order;
+      } else {
+        userLoyaltyPoint = userData.userLoyaltyPoint;
+      }
+    }
+
+    cart.map((item, key) => {
+      if (item.prodDiscountRate != '') {
+        var tPrice = item.final_price * item.customers_basket_quantity;
+        var disc = ((item.final_price * item.prodDiscountRate) / 100) * item.customers_basket_quantity;
+        var sellingPrice = tPrice - disc;
+      } else {
+        var tPrice = item.final_price * item.customers_basket_quantity;
+        var disc = 0;
+        var sellingPrice = tPrice - disc;
+      }
+      var initSellingPrice = sellingPrice;
+      var beforeDiscTaxableAmount = sellingPrice;
+
+      if (item.proTaxType != '' && item.taxRate != '') {
+        if (item.proTaxType == 'Inclusive') {
+          beforeDiscTaxableAmount = (initSellingPrice / (1 + (item.taxRate / 100)));
+        }
+      }
+
+      beforeDiscTaxableAmountTotal = beforeDiscTaxableAmountTotal + beforeDiscTaxableAmount;
+
+      if (coupon_discount_percent > 0) {
+        var cuponDiscount = beforeDiscTaxableAmount * (coupon_discount_percent / 100);
+      } else {
+        var cuponDiscount = 0;
+      }
+      var afterDiscTaxableAmount = beforeDiscTaxableAmount - cuponDiscount;
+
+      finalCuponDiscount = finalCuponDiscount + cuponDiscount;
+      afterDiscTaxableAmountTotal = afterDiscTaxableAmountTotal + afterDiscTaxableAmount;
+
+      if (item.proTaxType != '' && item.taxRate != '') {
+        var tax = afterDiscTaxableAmount * (item.taxRate / 100);
+      } else {
+        var tax = 0;
+      }
+      totalTax = totalTax + tax;
+
+      var productTotal = afterDiscTaxableAmount + tax;
+      allProductTotal = allProductTotal + productTotal;
+
+      if (isLogin) {
+        var show_LP = 0;
+        var show_LP_value = 0;
+        if (item.pro_loyalty_point > 0 && userLoyaltyPoint > 0) {
+
+          var ttl_p_lp = item.pro_loyalty_point * item.customers_basket_quantity;
+          if (userLoyaltyPoint > ttl_p_lp) {
+            show_LP = ttl_p_lp;
+          } else {
+            show_LP = userLoyaltyPoint;
+          }
+        }
+        userLoyaltyPoint = userLoyaltyPoint - show_LP;
+
+        total_used_lp = total_used_lp + show_LP;
+        show_LP_value = show_LP * loyaltyPointDetails.loyalty_point_discount;
+        beforeDiscTaxableAmount = beforeDiscTaxableAmount - show_LP_value;
+      }
+    })
+
+    var finalPrice = allProductTotal + shipping_detail.rate;
+    // if(isLogin){
+    //   var lp_value = userData.userLoyaltyPoint * userData.loyaltyPointPrice;
+    //   finalPrice = finalPrice + lp_value;
+    // }
+    setDeliveryCharges(shipping_detail.rate.toFixed(2));
+    setSubTotal(beforeDiscTaxableAmountTotal.toFixed(2));
+    setTotalTax(totalTax.toFixed(2));
+    setTotalPrice(Math.round(finalPrice));
+  }
+  // AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
+  //   navigation.navigate('HomeScreen');
+  // })
   const _updateCartQuantity = (customers_basket_id, products_id, customers_basket_quantity, AttributeIds) => {
 
     const formData = new FormData();
@@ -79,7 +178,7 @@ function MyCart({ navigation }) {
             if (isLogin) {
               _getCartList(userData.id, "");
             } else {
-              _getCartList("",android_id);
+              _getCartList("", android_id);
             }
           }
 
@@ -93,52 +192,54 @@ function MyCart({ navigation }) {
       });
   }
 
-  const stringFormat = (str) =>{
-    if(str.length > 50 ){
-      return str.substring(0,50)+'...';
-    }else{
+  const stringFormat = (str) => {
+    if (str.length > 50) {
+      return str.substring(0, 50) + '...';
+    } else {
       return str;
     }
   }
   // min_order : 1
   // max_order : 8
-  const _minusQuantity = (key, customers_basket_id, products_id, AttributeIds) =>{
+  const _minusQuantity = (key, customers_basket_id, products_id, AttributeIds) => {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) - 1;
-      if(customers_basket_quantity >= cartList[key].min_order){
-        _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
-      }
+    if (customers_basket_quantity >= cartList[key].min_order) {
+      _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+    }
   }
-  const _plusQuantity = (key, customers_basket_id, products_id, AttributeIds) =>{
+  const _plusQuantity = (key, customers_basket_id, products_id, AttributeIds) => {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) + 1;
-      if(customers_basket_quantity <= cartList[key].max_order){
-        _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
-      }
+    if (customers_basket_quantity <= cartList[key].max_order) {
+      _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+    }
   }
-  const _discountCalculation = (final_price,prodDiscountRate) =>{
-        final_price = parseInt(final_price);
-        var discountedPrice = final_price - ((final_price*prodDiscountRate)/100);
-        // console.log(discountedPrice);
-        return discountedPrice.toFixed(2);;
+  const _discountCalculation = (final_price, prodDiscountRate) => {
+    final_price = parseInt(final_price);
+    var discountedPrice = final_price - ((final_price * prodDiscountRate) / 100);
+    // console.log(discountedPrice);
+    return discountedPrice.toFixed(2);
   }
   useEffect(() => {
-  
+
     if (isFocused) {
-    
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-        var userDetails = JSON.parse(userData)
-        _getCartList(userDetails.id, "");
-      } else {
-        setIsLogin(false)
-        DeviceInfo.getAndroidId().then((androidId) => {
-          setAndroidId(androidId)
-          _getCartList("",androidId)
-        });
-      }
-    })
-  }
+
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          setLoyalttyPoint(parseInt(userDetails.userLoyaltyPoint));
+          _getCartList(userDetails.id, "");
+        } else {
+          setIsLogin(false)
+          DeviceInfo.getAndroidId().then((androidId) => {
+            setAndroidId(androidId)
+            _getCartList("", androidId)
+          });
+        }
+      })
+    }
+
   }, [navigation, isFocused]);
 
   return (
@@ -152,7 +253,7 @@ function MyCart({ navigation }) {
         <View style={styles.outerBoxAddress}>
           <View style={styles.outerBoxAddressInner}>
             <Text>
-              Deliver to John Doe...700137 10/172 Basudevpur
+              {check == undefined ? "No Address Selected!" : userShippingAddressList[check].entry_street_address}
             </Text>
           </View>
           <View>
@@ -166,33 +267,33 @@ function MyCart({ navigation }) {
         </View>
 
         {cartList.map((item, key) => (
-        <View style={styles.outerBox} key={key}>
-        <View style={{ flexDirection:'row' }}>
-          <Image source={{ uri: item.image_path }} style={styles.userImage } />
-          <View style={styles.leftBox}>
-            <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
-            <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price,item.prodDiscountRate)}</Text>
+          <View style={styles.outerBox} key={key}>
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={{ uri: item.image_path }} style={styles.userImage} />
+              <View style={styles.leftBox}>
+                <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
+                <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
 
-            <View style={styles.quantityOuter}>
-              <TouchableOpacity onPress={() => {
-                _minusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
-              }} style={styles.quantityInnerBtn}>
-                <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
-              </TouchableOpacity>
-              <View style={styles.quantityInner}><Text>{item.customers_basket_quantity}</Text></View>
-              <TouchableOpacity onPress={() => {
-                _plusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
-              }}  style={styles.quantityInnerBtn}>
-                <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
-              </TouchableOpacity>
+                <View style={styles.quantityOuter}>
+                  <TouchableOpacity onPress={() => {
+                    _minusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+                  }} style={styles.quantityInnerBtn}>
+                    <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
+                  </TouchableOpacity>
+                  <View style={styles.quantityInner}><Text>{item.customers_basket_quantity}</Text></View>
+                  <TouchableOpacity onPress={() => {
+                    _plusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+                  }} style={styles.quantityInnerBtn}>
+                    <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
+                  </TouchableOpacity>
+                </View>
+                <AntDesign name="delete" style={styles.deleteIcon} />
+
+              </View>
             </View>
-            <AntDesign name="delete"  style={styles.deleteIcon} />
-
-          </View>
-        </View>
 
 
-        {/* <View style={styles.outerBtn}>
+            {/* <View style={styles.outerBtn}>
           <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
             <Text style={styles.btnTxt}>Remove</Text>
           </TouchableOpacity>
@@ -201,22 +302,22 @@ function MyCart({ navigation }) {
             <Text style={styles.btnTxt}>Move to Wishlist</Text>
           </TouchableOpacity>
         </View> */}
-        </View>
+          </View>
         ))}
-        
+
 
         <View style={styles.outerBoxPrice}>
           <Text style={styles.priceTitle}>
             Use Coupon Code
           </Text>
           <View style={styles.priceLine}></View>
-          <View style={{ flexDirection: 'row' ,marginTop:10,justifyContent:'space-between'}}>
+          <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
             <View style={styles.textInput}>
-            <TextInput
-              placeholder={'Enter your coupon code'}
-            />
+              <TextInput
+                placeholder={'Enter your coupon code'}
+              />
             </View>
-            
+
             <TouchableOpacity onPress={() => {
 
             }} style={[styles.applyCoupon, { backgroundColor: '#A20101' }]}>
@@ -240,11 +341,11 @@ function MyCart({ navigation }) {
             </View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
-              <View style={{flexDirection:'row',alignItems:'center'}}>
-              <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
-              <Image source={require('../../assets/Image/loyalty.png')} style={{width:30,height:30,marginLeft:5}} />
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
+                <Image source={require('../../assets/Image/loyalty.png')} style={{ width: 30, height: 30, marginLeft: 5 }} />
               </View>
-              
+
             </View>
             <View style={styles.priceItem}>
               <Text style={styles.priceItemText}>Total Tax</Text>
@@ -263,23 +364,41 @@ function MyCart({ navigation }) {
 
             <View style={styles.priceItem}>
               <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
-              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹1900.00</Text>
+              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹{totalPrice}</Text>
             </View>
           </View>
 
         </View>
+        {addressError ?
+          <View style={styles.errorOuter}  >
+            <Text style={styles.error}>No Address Selected!</Text>
+          </View>
+          :
+          <></>
+        }
+
         <View style={styles.outerBoxCheckout}>
           <View>
-            <Text style={styles.priceAmount}>₹1900.00</Text>
+            <Text style={styles.priceAmount}>₹{totalPrice}</Text>
           </View>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('Checkout');
+            if (isLogin) {
+              if (check != undefined) {
+                navigation.navigate('Checkout');
+              } else {
+                setAddressError(true);
+              }
+            }else{
+              navigation.navigate('Login');
+            }
+
           }} style={[styles.checkoutButton, { backgroundColor: '#A20101' }]}>
             <Text style={styles.checkoutbtnTxt}>
               Checkout
             </Text>
           </TouchableOpacity>
         </View>
+
       </ScrollView>
 
       <Footer navigation={navigation} />
@@ -296,30 +415,20 @@ function MyCart({ navigation }) {
           <View style={styles.filterBar}>
             <Text style={styles.CategoryText2}>Select Delivery Address</Text>
           </View>
+          {userShippingAddressList.map((item, key) => (
+            <View style={styles.changeAddressSectionInner} key={key}>
+              <View>
+                <Text style={styles.nameTitle}>{item.entry_firstname} {item.entry_lastname}</Text>
+                <Text style={styles.nameSubTitle}>{item.entry_street_address} </Text>
+                <Text style={styles.nameSubTitle}>{item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+              </View>
 
-          <View style={styles.changeAddressSectionInner}>
-            <View><Text style={styles.nameTitle}>John Doe</Text>
-              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-            <TouchableOpacity onPress={() => {
-              setCheck(1)
-            }}><Fontisto name={check == 1 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
-          </View>
-
-          <View style={styles.changeAddressSectionInner}>
-            <View><Text style={styles.nameTitle}>John Doe</Text>
-              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-            <TouchableOpacity onPress={() => {
-              setCheck(2)
-            }}><Fontisto name={check == 2 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
-          </View>
-
-          <View style={styles.changeAddressSectionInner}>
-            <View><Text style={styles.nameTitle}>John Doe</Text>
-              <Text style={styles.nameSubTitle}>simply dummy text of the printing </Text></View>
-            <TouchableOpacity onPress={() => {
-              setCheck(3)
-            }}><Fontisto name={check == 3 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
-          </View>
+              <TouchableOpacity onPress={() => {
+                setCheck(key)
+                setAddressError(false);
+              }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            </View>
+          ))}
 
 
         </View>
