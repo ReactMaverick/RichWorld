@@ -24,7 +24,7 @@ function Notifications({ navigation }) {
       })
       .then(([status, response]) => {
         if (status == 200) {
-          console.log(JSON.stringify(response.List, null, " "));
+          // console.log(JSON.stringify(response.List, null, " "));
           setNotificationsList(response.List);
         } else {
           console.log(status, response);
