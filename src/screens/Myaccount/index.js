@@ -147,12 +147,12 @@ function Myaccount({ navigation }) {
           <Entypo name="camera" style={styles.camera} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {
+        {/* <TouchableOpacity onPress={() => {
           navigation.navigate('Account');
         }} style={styles.menuItem}>
           <FontAwesome name="user-circle" style={styles.menuIcon} />
           <Text style={styles.menuText}>My account</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
 
         <TouchableOpacity onPress={() => {
