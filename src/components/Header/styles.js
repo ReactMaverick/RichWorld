@@ -104,6 +104,23 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end'
+    },
+    countOuter: {
+        
+        marginTop:-10,
+        marginLeft:-3,
+        width: 20,
+        height: 20,
+        backgroundColor: '#AB0000',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex:1
+
+    },
+    countText: {
+        fontSize: 10,
+        color:'#fff'
     }
 
 });
