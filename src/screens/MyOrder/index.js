@@ -6,8 +6,10 @@ import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ORDERS } from '../../config/ApiConfig';
+import { useIsFocused } from "@react-navigation/native";
 function MyOrder({ navigation }) {
 
+  const isFocused = useIsFocused();
   const [tab, setTab] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
@@ -42,39 +44,41 @@ function MyOrder({ navigation }) {
       });
   }
 
-  const stringFormat = (str) =>{
-    if(str.length > 50 ){
-      return str.substring(0,50)+'...';
-    }else{
+  const stringFormat = (str) => {
+    if (str.length > 50) {
+      return str.substring(0, 50) + '...';
+    } else {
       return str;
     }
   }
 
-  const _calculateSubtotal = (totalUsedLp,pricePerLp,order_price,coupon_amount,shipping_cost,total_tax) =>{
+  const _calculateSubtotal = (totalUsedLp, pricePerLp, order_price, coupon_amount, shipping_cost, total_tax) => {
     var order_show_LP = parseFloat(totalUsedLp);
-    var order_show_LP_value = parseFloat(order_show_LP*pricePerLp);
+    var order_show_LP_value = parseFloat(order_show_LP * pricePerLp);
     var subtotal = parseFloat(order_price) + parseFloat(coupon_amount) - parseFloat(shipping_cost) - parseFloat(total_tax);
     return subtotal - order_show_LP_value;
   }
-  
-  const _calculateOrderTotal = (totalUsedLp,pricePerLp,order_price) =>{
+
+  const _calculateOrderTotal = (totalUsedLp, pricePerLp, order_price) => {
     var order_show_LP = parseFloat(totalUsedLp);
-    var order_show_LP_value = parseFloat(order_show_LP*pricePerLp);
+    var order_show_LP_value = parseFloat(order_show_LP * pricePerLp);
     return parseFloat(order_price) - order_show_LP_value;
   }
 
   useEffect(() => {
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-        var userDetails = JSON.parse(userData)
-        _getOrders(userDetails.id);
-      } else {
-        setIsLogin(false)
-        navigation.navigate('Login');
-      }
-    })
+    if (isFocused) {
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          _getOrders(userDetails.id);
+        } else {
+          setIsLogin(false)
+          navigation.navigate('Login');
+        }
+      })
+    }
   }, [navigation]);
 
   return (
@@ -97,7 +101,7 @@ function MyOrder({ navigation }) {
                 {item.products.map((item2, key2) => (
                   <View style={styles.productDetails} key={key2}>
                     <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
-                    <View style={{ paddingLeft: 10 }}>
+                    <View style={{ flex: 1, paddingLeft: 10 }}>
                       <Text style={styles.title1}>{stringFormat(item2.products_name)}</Text>
                       <Text style={styles.title2}>{item.orders_status}</Text>
                       <Text style={styles.title2}>{item2.products_quantity}</Text>
@@ -108,7 +112,7 @@ function MyOrder({ navigation }) {
 
                 <View style={styles.priceOuter}>
                   <Text style={styles.priceText}>Sub Total</Text>
-                  <Text style={styles.priceText}>₹{_calculateSubtotal(item.totalUsedLp,item.pricePerLp,item.order_price,item.coupon_amount,item.shipping_cost,item.total_tax)}</Text>
+                  <Text style={styles.priceText}>₹{_calculateSubtotal(item.totalUsedLp, item.pricePerLp, item.order_price, item.coupon_amount, item.shipping_cost, item.total_tax)}</Text>
                 </View>
                 <View style={styles.priceOuter}>
                   <Text style={styles.priceText}>Used Loyalty Point</Text>
@@ -129,7 +133,7 @@ function MyOrder({ navigation }) {
 
                 <View style={styles.priceOuter}>
                   <Text style={styles.priceText1}>Total</Text>
-                  <Text style={styles.priceText1}>₹{_calculateOrderTotal(item.totalUsedLp,item.pricePerLp,item.order_price)}</Text>
+                  <Text style={styles.priceText1}>₹{_calculateOrderTotal(item.totalUsedLp, item.pricePerLp, item.order_price)}</Text>
                 </View>
                 <View style={styles.trackOrderOuter}>
                   <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>

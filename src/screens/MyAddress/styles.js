@@ -115,6 +115,13 @@ export default StyleSheet.create({
         marginBottom:10
     },
  
+    errorMessage: {
+        fontSize: 14,
+        fontFamily: 'Poppins-Bold',
+        color: 'red',
+        textAlign: 'center',
+        margin: 10
+    },
 
 
 });

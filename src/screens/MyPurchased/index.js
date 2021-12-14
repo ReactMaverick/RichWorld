@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Rating } from 'react-native-ratings';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MY_PURCHASED, SUBMIT_RATTINGS } from '../../config/ApiConfig';
+import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT } from '../../config/ApiConfig';
 
 function MyPurchased({ navigation }) {
 
@@ -22,8 +22,11 @@ function MyPurchased({ navigation }) {
   const [purchasedOrderList, setPurchasedOrderList] = useState([]);
   const [returnReasons, setReturnReasons] = useState([]);
   const [basePath, setBasePath] = useState("");
+  const [errorMsg, setErrorMessage] = useState("")
+  const [returnErrorMsg, setReturnErrorMessage] = useState("")
 
   const [productsId, setProductsId] = useState("");
+  const [ordersId, setOrdersId] = useState("");
   const [starRatting, setStarRatting] = useState(5);
   const [reviewsText, setReviewsText] = useState("");
   const [returnReasonId, setReturnReasonId] = useState("");
@@ -89,70 +92,85 @@ function MyPurchased({ navigation }) {
   }
 
   const _submitRaitings = async () => {
-    const formData = new FormData();
-    formData.append('user_id', userData.id);
-    formData.append('first_name', userData.first_name);
-    formData.append('products_id', productsId);
-    formData.append('starRatting', starRatting);
-    formData.append('reviews_text', reviewsText);
-    // console.log(JSON.stringify(formData, null, " "));
-    fetch(SUBMIT_RATTINGS, {
-      method: "POST",
-      body: formData
-    })
-      .then((response) => {
+    if (starRatting == '') {
+      setErrorMessage("Please Select Stars");
+    } else if (reviewsText == '') {
+      setErrorMessage("Please Enter Reviews Text");
+    } else {
+      const formData = new FormData();
+      formData.append('user_id', userData.id);
+      formData.append('first_name', userData.first_name);
+      formData.append('products_id', productsId);
+      formData.append('starRatting', starRatting);
+      formData.append('reviews_text', reviewsText);
+      // console.log(JSON.stringify(formData, null, " "));
+      fetch(SUBMIT_RATTINGS, {
+        method: "POST",
+        body: formData
+      })
+        .then((response) => {
 
-        const statusCode = response.status;
-        const data = response.json();
-        return Promise.all([statusCode, data]);
-      })
-      .then(([status, response]) => {
-        if (status == 200) {
-          console.log(JSON.stringify(response, null, " "));
-        } else {
-          console.log(status, response);
-        }
-      })
-      .catch((error) => console.log("error", error))
-      .finally(() => {
-        setIsLoading(false);
-        toggleRatingModal();
-        setStarRatting(5);
-        setReviewsText("");
-      });
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            console.log(JSON.stringify(response, null, " "));
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false);
+          toggleRatingModal();
+          setStarRatting(5);
+          setReviewsText("");
+        });
+    }
+
   }
 
   const _submitReturnRequest = async () => {
-    const formData = new FormData();
-    formData.append('user_id', userData.id);
-    formData.append('products_id', productsId);
-    formData.append('return_reason', returnReasonId);
-    formData.append('return_comment', returnText);
-    console.log(JSON.stringify(formData, null, " "));
-    // fetch(SUBMIT_RATTINGS, {
-    //   method: "POST",
-    //   body: formData
-    // })
-    //   .then((response) => {
+    if (returnReasonId == '') {
+      setReturnErrorMessage("Please Select Return Reason");
+    } else if (returnText == '') {
+      setReturnErrorMessage("Please Enter Return Text");
+    } else {
+      const formData = new FormData();
+      formData.append('user_id', userData.id);
+      formData.append('products_id', productsId);
+      formData.append('orders_id', ordersId);
+      formData.append('return_reason', returnReasonId);
+      formData.append('return_comment', returnText);
+      // console.log(JSON.stringify(formData, null, " "));
+      fetch(RETURN_PRODUCT, {
+        method: "POST",
+        body: formData
+      })
+        .then((response) => {
 
-    //     const statusCode = response.status;
-    //     const data = response.json();
-    //     return Promise.all([statusCode, data]);
-    //   })
-    //   .then(([status, response]) => {
-    //     if (status == 200) {
-    //       console.log(JSON.stringify(response, null, " "));
-    //     } else {
-    //       console.log(status, response);
-    //     }
-    //   })
-    //   .catch((error) => console.log("error", error))
-    //   .finally(() => {
-    //     setIsLoading(false);
-    //     toggleRatingModal();
-    //     setStarRatting(5);
-    //     setReviewsText("");
-    //   });
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            console.log(JSON.stringify(response, null, " "));
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false);
+          toggleCancelModal();
+          setStarRatting(5);
+          setReviewsText("");
+        });
+    }
+
   }
   useEffect(() => {
 
@@ -185,7 +203,6 @@ function MyPurchased({ navigation }) {
                 <Text style={styles.leftText1}>{stringFormat(item.products_name)}</Text>
                 <Text style={styles.leftText2}>₹{item.final_price}</Text>
                 <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
-                <Text style={styles.leftText2}>Order Date : {item.date_purchased}</Text>
                 <Text style={styles.leftText2}>Delivery Date : {item.delivery_date}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.leftText2}>Subtotal:</Text>
@@ -198,14 +215,14 @@ function MyPurchased({ navigation }) {
             <View style={styles.outerBtn}>
 
               {item.return_request == 0 && item.is_returnable == 1 ?
-                    <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={() => {
-                      setProductsId(item.products_id);
-                      toggleCancelModal();
-                    }}>
-                      <Text style={styles.btnTxt}>Return</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={() => {
+                  setOrdersId(item.orders_id);
+                  setProductsId(item.products_id);
+                  toggleCancelModal();
+                }}>
+                  <Text style={styles.btnTxt}>Return</Text>
+                </TouchableOpacity>
                 : <></>}
-
 
               <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={() => {
                 setProductsId(item.products_id);
@@ -234,11 +251,18 @@ function MyPurchased({ navigation }) {
               <AntDesign name="close" style={styles.closeBtn} />
             </TouchableOpacity>
           </View>
-
+          {returnErrorMsg != '' ?
+            <View style={styles.headerPopup}>
+              <Text style={styles.errorMessage}>{returnErrorMsg}</Text>
+            </View>
+            :
+            <></>
+          }
           {returnReasons.map((item, key) => (
             <TouchableOpacity onPress={() => {
               setReturnReasonId(item.return_reasons_id);
-              setCheck(item.return_reasons_id)
+              setCheck(item.return_reasons_id);
+              setReturnErrorMessage('');
             }} style={styles.itemOuter} key={key}>
               <MaterialIcons style={{ fontSize: 20 }} name={check == item.return_reasons_id ? "radio-button-checked" : "radio-button-off"} />
               <Text style={styles.radioText}>{item.retutn_reason}</Text>
@@ -255,6 +279,9 @@ function MyPurchased({ navigation }) {
               numberOfLines={4}
               value={returnText}
               onChangeText={(returnText) => setReturnText(returnText)}
+              onFocus={() => {
+                setReturnErrorMessage('')
+              }}
             />
           </View>
 
@@ -277,7 +304,13 @@ function MyPurchased({ navigation }) {
 
 
           </View>
-
+          {errorMsg != '' ?
+            <View style={styles.headerPopup}>
+              <Text style={styles.errorMessage}>{errorMsg}</Text>
+            </View>
+            :
+            <></>
+          }
           <Rating
             startingValue={starRatting}
             ratingCount={5}
@@ -286,7 +319,9 @@ function MyPurchased({ navigation }) {
             onFinishRating={(value) => {
               setStarRatting(value);
             }}
-
+            onStartRating={() => {
+              setErrorMessage('')
+            }}
             style={{ alignSelf: 'flex-start', marginTop: 20, marginBottom: 10 }}
           />
 
@@ -300,6 +335,9 @@ function MyPurchased({ navigation }) {
               numberOfLines={4}
               value={reviewsText}
               onChangeText={(reviewsText) => setReviewsText(reviewsText)}
+              onFocus={() => {
+                setAddErrorMessage('')
+              }}
             />
           </View>
 
