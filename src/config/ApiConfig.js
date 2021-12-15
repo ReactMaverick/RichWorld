@@ -16,6 +16,7 @@ export const FAQ = BASE_URL + 'faq';
 export const NOTIFICATION_LIST = BASE_URL + 'notificationList?customers_id=';
 export const ADD_TO_CART = BASE_URL + 'addToCart';
 export const VIEW_CART = BASE_URL + 'viewCart?';
+export const DELETE_CART_ITEM = BASE_URL + 'deleteCartItem?id=';
 export const UPDATE_CART_QUANTITY = BASE_URL + 'updateCartQuantity';
 export const MY_ADDRESS = BASE_URL + 'myAddress';
 export const ADD_MY_ADDRESS = BASE_URL + 'addMyAddress';
@@ -30,6 +31,7 @@ export const TESTIMOIALS = BASE_URL + 'testimonials';
 export const CONTACT_US = BASE_URL + 'contactUs';
 export const CONTACT_US_REQUEST = BASE_URL + 'contactUsMessage';
 export const UPLOAD_PRODUCTS_IMAGES = BASE_URL + 'customerProductImages';
+export const GET_ATTRIBUTE_PRICE_ID = BASE_URL + 'getAttributePriceId'; 
 
 
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
@@ -39,6 +41,9 @@ export const SEARCH_SUGGESSION = BASE_URL + 'searchSuggession?searchChar=';
 export const POST_SOCIAL_LOGIN = BASE_URL + 'socialLogin';
 export const POST_SOCIAL_OTP = BASE_URL + 'socialOtp';
 export const POST_PROCESS_SOCIAL_LOGIN = BASE_URL + 'processSocialLogin';
+export const GET_PAYMENT_METHODS = BASE_URL + 'getPaymentMethods';
+export const ADD_ORDER = BASE_URL + 'add_order';
+
 
 
 

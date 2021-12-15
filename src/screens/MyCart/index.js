@@ -4,9 +4,10 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import DeviceInfo from 'react-native-device-info';
-import { VIEW_CART, UPDATE_CART_QUANTITY } from '../../config/ApiConfig';
+import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ActionSheet from "react-native-actions-sheet";
@@ -22,6 +23,7 @@ function MyCart({ navigation }) {
   const [cartList, setCartList] = useState([]);
   const [loyaltyPointDetails, setLoyaltyPointDetails] = useState({});
   const [userShippingAddressList, setUserShippingAddressList] = useState([]);
+  const [userBillingAddress, setUserBillingAddress] = useState([]);
   const [android_id, setAndroidId] = useState("");
   const [addressError, setAddressError] = useState(false);
 
@@ -32,7 +34,7 @@ function MyCart({ navigation }) {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  
+
 
   const _getCartList = async (customers_id, session_id) => {
     fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
@@ -50,6 +52,7 @@ function MyCart({ navigation }) {
           setCartList(response.cart)
           setLoyaltyPointDetails(response.loyalty_point_details)
           setUserShippingAddressList(response.userShippingAddressList)
+          setUserBillingAddress(response.userBillingAddress)
           _calculateAmounts(response.cart, response.shipping_detail)
 
         } else {
@@ -193,6 +196,39 @@ function MyCart({ navigation }) {
       });
   }
 
+  const _deleteCartItem = (customers_basket_id) => {
+
+    fetch( DELETE_CART_ITEM + customers_basket_id, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        // console.log(JSON.stringify(response, null, " "));
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+
+        if (status == 200) {
+          console.log(JSON.stringify(response, null, " "));
+          if (response.status) {
+            if (isLogin) {
+              _getCartList(userData.id, "");
+            } else {
+              _getCartList("", android_id);
+            }
+          }
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
   const stringFormat = (str) => {
     if (str.length > 50) {
       return str.substring(0, 50) + '...';
@@ -249,158 +285,181 @@ function MyCart({ navigation }) {
       <View style={styles.filterBar}>
         <Text style={styles.CategoryText2}>My Cart</Text>
       </View>
-      <ScrollView style={{ flex: 1 }}>
+      {cartList.length > 0 ?
+        <ScrollView style={{ flex: 1 }}>
 
-        <View style={styles.outerBoxAddress}>
-          <View style={styles.outerBoxAddressInner}>
-            <Text>
-              {check == undefined ? "No Address Selected!" : userShippingAddressList[check].entry_street_address}
-            </Text>
-          </View>
-          <View>
-            <TouchableOpacity onPress={() => {
-              actionSheetRef.current?.setModalVisible();
-            }} style={[styles.changeAddress, { backgroundColor: '#A20101' }]}>
-              <Text style={styles.btnTxt}>
-                Change
+          <View style={styles.outerBoxAddress}>
+            <View style={styles.outerBoxAddressInner}>
+              <Text>
+                {check == undefined ? "No Address Selected!" : userShippingAddressList[check].entry_street_address}
               </Text>
-            </TouchableOpacity></View>
-        </View>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() => {
+                actionSheetRef.current?.setModalVisible();
+              }} style={[styles.changeAddress, { backgroundColor: '#A20101' }]}>
+                <Text style={styles.btnTxt}>
+                  Change
+                </Text>
+              </TouchableOpacity></View>
+          </View>
 
-        {cartList.map((item, key) => (
-          <View style={styles.outerBox} key={key}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image source={{ uri: item.image_path }} style={styles.userImage} />
-              <View style={styles.leftBox}>
-                <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
-                <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
+          {cartList.map((item, key) => (
+            <View style={styles.outerBox} key={key}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={{ uri: item.image_path }} style={styles.userImage} />
+                <View style={styles.leftBox}>
+                  <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
+                  <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
 
-                <View style={styles.quantityOuter}>
+                  <View style={styles.quantityOuter}>
+                    <TouchableOpacity onPress={() => {
+                      _minusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+                    }} style={styles.quantityInnerBtn}>
+                      <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
+                    </TouchableOpacity>
+                    <View style={styles.quantityInner}><Text>{item.customers_basket_quantity}</Text></View>
+                    <TouchableOpacity onPress={() => {
+                      _plusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
+                    }} style={styles.quantityInnerBtn}>
+                      <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
+                    </TouchableOpacity>
+                  </View>
                   <TouchableOpacity onPress={() => {
-                    _minusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
-                  }} style={styles.quantityInnerBtn}>
-                    <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
-                  </TouchableOpacity>
-                  <View style={styles.quantityInner}><Text>{item.customers_basket_quantity}</Text></View>
-                  <TouchableOpacity onPress={() => {
-                    _plusQuantity(key, item.customers_basket_id, item.products_id, item.attributesString);
-                  }} style={styles.quantityInnerBtn}>
-                    <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
-                  </TouchableOpacity>
+                      _deleteCartItem(item.customers_basket_id);
+                    }} >
+                      <AntDesign name="delete" style={styles.deleteIcon} />
+                    </TouchableOpacity>
+                  
+
                 </View>
-                <AntDesign name="delete" style={styles.deleteIcon} />
+              </View>
 
+
+              {/* <View style={styles.outerBtn}>
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
+          <Text style={styles.btnTxt}>Remove</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
+          <Text style={styles.btnTxt}>Move to Wishlist</Text>
+        </TouchableOpacity>
+      </View> */}
+            </View>
+          ))}
+
+
+          <View style={styles.outerBoxPrice}>
+            <Text style={styles.priceTitle}>
+              Use Coupon Code
+            </Text>
+            <View style={styles.priceLine}></View>
+            <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
+              <View style={styles.textInput}>
+                <TextInput
+                  placeholder={'Enter your coupon code'}
+                />
+              </View>
+
+              <TouchableOpacity onPress={() => {
+
+              }} style={[styles.applyCoupon, { backgroundColor: '#A20101' }]}>
+                <Text style={styles.checkoutbtnTxt}>
+                  Apply Coupon
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+
+          <View style={styles.outerBoxPrice}>
+            <View style={styles.priceList}>
+              <Text style={styles.priceTitle}>
+                PRICE DETAILS
+              </Text>
+              <View style={styles.priceLine}></View>
+              <View style={styles.priceItem}>
+                <Text style={styles.priceItemText}>Sub Total</Text>
+                <Text style={styles.priceItemText}>₹{subTotal}</Text>
+              </View>
+              <View style={styles.priceItem}>
+                <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
+                  <Image source={require('../../assets/Image/loyalty.png')} style={{ width: 30, height: 30, marginLeft: 5 }} />
+                </View>
+
+              </View>
+              <View style={styles.priceItem}>
+                <Text style={styles.priceItemText}>Total Tax</Text>
+                <Text style={styles.priceItemText}>₹{totalTax}</Text>
+              </View>
+              <View style={styles.priceItem}>
+                <Text style={styles.priceItemText}>Discount(Coupon)</Text>
+                <Text style={[styles.priceItemText, { color: 'red' }]}>-₹{couponDiscount}</Text>
+              </View>
+
+              <View style={styles.priceItem}>
+                <Text style={styles.priceItemText}>Delivery Charges</Text>
+                <Text style={[styles.priceItemText, { color: 'red' }]}>{deliveryCharges}</Text>
+              </View>
+              <View style={styles.priceLine}></View>
+
+              <View style={styles.priceItem}>
+                <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
+                <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹{totalPrice}</Text>
               </View>
             </View>
 
-
-            {/* <View style={styles.outerBtn}>
-          <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
-            <Text style={styles.btnTxt}>Remove</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-            <Text style={styles.btnTxt}>Move to Wishlist</Text>
-          </TouchableOpacity>
-        </View> */}
           </View>
-        ))}
-
-
-        <View style={styles.outerBoxPrice}>
-          <Text style={styles.priceTitle}>
-            Use Coupon Code
-          </Text>
-          <View style={styles.priceLine}></View>
-          <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
-            <View style={styles.textInput}>
-              <TextInput
-                placeholder={'Enter your coupon code'}
-              />
+          {addressError ?
+            <View style={styles.errorOuter}  >
+              <Text style={styles.error}>No Address Selected!</Text>
             </View>
+            :
+            <></>
+          }
 
+          <View style={styles.outerBoxCheckout}>
+            <View>
+              <Text style={styles.priceAmount}>₹{totalPrice}</Text>
+            </View>
             <TouchableOpacity onPress={() => {
+              if (isLogin) {
+                if (check != undefined) {
+                  navigation.navigate('Checkout',{
+                    orderBillingAddressBookId:userBillingAddress[0].address_book_id,
+                    address_id_hidden:userShippingAddressList[check].address_book_id,
+                    is_shop_now:0,
+                    orderNote:"",
+                    shipping_rate:deliveryCharges,
+                    coupon_code:"",
+                    coupon_discount_percent:"",
+                    totalPrice:totalPrice
+                  });
 
-            }} style={[styles.applyCoupon, { backgroundColor: '#A20101' }]}>
+                } else {
+                  setAddressError(true);
+                }
+              } else {
+                navigation.navigate('Login');
+              }
+
+            }} style={[styles.checkoutButton, { backgroundColor: '#A20101' }]}>
               <Text style={styles.checkoutbtnTxt}>
-                Apply Coupon
+                Checkout
               </Text>
             </TouchableOpacity>
           </View>
 
+        </ScrollView>
+        :
+        <View style={{ flex: 1, justifyContent:"center", alignItems:"center" }}>
+          <MaterialCommunityIcons  name="cart-off" style={{ color: '#A20101', fontSize: 100 }} />
+          <Text style={styles.CategoryText2}>No Cart item Available</Text>
         </View>
+      }
 
-        <View style={styles.outerBoxPrice}>
-          <View style={styles.priceList}>
-            <Text style={styles.priceTitle}>
-              PRICE DETAILS
-            </Text>
-            <View style={styles.priceLine}></View>
-            <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Sub Total</Text>
-              <Text style={styles.priceItemText}>₹{subTotal}</Text>
-            </View>
-            <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
-                <Image source={require('../../assets/Image/loyalty.png')} style={{ width: 30, height: 30, marginLeft: 5 }} />
-              </View>
-
-            </View>
-            <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Total Tax</Text>
-              <Text style={styles.priceItemText}>₹{totalTax}</Text>
-            </View>
-            <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Discount(Coupon)</Text>
-              <Text style={[styles.priceItemText, { color: 'red' }]}>-₹{couponDiscount}</Text>
-            </View>
-
-            <View style={styles.priceItem}>
-              <Text style={styles.priceItemText}>Delivery Charges</Text>
-              <Text style={[styles.priceItemText, { color: 'red' }]}>{deliveryCharges}</Text>
-            </View>
-            <View style={styles.priceLine}></View>
-
-            <View style={styles.priceItem}>
-              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
-              <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹{totalPrice}</Text>
-            </View>
-          </View>
-
-        </View>
-        {addressError ?
-          <View style={styles.errorOuter}  >
-            <Text style={styles.error}>No Address Selected!</Text>
-          </View>
-          :
-          <></>
-        }
-
-        <View style={styles.outerBoxCheckout}>
-          <View>
-            <Text style={styles.priceAmount}>₹{totalPrice}</Text>
-          </View>
-          <TouchableOpacity onPress={() => {
-            if (isLogin) {
-              if (check != undefined) {
-                navigation.navigate('Checkout');
-              } else {
-                setAddressError(true);
-              }
-            }else{
-              navigation.navigate('Login');
-            }
-
-          }} style={[styles.checkoutButton, { backgroundColor: '#A20101' }]}>
-            <Text style={styles.checkoutbtnTxt}>
-              Checkout
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
 
       <Footer navigation={navigation} />
 
