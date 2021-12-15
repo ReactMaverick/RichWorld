@@ -12,7 +12,7 @@ import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ActionSheet from "react-native-actions-sheet";
-import { POST_PRODUCT, ADD_WISHLIST } from '../../config/ApiConfig';
+import { POST_PRODUCT, ADD_WISHLIST, GET_ALL_CATEGORY } from '../../config/ApiConfig';
 import DeviceInfo from 'react-native-device-info';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,12 +25,20 @@ function ProductList({ navigation, route }) {
 
   const [isLoading, setIsLoading] = useState(true);
   const [Products, setProducts] = useState([]);
+  const [attrList, setAttrList] = useState([]);
+  const [brandList, setBrandList] = useState([]);
+  const [classificationList, setClassificationList] = useState([]);
+  const [allCategory, setaAllCategory] = useState([]);
   const [isLogin, setIsLogin] = useState(true);
   const [userData, setUserData] = useState({});
+  // category selected value
+  const [catgorySelected, setSelectedCategory] = useState("");
+  const [selectedBrands, setSelectedBrands] = useState("");
+  const [selectedClassification, setSelectedClassification] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState("");
+
 
   let actionSheet;
-
-
 
   const _getProductList = async (filterParam, androidId, user_id) => {
     setIsLoading(true)
@@ -57,9 +65,38 @@ function ProductList({ navigation, route }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          // console.log(JSON.stringify(response.products.product_data, null, " "));
+          //  console.log(JSON.stringify(response.brandList, null, " "));
           setProducts(response.products.product_data);
 
+          setAttrList(response.filters.attr_data);
+          setBrandList(response.brandList);
+          setClassificationList(response.classificationList);
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
+  const _getAllCategory = async () => {
+    setIsLoading(true)
+
+    fetch(GET_ALL_CATEGORY, {
+      method: "GET",
+    })
+      .then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          // console.log(JSON.stringify(response, null, " "));
+          setaAllCategory(response.allCategory)
         } else {
           console.log(status, response);
         }
@@ -106,29 +143,24 @@ function ProductList({ navigation, route }) {
       });
   }
 
+
   useEffect(() => {
-
-
-
     AsyncStorage.getItem('userData').then((userData) => {
-
       if (userData != null) {
         setIsLogin(true)
         setUserData(JSON.parse(userData))
         var userDetails = JSON.parse(userData)
         _getProductList(filterParam, "", userDetails.id);
+        _getAllCategory();
       } else {
         setIsLogin(false)
         DeviceInfo.getAndroidId().then((androidId) => {
           _getProductList(filterParam, androidId, "");
+          _getAllCategory();
         });
       }
     })
-
-
-
-
-  }, [navigation, route, useState]);
+  }, [navigation, route]);
 
 
 
@@ -280,22 +312,20 @@ function ProductList({ navigation, route }) {
 
                   </View>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Men</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                    </View>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Men</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                    </View>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Women</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                    </View>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Kids</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                    </View>
+                    {allCategory.map((item, key) => (
+                      <TouchableOpacity style={styles.filterOptionsSection1} key={key} onPress={() => {
+                        setSelectedCategory(item.slug)
+                      }}>
+                        <Text style={styles.filterOptionsTextOptions}>{item.name}</Text>
+                        {catgorySelected == item.slug ?
+                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                          :
+                          <></>
+                        }
+                      </TouchableOpacity>
+                    ))}
+
+
                   </View>
 
                 </View>
@@ -333,20 +363,90 @@ function ProductList({ navigation, route }) {
                   <View style={styles.filterOptions}>
                     <Text style={styles.filterOptionsText}>Brands</Text>
                     <Feather name="chevron-down" style={styles.dropdownIcon} />
-
                   </View>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Hussking</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+
+                    {brandList.map((item, key) => (
+                      <TouchableOpacity style={styles.filterOptionsSection1} key={key} onPress={() => {
+                        var tempBrands = selectedBrands;
+                        if (selectedBrands.includes(item.brands_name)) {
+                          tempBrands = tempBrands.replace(item.brands_name + ',', '');
+                        } else {
+                          tempBrands += item.brands_name + ',';
+                        }
+                        setSelectedBrands(tempBrands)
+                        console.log(selectedBrands)
+                      }}>
+                        <Text style={styles.filterOptionsTextOptions}>{item.brands_name} </Text>
+                        {(selectedBrands.includes(item.brands_name)) ?
+                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                          :
+                          <></>
+                        }
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+
+                {classificationList.map((item, key) => (
+                <View style={styles.filterOptionsMain} key={key}>
+                  <View style={styles.filterOptions}>
+                    <Text style={styles.filterOptionsText}>{item.classifications_name}</Text>
+                    <Feather name="chevron-down" style={styles.dropdownIcon} />
+                  </View>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {item.classificationValue.map((item2, key2) => (
+                      <TouchableOpacity style={styles.filterOptionsSection1} key={key2} onPress={() => {
+                        var tempClassification = selectedClassification;
+                        if (tempClassification.includes(item2.classification_value_name)) {
+                          tempClassification = tempClassification.replace(item2.classification_value_name + ',', '');
+                        } else {
+                          tempClassification += item2.classification_value_name + ',';
+                        }
+                        setSelectedClassification(tempClassification)
+                        console.log(tempClassification)
+                      }}>
+                        <Text style={styles.filterOptionsTextOptions}>{item2.classification_value_name}</Text>
+                        {(selectedClassification.includes(item2.classification_value_name)) ?
+                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                          :
+                          <></>
+                        }
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+                ))}
+                
+                {attrList.map((item, key) => (
+                  <View style={styles.filterOptionsMain} key={key}>
+                    <View style={styles.filterOptions}>
+                      <Text style={styles.filterOptionsText}>{item.option.name}</Text>
+                      <Feather name="chevron-down" style={styles.dropdownIcon} />
                     </View>
-                    <View style={styles.filterOptionsSection1}>
-                      <Text style={styles.filterOptionsTextOptions}>Genteel</Text>
-                      <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {item.values.map((item2, key2) => (
+                        <TouchableOpacity style={styles.filterOptionsSection1} key={key2} onPress={() => {
+                          var tempOptions = selectedOptions;
+                          if (tempOptions.includes(item.option.name+'-'+item2.value)) {
+                            tempOptions = tempOptions.replace(item.option.name+'-'+item2.value + ',', '');
+                          } else {
+                            tempOptions += item.option.name+'-'+item2.value + ',';
+                          }
+                          setSelectedOptions(tempOptions)
+                          console.log(tempOptions)
+                        }}>
+                          <Text style={styles.filterOptionsTextOptions}>{item2.value}</Text>
+                          {(selectedOptions.includes(item.option.name+'-'+item2.value)) ?
+                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                          :
+                          <></>
+                        }
+                        </TouchableOpacity>
+                      ))}
                     </View>
                   </View>
-
-                </View>
+                ))}
               </ScrollView>
               <View style={styles.outerBtn}>
                 <TouchableOpacity onPress={() => {
