@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ImageBackground } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ImageBackground, Platform } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -177,14 +177,32 @@ function MyPurchased({ navigation }) {
   }
 
   const _uploadProductImages = async () => {
-    if (images.length > 0) {
+    if (images.length <= 0) {
       console.log("Please Select Image")
       // setReturnErrorMessage("Please Select Image");
     } else {
       const formData = new FormData();
       formData.append('user_id', userData.id);
       formData.append('products_id', productsId);
-      formData.append('images', images);
+      
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          const imagePath = images[i].path;
+          const arr = imagePath.split("/");
+
+          formData.append('images[]', {
+            uri: Platform.OS === 'ios' ? `file:///${images[i].path}` : images[i].path,
+            type: images[i].mime,
+            name: arr[arr.length - 2]
+          });
+         
+
+        }
+      }
+
+      
+
+
       fetch(UPLOAD_PRODUCTS_IMAGES, {
         method: "POST",
         headers: {
@@ -193,7 +211,7 @@ function MyPurchased({ navigation }) {
         body: formData
       })
         .then((response) => {
-
+          console.log(response);
           const statusCode = response.status;
           const data = response.json();
           return Promise.all([statusCode, data]);
@@ -215,12 +233,22 @@ function MyPurchased({ navigation }) {
 
   }
 
-  const _removeImage = (key) => {
-          // console.log(key)
-          const UploadImages  = images;
-          UploadImages.splice(key, 1);
-          console.log(UploadImages)
-          setImages(UploadImages);
+  const _removeImage = async (key) => {
+    // console.log(key)
+    // const UploadImages  = images;
+    // UploadImages.splice(key, 1);
+    // console.log("remove",UploadImages)
+    // setImages(UploadImages);
+
+    const tempArr = [];
+    for (let i = 0; i < images.length; i++) {
+      if (i != key) {
+        tempArr.push(images[i]);
+      }
+    }
+
+    setImages(tempArr);
+
   }
   useEffect(() => {
 
@@ -236,7 +264,7 @@ function MyPurchased({ navigation }) {
         navigation.navigate('Login');
       }
     })
-  }, [navigation,images]);
+  }, [navigation]);
 
   return (
     <>
@@ -281,7 +309,10 @@ function MyPurchased({ navigation }) {
                 <Text style={styles.btnTxt}>Rating</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={toggleImageModal}>
+              <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={()=>{
+                 setProductsId(item.products_id);
+                toggleImageModal();
+                }}>
                 <Text style={styles.btnTxt}>Upload images</Text>
               </TouchableOpacity>
             </View>
@@ -404,9 +435,9 @@ function MyPurchased({ navigation }) {
           <View style={styles.headerPopup}>
             <Text style={styles.CategoryText2}>Upload Your Images</Text>
             <TouchableOpacity onPress={() => {
-                    toggleImageModal();
-                    setImages([]);
-                  }}>
+              toggleImageModal();
+              setImages([]);
+            }}>
               <AntDesign name="close" style={styles.closeBtn} />
             </TouchableOpacity>
 
@@ -418,7 +449,7 @@ function MyPurchased({ navigation }) {
                   <TouchableOpacity onPress={() => {
                     _removeImage(key)
                   }}>
-                  <AntDesign name="closecircle" style={[styles.closeBtn, {  alignSelf: 'flex-end', padding: 10,zIndex:2 }]} />
+                    <AntDesign name="closecircle" style={[styles.closeBtn, { alignSelf: 'flex-end', padding: 10, zIndex: 2 }]} />
                   </TouchableOpacity>
                 </ImageBackground>
               ))}
@@ -430,17 +461,17 @@ function MyPurchased({ navigation }) {
               width: 300,
               height: 400,
               multiple: true
-            }).then(images => {
-              setImages(images);
-              console.log(images);
+            }).then((selectedImages) => {
+              setImages(selectedImages);
+              //console.log(selectedImages);
             });
           }}>
             <Text style={styles.btnImageText}>Upload Images </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
-                    _uploadProductImages()
-                  }}>
+            _uploadProductImages()
+          }}>
             <Text style={styles.btnMessage}>Submit </Text>
           </TouchableOpacity>
         </View>
