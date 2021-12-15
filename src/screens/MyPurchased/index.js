@@ -6,9 +6,11 @@ import styles from "./styles";
 import Modal from "react-native-modal";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import ImagePicker from 'react-native-image-crop-picker';
 import { Rating } from 'react-native-ratings';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT } from '../../config/ApiConfig';
+import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT, UPLOAD_PRODUCTS_IMAGES } from '../../config/ApiConfig';
 
 function MyPurchased({ navigation }) {
 
@@ -27,6 +29,7 @@ function MyPurchased({ navigation }) {
 
   const [productsId, setProductsId] = useState("");
   const [ordersId, setOrdersId] = useState("");
+  const [images, setImages] = useState([]);
   const [starRatting, setStarRatting] = useState(5);
   const [reviewsText, setReviewsText] = useState("");
   const [returnReasonId, setReturnReasonId] = useState("");
@@ -172,6 +175,53 @@ function MyPurchased({ navigation }) {
     }
 
   }
+
+  const _uploadProductImages = async () => {
+    if (images.length > 0) {
+      console.log("Please Select Image")
+      // setReturnErrorMessage("Please Select Image");
+    } else {
+      const formData = new FormData();
+      formData.append('user_id', userData.id);
+      formData.append('products_id', productsId);
+      formData.append('images', images);
+      fetch(UPLOAD_PRODUCTS_IMAGES, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData
+      })
+        .then((response) => {
+
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            console.log(JSON.stringify(response, null, " "));
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false);
+          toggleImageModal();
+          setImages([])
+        });
+    }
+
+  }
+
+  const _removeImage = (key) => {
+          // console.log(key)
+          const UploadImages  = images;
+          UploadImages.splice(key, 1);
+          console.log(UploadImages)
+          setImages(UploadImages);
+  }
   useEffect(() => {
 
     AsyncStorage.getItem('userData').then((userData) => {
@@ -186,7 +236,7 @@ function MyPurchased({ navigation }) {
         navigation.navigate('Login');
       }
     })
-  }, [navigation]);
+  }, [navigation,images]);
 
   return (
     <>
@@ -353,29 +403,44 @@ function MyPurchased({ navigation }) {
         <View style={styles.cancelPopup}>
           <View style={styles.headerPopup}>
             <Text style={styles.CategoryText2}>Upload Your Images</Text>
-            <TouchableOpacity onPress={toggleImageModal}>
+            <TouchableOpacity onPress={() => {
+                    toggleImageModal();
+                    setImages([]);
+                  }}>
               <AntDesign name="close" style={styles.closeBtn} />
             </TouchableOpacity>
 
           </View>
           <ScrollView>
             <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-              <ImageBackground style={styles.productBox} source={require('../../assets/Image/uploadImage.png')}>
-                <AntDesign name="closecircle" style={[styles.closeBtn, { position: 'absolute', alignSelf: 'flex-end', padding: 10 }]} />
-              </ImageBackground>
-
-              <ImageBackground style={styles.productBox} source={require('../../assets/Image/uploadImage.png')}>
-                <AntDesign name="closecircle" style={[styles.closeBtn, { position: 'absolute', alignSelf: 'flex-end', padding: 10 }]} />
-              </ImageBackground>
-
+              {images.map((item, key) => (
+                <ImageBackground style={styles.productBox} source={{ uri: item.path }} key={key} >
+                  <TouchableOpacity onPress={() => {
+                    _removeImage(key)
+                  }}>
+                  <AntDesign name="closecircle" style={[styles.closeBtn, {  alignSelf: 'flex-end', padding: 10,zIndex:2 }]} />
+                  </TouchableOpacity>
+                </ImageBackground>
+              ))}
             </View>
           </ScrollView>
 
-          <TouchableOpacity style={styles.btnOuterImage}>
+          <TouchableOpacity style={styles.btnOuterImage} onPress={() => {
+            ImagePicker.openPicker({
+              width: 300,
+              height: 400,
+              multiple: true
+            }).then(images => {
+              setImages(images);
+              console.log(images);
+            });
+          }}>
             <Text style={styles.btnImageText}>Upload Images </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.btnOuter}>
+          <TouchableOpacity style={styles.btnOuter} onPress={() => {
+                    _uploadProductImages()
+                  }}>
             <Text style={styles.btnMessage}>Submit </Text>
           </TouchableOpacity>
         </View>

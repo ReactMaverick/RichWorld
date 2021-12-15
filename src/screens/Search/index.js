@@ -134,7 +134,7 @@ function Search({ navigation }) {
         <View>
           <Image source={{ uri: item.image_path }} style={styles.searchImage} />
         </View>
-        <View>
+        <View style={{flex:1}}>
           <Text style={styles.searchResultText}>{item.products_name} </Text>
           <Text style={styles.searchResultTextCat}>{item.categories_name} </Text>
         </View>

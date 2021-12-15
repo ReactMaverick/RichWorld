@@ -15,6 +15,7 @@ function MyOrder({ navigation }) {
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [orderList, setOrderList] = useState([]);
+  const [basePath, setBasePath] = useState("");
 
   const _getOrders = async (user_id) => {
     const formData = new FormData();
@@ -34,6 +35,7 @@ function MyOrder({ navigation }) {
           // console.log(JSON.stringify(response, null, " "));
           // console.log(response.orderList);
           setOrderList(response.orderList);
+          setBasePath(response.base_path)
         } else {
           console.log(status, response);
         }
@@ -56,13 +58,15 @@ function MyOrder({ navigation }) {
     var order_show_LP = parseFloat(totalUsedLp);
     var order_show_LP_value = parseFloat(order_show_LP * pricePerLp);
     var subtotal = parseFloat(order_price) + parseFloat(coupon_amount) - parseFloat(shipping_cost) - parseFloat(total_tax);
-    return subtotal - order_show_LP_value;
+    subtotal = subtotal - order_show_LP_value;
+    return subtotal.toFixed(2);
   }
 
   const _calculateOrderTotal = (totalUsedLp, pricePerLp, order_price) => {
     var order_show_LP = parseFloat(totalUsedLp);
     var order_show_LP_value = parseFloat(order_show_LP * pricePerLp);
-    return parseFloat(order_price) - order_show_LP_value;
+    var order_total = parseFloat(order_price) - order_show_LP_value;
+    return order_total.toFixed(2);
   }
 
   useEffect(() => {
@@ -100,7 +104,7 @@ function MyOrder({ navigation }) {
               <View >
                 {item.products.map((item2, key2) => (
                   <View style={styles.productDetails} key={key2}>
-                    <Image style={styles.productImage} source={require('../../assets/Image/ProductImg.png')} />
+                    <Image style={styles.productImage} source={{ uri: basePath + "/" + item2.image }} />
                     <View style={{ flex: 1, paddingLeft: 10 }}>
                       <Text style={styles.title1}>{stringFormat(item2.products_name)}</Text>
                       <Text style={styles.title2}>{item.orders_status}</Text>

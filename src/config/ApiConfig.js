@@ -29,6 +29,7 @@ export const REWARDS = BASE_URL + 'myLoyaltyPoint';
 export const TESTIMOIALS = BASE_URL + 'testimonials';
 export const CONTACT_US = BASE_URL + 'contactUs';
 export const CONTACT_US_REQUEST = BASE_URL + 'contactUsMessage';
+export const UPLOAD_PRODUCTS_IMAGES = BASE_URL + 'customerProductImages';
 
 
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
