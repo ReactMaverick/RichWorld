@@ -6,7 +6,7 @@ import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE } from '../../config/ApiConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProductDetails({ navigation, route }) {
@@ -24,6 +24,9 @@ function ProductDetails({ navigation, route }) {
   const [userData, setUserData] = useState({});
   const [androidId, setAndroidId] = useState("");
   const [activeAttributeIds, setActiveAttributeIds] = useState("");
+  const [pincode, setpincode] = useState("");
+  const [pincodeMessage, setPincodeMessage] = useState("");
+
 
 
 
@@ -48,10 +51,10 @@ function ProductDetails({ navigation, route }) {
           setActiveAttributeIds(response.detail.product_data[0].prod_attributeids);
           // console.log(response.detail.product_data[0].prod_attributeids)
           setProductAttributes(response.detail.product_data[0].attributes);
-          if(response.detail.product_data[0].BulkPriceList != undefined){
+          if (response.detail.product_data[0].BulkPriceList != undefined) {
             setBulkPriceList(response.detail.product_data[0].BulkPriceList);
           }
-          if(response.detail.product_data[0].product_review != undefined){
+          if (response.detail.product_data[0].product_review != undefined) {
             setProductReview(response.detail.product_data[0].product_review);
           }
           if (response.detail.product_data[0]['images'].length > 0) {
@@ -139,7 +142,31 @@ function ProductDetails({ navigation, route }) {
       });
 
   }
+  const _checkPincode = () => {
+    // setIsLoading(true)
+    fetch(CHECK_PINCODE + pincode, {
+      method: "GET",
+    })
+      .then((response) => {
 
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          console.log(JSON.stringify(response, null, " "));
+          setPincodeMessage(response.massage);
+        } else {
+          console.log(status, response);
+          
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
@@ -277,15 +304,23 @@ function ProductDetails({ navigation, route }) {
           </View> */}
           </View>
           <Text style={styles.pincodeCheckTitle}>Delivery Pincode Availability :</Text>
+          {pincodeMessage.length > 0 ? 
+          <View style={{ margin: 10 }}><Text style={styles.bulkText}>{pincodeMessage}</Text></View>
+          : 
+          <></>
+          }
+          
+
           <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-between' }}>
             <View style={styles.picodeCheckoutBox}>
               <TextInput
                 placeholder={''}
                 style={[styles.textInput]}
-              // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
+                value={pincode}
+                onChangeText={(pincode) => setpincode(pincode)}
               />
             </View>
-            <TouchableOpacity style={styles.pincodeCheckoutBtn}>
+            <TouchableOpacity style={styles.pincodeCheckoutBtn} onPress={(_checkPincode)}>
               <Text style={styles.pincodeCheckoutText}>Check</Text>
             </TouchableOpacity>
 
@@ -306,27 +341,27 @@ function ProductDetails({ navigation, route }) {
           <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text>
           {bulkPriceList.length > 0 ?
             <View style={{ margin: 10 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={styles.bulkTitle}>Select</Text>
-              <Text style={styles.bulkTitle}>Quantity</Text>
-              <Text style={styles.bulkTitle}>Discount</Text>
-              <Text style={styles.bulkTitle}>Price per prices</Text>
-            </View>
-            {bulkPriceList.map((item, key) => (
-              <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between' }}  key={key}>
-                <View style={styles.bulkText}>
-                  <MaterialIcons style={{ fontSize: 16 }} name="radio-button-checked" />
-                </View>
-                <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
-                <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
-                <Text style={styles.bulkText}>₹ {item.bulk_selling_price}</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={styles.bulkTitle}>Select</Text>
+                <Text style={styles.bulkTitle}>Quantity</Text>
+                <Text style={styles.bulkTitle}>Discount</Text>
+                <Text style={styles.bulkTitle}>Price per prices</Text>
               </View>
-            ))}
-          </View>
-          :
-          <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
+              {bulkPriceList.map((item, key) => (
+                <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between' }} key={key}>
+                  <View style={styles.bulkText}>
+                    <MaterialIcons style={{ fontSize: 16 }} name="radio-button-checked" />
+                  </View>
+                  <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
+                  <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
+                  <Text style={styles.bulkText}>₹ {item.bulk_selling_price}</Text>
+                </View>
+              ))}
+            </View>
+            :
+            <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
           }
-          
+
 
           <View style={styles.tabheader}>
             <TouchableOpacity onPress={() => {
@@ -348,33 +383,33 @@ function ProductDetails({ navigation, route }) {
             :
             <View style={styles.tabContent2}>
               {bulkPriceList.length > 0 ?
-              productReview.map((item, key) => (
-                <View style={styles.reviewBox} key={key}>
-                  <View style={styles.reviewTopSection}>
-                    <Image source={{ uri: basePath + "/" + item.customer_image }} style={styles.reviewUserImage} />
-                    <View>
-                      <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.reviewUserName}>{item.customers_name} </Text><Text style={[styles.reviewUserName, { color: '#818181' }]}>- {item.created_at}</Text>
+                productReview.map((item, key) => (
+                  <View style={styles.reviewBox} key={key}>
+                    <View style={styles.reviewTopSection}>
+                      <Image source={{ uri: basePath + "/" + item.customer_image }} style={styles.reviewUserImage} />
+                      <View>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={styles.reviewUserName}>{item.customers_name} </Text><Text style={[styles.reviewUserName, { color: '#818181' }]}>- {item.created_at}</Text>
+                        </View>
+
+
+                        <Rating
+                          startingValue={5}
+                          ratingCount={5}
+                          showRating={false}
+                          imageSize={20}
+                          style={{ alignItems: 'flex-start' }}
+                        />
                       </View>
 
-
-                      <Rating
-                        startingValue={5}
-                        ratingCount={5}
-                        showRating={false}
-                        imageSize={20}
-                        style={{ alignItems: 'flex-start' }}
-                      />
                     </View>
-
+                    <Text style={styles.reviewDescription}>{item.reviews_text} </Text>
                   </View>
-                  <Text style={styles.reviewDescription}>{item.reviews_text} </Text>
-                </View>
-              ))
-            :
-            <View style={styles.reviewBox}><Text style={styles.reviewDescription}>No Reviews Available.</Text></View>
-            }
-              
+                ))
+                :
+                <View style={styles.reviewBox}><Text style={styles.reviewDescription}>No Reviews Available.</Text></View>
+              }
+
 
 
             </View>

@@ -14,7 +14,7 @@ function Category({ navigation, route }) {
 
 
   const _getCategory = async () => {
-    fetch(GET_ALL_CATEGORY, {
+    fetch(GET_ALL_CATEGORY+1, {
       method: "GET",
     })
       .then((response) => {

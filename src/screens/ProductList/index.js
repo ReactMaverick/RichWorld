@@ -21,11 +21,15 @@ const actionSheetRef = createRef();
 function ProductList({ navigation, route }) {
   const { title1, title2, filterParam } = route.params;
   const [modalVisible, setFilterModalVisible] = useState(false);
-  const [data, setSliderData] = useState(10);
+  const [data, setSliderData] = useState(50);
+  const [androidId, setAndroidId] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   const [Products, setProducts] = useState([]);
   const [attrList, setAttrList] = useState([]);
+  const [maxPrice, setMaxPrice] = useState(200);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPriceFilter, setMaxPriceFilter] = useState(0);
   const [brandList, setBrandList] = useState([]);
   const [classificationList, setClassificationList] = useState([]);
   const [allCategory, setaAllCategory] = useState([]);
@@ -36,6 +40,7 @@ function ProductList({ navigation, route }) {
   const [selectedBrands, setSelectedBrands] = useState("");
   const [selectedClassification, setSelectedClassification] = useState("");
   const [selectedOptions, setSelectedOptions] = useState("");
+  const [filterApplyed, setFilterApplyed] = useState(false);
 
 
   let actionSheet;
@@ -50,12 +55,11 @@ function ProductList({ navigation, route }) {
     }
     formData.append('session_id', androidId);
     formData.append('customers_id', user_id);
+    console.log(JSON.stringify(formData, null, " "));
     fetch(POST_PRODUCT, {
       method: "POST",
-
       body: formData
     })
-
       .then((response) => {
 
         const statusCode = response.status;
@@ -67,11 +71,18 @@ function ProductList({ navigation, route }) {
         if (status == 200) {
           //  console.log(JSON.stringify(response.brandList, null, " "));
           setProducts(response.products.product_data);
-
           setAttrList(response.filters.attr_data);
+          setMaxPrice(response.filters.maxPrice)
           setBrandList(response.brandList);
           setClassificationList(response.classificationList);
+          if (response.max_price == "") {
+            setMaxPriceFilter(response.filters.maxPrice)
+          } else {
+            setMaxPriceFilter(parseInt(response.max_price))
+          }
 
+
+          setFilterModalVisible(false)
         } else {
           console.log(status, response);
         }
@@ -81,11 +92,49 @@ function ProductList({ navigation, route }) {
         setIsLoading(false)
       });
   }
+  const _changeCategory  = (id) => {
+    if(catgorySelected != id){
+      setSelectedCategory(id);
+      setSelectedBrands("");
+      setSelectedClassification("");
+      setSelectedOptions("");
+    }else{
+      setSelectedCategory(id);
+    }
+  }
+  const _applyFilters = async () => {
+    setFilterApplyed(true)
+    let tempFilterParam = {};
+    tempFilterParam.categories_id = catgorySelected;
+    tempFilterParam.brands_id = selectedBrands.substring(0, selectedBrands.length - 1);
+    tempFilterParam.classification_values_ids = selectedClassification.substring(0, selectedClassification.length - 1);
+    tempFilterParam.attr_value_ids = selectedOptions.substring(0, selectedOptions.length - 1);
+    tempFilterParam.min_price = 0;
+    tempFilterParam.max_price = maxPriceFilter;
+    tempFilterParam.filters_applied = 1;
+    if (isLogin) {
+      _getProductList(tempFilterParam, "", userData.id);
+    } else {
+      _getProductList(tempFilterParam, androidId, "");
+    }
+
+  }
+
+  const _clearFilters = async () => {
+    setFilterApplyed(false)
+    let tempFilterParam = filterParam;
+    if (isLogin) {
+      _getProductList(tempFilterParam, "", userData.id);
+    } else {
+      _getProductList(tempFilterParam, androidId, "");
+    }
+
+  }
 
   const _getAllCategory = async () => {
     setIsLoading(true)
 
-    fetch(GET_ALL_CATEGORY, {
+    fetch(GET_ALL_CATEGORY+0, {
       method: "GET",
     })
       .then((response) => {
@@ -106,7 +155,13 @@ function ProductList({ navigation, route }) {
         setIsLoading(false)
       });
   }
-
+  const stringFormat = (str) => {
+    if (str.length > 50) {
+      return str.substring(0, 50) + '...';
+    } else {
+      return str;
+    }
+  }
   const _addToWishlist = (products_id, products_attributes_prices_id, key) => {
     setIsLoading(true)
     const formData = new FormData();
@@ -155,6 +210,7 @@ function ProductList({ navigation, route }) {
       } else {
         setIsLogin(false)
         DeviceInfo.getAndroidId().then((androidId) => {
+          setAndroidId(androidId);
           _getProductList(filterParam, androidId, "");
           _getAllCategory();
         });
@@ -178,8 +234,15 @@ function ProductList({ navigation, route }) {
         {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
-            <Text style={styles.CategoryText1}>{title1} </Text>
-            <Text style={styles.CategoryText2}>{title2}</Text>
+            {filterApplyed ?
+              <></>
+              :
+              <>
+                <Text style={styles.CategoryText1}>{title1} </Text>
+                <Text style={styles.CategoryText2}>{title2}</Text>
+              </>
+            }
+
           </View>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => {
@@ -225,50 +288,56 @@ function ProductList({ navigation, route }) {
               </>
               :
               <>
-                {Products.map((item, key) => (
+                {Products.length > 0 ?
+                  Products.map((item, key) => (
 
-                  <TouchableOpacity onPress={() => {
-                    navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
-                  }} style={styles.productBox} key={key}>
+                    <TouchableOpacity onPress={() => {
+                      navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
+                    }} style={styles.productBox} key={key}>
 
-                    <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
+                      <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
 
-                      {isLogin ? <TouchableOpacity onPress={() => {
-                        console.log("long press");
-                        _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
-                      }}>
-                        <>
-                          {item.isLiked != 0 ?
-                            <AntDesign name="heart" style={styles.heartIcon} />
-                            :
-                            <AntDesign name="hearto" style={styles.heartIcon} />
-                          }
-                        </>
-                      </TouchableOpacity> : <></>}
+                        {isLogin ? <TouchableOpacity onPress={() => {
+                          console.log("long press");
+                          _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
+                        }}>
+                          <>
+                            {item.isLiked != 0 ?
+                              <AntDesign name="heart" style={styles.heartIcon} />
+                              :
+                              <AntDesign name="hearto" style={styles.heartIcon} />
+                            }
+                          </>
+                        </TouchableOpacity> : <></>}
 
-                    </ImageBackground>
-                    <Text style={styles.productTitle}>{item.products_model}</Text>
-                    <Rating
-                      startingValue={item.avg_review == null ? 0 : item.avg_review}
-                      ratingCount={5}
-                      showRating={false}
-                      imageSize={20}
-                      readonly={true}
-                      style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-                    />
-                    <View style={styles.priceBox}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
-                        <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+                      </ImageBackground>
+                      <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
+                      <Rating
+                        startingValue={item.avg_review == null ? 0 : item.avg_review}
+                        ratingCount={5}
+                        showRating={false}
+                        imageSize={20}
+                        readonly={true}
+                        style={{ alignSelf: 'flex-start', marginLeft: 5 }}
+                      />
+                      <View style={styles.priceBox}>
+                        <View style={{ flexDirection: 'row' }}>
+                          <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
+                          <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
+                        </View>
+                        <View style={styles.cartIconBox}>
+                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                        </View>
+
                       </View>
-                      <View style={styles.cartIconBox}>
-                        <AntDesign name="shoppingcart" style={styles.cartIcon} />
-                      </View>
 
-                    </View>
-
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  ))
+                  :
+                  <View style={{ flex: 1, justifyContent:'center', alignItems:'center' }}>
+                    <Text style={styles.sellingPrice}>No Products Found! </Text>
+                  </View>
+                }
               </>
 
             }
@@ -298,6 +367,7 @@ function ProductList({ navigation, route }) {
               <View style={styles.filterArea}>
                 <Text style={styles.filterAreaText}>FILTER</Text>
                 <TouchableOpacity onPress={() => {
+                  _clearFilters();
                   setFilterModalVisible(!modalVisible)
                 }}>
                   <Text style={styles.filterClearText}>Clear All</Text>
@@ -314,10 +384,10 @@ function ProductList({ navigation, route }) {
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                     {allCategory.map((item, key) => (
                       <TouchableOpacity style={styles.filterOptionsSection1} key={key} onPress={() => {
-                        setSelectedCategory(item.slug)
+                        _changeCategory(item.id)
                       }}>
                         <Text style={styles.filterOptionsTextOptions}>{item.name}</Text>
-                        {catgorySelected == item.slug ?
+                        {catgorySelected == item.id ?
                           <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
                           :
                           <></>
@@ -336,25 +406,25 @@ function ProductList({ navigation, route }) {
                     <Feather name="chevron-down" style={styles.dropdownIcon} />
 
                   </View>
-                  <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{data}</Text>
+                  <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{maxPriceFilter}</Text>
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                    <Text style={styles.rangeText}>₹0</Text>
+                    <Text style={styles.rangeText}>₹{minPrice}</Text>
 
                     <Slider
-                      maximumValue={100}
-                      minimumValue={0}
+                      maximumValue={maxPrice}
+                      minimumValue={minPrice}
                       minimumTrackTintColor="#A20101"
                       maximumTrackTintColor="#A20101"
                       step={1}
-                      value={data}
+                      value={maxPriceFilter}
                       onValueChange={
-                        (sliderValue) => setSliderData(sliderValue)
+                        (sliderValue) => setMaxPriceFilter(sliderValue)
                       }
                       thumbTintColor="#1B5E20"
                       style={{ width: Dimensions.get('window').width - 100, height: 40 }}
                     />
-                    <Text style={styles.rangeText}>₹100</Text>
+                    <Text style={styles.rangeText}>₹{maxPrice}</Text>
                   </View>
 
                 </View>
@@ -369,16 +439,16 @@ function ProductList({ navigation, route }) {
                     {brandList.map((item, key) => (
                       <TouchableOpacity style={styles.filterOptionsSection1} key={key} onPress={() => {
                         var tempBrands = selectedBrands;
-                        if (selectedBrands.includes(item.brands_name)) {
-                          tempBrands = tempBrands.replace(item.brands_name + ',', '');
+                        if (selectedBrands.includes(item.brands_id)) {
+                          tempBrands = tempBrands.replace(item.brands_id + ',', '');
                         } else {
-                          tempBrands += item.brands_name + ',';
+                          tempBrands += item.brands_id + ',';
                         }
                         setSelectedBrands(tempBrands)
                         console.log(selectedBrands)
                       }}>
                         <Text style={styles.filterOptionsTextOptions}>{item.brands_name} </Text>
-                        {(selectedBrands.includes(item.brands_name)) ?
+                        {(selectedBrands.includes(item.brands_id)) ?
                           <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
                           :
                           <></>
@@ -389,35 +459,35 @@ function ProductList({ navigation, route }) {
                 </View>
 
                 {classificationList.map((item, key) => (
-                <View style={styles.filterOptionsMain} key={key}>
-                  <View style={styles.filterOptions}>
-                    <Text style={styles.filterOptionsText}>{item.classifications_name}</Text>
-                    <Feather name="chevron-down" style={styles.dropdownIcon} />
+                  <View style={styles.filterOptionsMain} key={key}>
+                    <View style={styles.filterOptions}>
+                      <Text style={styles.filterOptionsText}>{item.classifications_name}</Text>
+                      <Feather name="chevron-down" style={styles.dropdownIcon} />
+                    </View>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {item.classificationValue.map((item2, key2) => (
+                        <TouchableOpacity style={styles.filterOptionsSection1} key={key2} onPress={() => {
+                          var tempClassification = selectedClassification;
+                          if (tempClassification.includes(item2.classification_values_id)) {
+                            tempClassification = tempClassification.replace(item2.classification_values_id + ',', '');
+                          } else {
+                            tempClassification += item2.classification_values_id + ',';
+                          }
+                          setSelectedClassification(tempClassification)
+                          console.log(tempClassification)
+                        }}>
+                          <Text style={styles.filterOptionsTextOptions}>{item2.classification_value_name}</Text>
+                          {(selectedClassification.includes(item2.classification_values_id)) ?
+                            <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                            :
+                            <></>
+                          }
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   </View>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {item.classificationValue.map((item2, key2) => (
-                      <TouchableOpacity style={styles.filterOptionsSection1} key={key2} onPress={() => {
-                        var tempClassification = selectedClassification;
-                        if (tempClassification.includes(item2.classification_value_name)) {
-                          tempClassification = tempClassification.replace(item2.classification_value_name + ',', '');
-                        } else {
-                          tempClassification += item2.classification_value_name + ',';
-                        }
-                        setSelectedClassification(tempClassification)
-                        console.log(tempClassification)
-                      }}>
-                        <Text style={styles.filterOptionsTextOptions}>{item2.classification_value_name}</Text>
-                        {(selectedClassification.includes(item2.classification_value_name)) ?
-                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                          :
-                          <></>
-                        }
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
                 ))}
-                
+
                 {attrList.map((item, key) => (
                   <View style={styles.filterOptionsMain} key={key}>
                     <View style={styles.filterOptions}>
@@ -428,20 +498,20 @@ function ProductList({ navigation, route }) {
                       {item.values.map((item2, key2) => (
                         <TouchableOpacity style={styles.filterOptionsSection1} key={key2} onPress={() => {
                           var tempOptions = selectedOptions;
-                          if (tempOptions.includes(item.option.name+'-'+item2.value)) {
-                            tempOptions = tempOptions.replace(item.option.name+'-'+item2.value + ',', '');
+                          if (tempOptions.includes(item2.value_id)) {
+                            tempOptions = tempOptions.replace(item2.value_id + ',', '');
                           } else {
-                            tempOptions += item.option.name+'-'+item2.value + ',';
+                            tempOptions += item2.value_id + ',';
                           }
                           setSelectedOptions(tempOptions)
                           console.log(tempOptions)
                         }}>
                           <Text style={styles.filterOptionsTextOptions}>{item2.value}</Text>
-                          {(selectedOptions.includes(item.option.name+'-'+item2.value)) ?
-                          <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
-                          :
-                          <></>
-                        }
+                          {(selectedOptions.includes(item2.value_id)) ?
+                            <Ionicons name="checkmark-done-outline" style={styles.dropdownIcon} />
+                            :
+                            <></>
+                          }
                         </TouchableOpacity>
                       ))}
                     </View>
@@ -455,7 +525,7 @@ function ProductList({ navigation, route }) {
                   <Text style={styles.btnTxt}>Cancel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]} onPress={(_applyFilters)}>
                   <Text style={styles.btnTxt}>Search</Text>
                 </TouchableOpacity>
               </View>

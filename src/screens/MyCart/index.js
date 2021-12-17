@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import DeviceInfo from 'react-native-device-info';
-import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM } from '../../config/ApiConfig';
+import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ActionSheet from "react-native-actions-sheet";
@@ -19,6 +19,7 @@ function MyCart({ navigation }) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
+  const [couponData, setCouponData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [cartList, setCartList] = useState([]);
   const [loyaltyPointDetails, setLoyaltyPointDetails] = useState({});
@@ -33,6 +34,8 @@ function MyCart({ navigation }) {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [pincodeError, setPincodeError] = useState("");
+
 
 
 
@@ -198,7 +201,7 @@ function MyCart({ navigation }) {
 
   const _deleteCartItem = (customers_basket_id) => {
 
-    fetch( DELETE_CART_ITEM + customers_basket_id, {
+    fetch(DELETE_CART_ITEM + customers_basket_id, {
       method: "DELETE",
     })
       .then((response) => {
@@ -256,11 +259,84 @@ function MyCart({ navigation }) {
     // console.log(discountedPrice);
     return discountedPrice.toFixed(2);
   }
+
+  const _checkAddress = (key) => {
+    let pincode = userShippingAddressList[key].entry_postcode;
+    fetch(CHECK_PINCODE + pincode, {
+      method: "GET",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          console.log(JSON.stringify(response, null, " "));
+          if (response.status) {
+            setCheck(key)
+            setPincodeError("");
+          } else {
+            setCheck()
+            setPincodeError(response.massage);
+          }
+        } else {
+          console.log(status, response);
+
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+  const _applyCoupon = () => {
+    if (isLogin) {
+      let coupons = [];
+      let couponDiscountPercent = 0;
+      let couponDiscount = 0;
+      const formData = new FormData();
+      formData.append('customers_id', userData.id);
+      formData.append('shopNow', 0);
+      formData.append('coupon_code', couponCode);
+      formData.append('coupons', coupons);
+      formData.append('coupon_discount_percent', couponDiscountPercent);
+      formData.append('coupon_discount', couponDiscount);
+      fetch(UPDATE_CART_QUANTITY, {
+        method: "POST",
+        body: formData
+      })
+        .then((response) => {
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            // console.log(JSON.stringify(response, null, " "));
+            if (response.status) {
+              if (isLogin) {
+                _getCartList(userData.id, "");
+              } else {
+                _getCartList("", android_id);
+              }
+            }
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false)
+        });
+    }
+  }
+
   useEffect(() => {
-
     if (isFocused) {
-
       AsyncStorage.getItem('userData').then((userData) => {
+        // console.log(couponData);
         if (userData != null) {
           setIsLogin(true)
           setUserData(JSON.parse(userData))
@@ -326,11 +402,11 @@ function MyCart({ navigation }) {
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity onPress={() => {
-                      _deleteCartItem(item.customers_basket_id);
-                    }} >
-                      <AntDesign name="delete" style={styles.deleteIcon} />
-                    </TouchableOpacity>
-                  
+                    _deleteCartItem(item.customers_basket_id);
+                  }} >
+                    <AntDesign name="delete" style={styles.deleteIcon} />
+                  </TouchableOpacity>
+
 
                 </View>
               </View>
@@ -427,15 +503,15 @@ function MyCart({ navigation }) {
             <TouchableOpacity onPress={() => {
               if (isLogin) {
                 if (check != undefined) {
-                  navigation.navigate('Checkout',{
-                    orderBillingAddressBookId:userBillingAddress[0].address_book_id,
-                    address_id_hidden:userShippingAddressList[check].address_book_id,
-                    is_shop_now:0,
-                    orderNote:"",
-                    shipping_rate:deliveryCharges,
-                    coupon_code:"",
-                    coupon_discount_percent:"",
-                    totalPrice:totalPrice
+                  navigation.navigate('Checkout', {
+                    orderBillingAddressBookId: userBillingAddress[0].address_book_id,
+                    address_id_hidden: userShippingAddressList[check].address_book_id,
+                    is_shop_now: 0,
+                    orderNote: "",
+                    shipping_rate: deliveryCharges,
+                    coupon_code: "",
+                    coupon_discount_percent: "",
+                    totalPrice: totalPrice
                   });
 
                 } else {
@@ -454,8 +530,8 @@ function MyCart({ navigation }) {
 
         </ScrollView>
         :
-        <View style={{ flex: 1, justifyContent:"center", alignItems:"center" }}>
-          <MaterialCommunityIcons  name="cart-off" style={{ color: '#A20101', fontSize: 100 }} />
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <MaterialCommunityIcons name="cart-off" style={{ color: '#A20101', fontSize: 100 }} />
           <Text style={styles.CategoryText2}>No Cart item Available</Text>
         </View>
       }
@@ -471,7 +547,11 @@ function MyCart({ navigation }) {
       <ActionSheet ref={actionSheetRef}>
         <View style={styles.changeAddressSection}>
 
-
+          {pincodeError.length > 0 ?
+            <View style={{ margin: 10 }}><Text style={styles.nameSubTitle, { color: 'red' }}>{pincodeError}</Text></View>
+            :
+            <></>
+          }
           <View style={styles.filterBar}>
             <Text style={styles.CategoryText2}>Select Delivery Address</Text>
           </View>
@@ -484,7 +564,8 @@ function MyCart({ navigation }) {
               </View>
 
               <TouchableOpacity onPress={() => {
-                setCheck(key)
+                _checkAddress(key)
+                // setCheck(key)
                 setAddressError(false);
               }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
             </View>
