@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import DeviceInfo from 'react-native-device-info';
-import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE } from '../../config/ApiConfig';
+import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE, APPLY_COUPON } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ActionSheet from "react-native-actions-sheet";
@@ -35,6 +35,8 @@ function MyCart({ navigation }) {
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [pincodeError, setPincodeError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  
 
 
 
@@ -293,52 +295,56 @@ function MyCart({ navigation }) {
   }
   const _applyCoupon = () => {
     if (isLogin) {
-      let coupons = [];
-      let couponDiscountPercent = 0;
-      let couponDiscount = 0;
+      // let coupons = "";
+      // let couponDiscountPercent = "";
+      // let couponDiscount = "";
       const formData = new FormData();
       formData.append('customers_id', userData.id);
       formData.append('shopNow', 0);
       formData.append('coupon_code', couponCode);
-      formData.append('coupons', coupons);
-      formData.append('coupon_discount_percent', couponDiscountPercent);
-      formData.append('coupon_discount', couponDiscount);
-      fetch(UPDATE_CART_QUANTITY, {
-        method: "POST",
-        body: formData
-      })
-        .then((response) => {
-          const statusCode = response.status;
-          const data = response.json();
-          return Promise.all([statusCode, data]);
-        })
-        .then(([status, response]) => {
-          if (status == 200) {
-            // console.log(JSON.stringify(response, null, " "));
-            if (response.status) {
-              if (isLogin) {
-                _getCartList(userData.id, "");
-              } else {
-                _getCartList("", android_id);
-              }
-            }
-          } else {
-            console.log(status, response);
-          }
-        })
-        .catch((error) => console.log("error", error))
-        .finally(() => {
-          setIsLoading(false)
-        });
+      formData.append('coupons', "");
+      formData.append('coupon_discount_percent', "");
+      formData.append('coupon_discount', "");
+      console.log(JSON.stringify(formData, null, " "));
+      // fetch(APPLY_COUPON, {
+      //   method: "POST",
+      //   body: formData
+      // })
+      //   .then((response) => {
+      //     const statusCode = response.status;
+      //     const data = response.json();
+      //     return Promise.all([statusCode, data]);
+      //   })
+      //   .then(([status, response]) => {
+      //     if (status == 200) {
+            
+      //       if(response.success == 1){
+      //         AsyncStorage.setItem('couponData', JSON.stringify(response.couponDetails)).then(() => {
+      //           setCouponData(response.couponDetails)
+      //           console.log(JSON.stringify(response.couponDetails, null, " "));
+      //         })
+      //       }
+      //     } else {
+      //       console.log(status, response);
+      //     }
+      //   })
+      //   .catch((error) => console.log("error", error))
+      //   .finally(() => {
+      //     setIsLoading(false)
+      //   });
     }
   }
 
   useEffect(() => {
+    console.log("useEffect");
     if (isFocused) {
       AsyncStorage.getItem('userData').then((userData) => {
         // console.log(couponData);
         if (userData != null) {
           setIsLogin(true)
+          // AsyncStorage.getItem('couponData').then((couponData) =>{
+          //   console.log("couponData",couponData);
+          // } )
           setUserData(JSON.parse(userData))
           var userDetails = JSON.parse(userData)
           setLoyalttyPoint(parseInt(userDetails.userLoyaltyPoint));
@@ -434,11 +440,13 @@ function MyCart({ navigation }) {
               <View style={styles.textInput}>
                 <TextInput
                   placeholder={'Enter your coupon code'}
+                  value={couponCode}
+                  onChangeText={(couponCode) => setCouponCode(couponCode)}
                 />
               </View>
 
               <TouchableOpacity onPress={() => {
-
+                _applyCoupon()
               }} style={[styles.applyCoupon, { backgroundColor: '#A20101' }]}>
                 <Text style={styles.checkoutbtnTxt}>
                   Apply Coupon

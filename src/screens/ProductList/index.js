@@ -98,6 +98,7 @@ function ProductList({ navigation, route }) {
       setSelectedBrands("");
       setSelectedClassification("");
       setSelectedOptions("");
+      setMaxPriceFilter(maxPrice)
     }else{
       setSelectedCategory(id);
     }

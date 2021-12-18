@@ -186,7 +186,7 @@ function MyAddress({ navigation }) {
     <>
       <Header navigation={navigation} />
       <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>Privacy Policy</Text>
+        <Text style={styles.CategoryText2}>My Address</Text>
       </View>
       <ScrollView style={{ flex: 1 }}>
 

@@ -34,6 +34,7 @@ const _getFaqs = async () => {
     })
     .then(([status, response]) => {
       if (status == 200) {
+        console.log(response.faq_list)
         // console.log(JSON.stringify(response.faq_list, null, " "));
         setFaqList(response.faq_list);
       } else {

@@ -45,7 +45,7 @@ function Testimonials({ navigation }) {
       </View>
       <ScrollView style={{ flex: 1 }}>
         {testimonials.map((item,key)=>(
-          <View style={styles.card}>
+          <View style={styles.card} key={key}>
           <View style={styles.imageouter}>
             <Image style={styles.userImage} source={{uri:item.profile_image}} />
             <View style={{ flex: 1 }}>
