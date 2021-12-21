@@ -45,6 +45,8 @@ export const GET_PAYMENT_METHODS = BASE_URL + 'getPaymentMethods';
 export const ADD_ORDER = BASE_URL + 'add_order';
 export const CHECK_PINCODE = BASE_URL + 'pincodeCheck?pincode=';
 export const APPLY_COUPON = BASE_URL + 'apply_coupon';
+export const NOTIFY_PRODUCT = BASE_URL + 'notifyProduct';
+
 
 
 

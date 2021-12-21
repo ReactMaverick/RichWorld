@@ -43,6 +43,7 @@ import OtpScreenForgetPass from "./src/screens/OtpScreenForgetPass";
 import Category from './src/screens/Category';
 import Brands from './src/screens/Brands';
 
+import FlashMessage from "react-native-flash-message";
 import configureStore from './src/redux/store'
 import { Provider } from "react-redux";
 
@@ -150,6 +151,7 @@ export default function App() {
     <Provider store={store}>
     <NavigationContainer>     
       <Stack1 />           
+      <FlashMessage position="bottom" floating={true} duration={2000} />
     </NavigationContainer>
     </Provider>
 

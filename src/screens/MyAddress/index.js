@@ -22,6 +22,7 @@ function MyAddress({ navigation }) {
 
 
   const [addressBookId, setAddressBookId] = useState('')
+  const [addressType, setAddressType] = useState('')
   const [entryStreetAddress, setEntryStreetAddress] = useState('')
   const [entryCity, setEntryCity] = useState('')
   const [entryState, setEntryState] = useState('')
@@ -78,7 +79,7 @@ function MyAddress({ navigation }) {
       setIsLoading(true)
       const formData = new FormData();
       formData.append('user_id', userData.id);
-      formData.append('address_type', 'shipping');
+      formData.append('address_type', addressType);
       formData.append('entry_firstname', entryFirstname);
       formData.append('entry_street_address', entryStreetAddress);
       formData.append('entry_city', entryCity);
@@ -193,7 +194,18 @@ function MyAddress({ navigation }) {
         <View style={styles.card}>
           <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
             <Text style={styles.headerTitle}>Billing Address</Text>
-            <AntDesign name="enviromento" style={styles.downicon} />
+            {Object.keys(billingAddressList).length === 0 ?
+              <TouchableOpacity onPress={() => {
+                setAddressType('billing')
+                toggleAddAddressModal()
+              }}>
+                <Text style={styles.editText} >Add Address</Text>
+              </TouchableOpacity>
+              :
+              <AntDesign name="enviromento" style={styles.downicon} />
+            }
+
+            {/* <AntDesign name="enviromento" style={styles.downicon} /> */}
           </View>
           <View style={styles.headerSection}>
             <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
@@ -218,9 +230,10 @@ function MyAddress({ navigation }) {
         <View style={styles.card}>
           <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
             <Text style={styles.headerTitle}>Shipping Address</Text>
-            <TouchableOpacity onPress={
-              toggleAddAddressModal
-            } >
+            <TouchableOpacity onPress={() => {
+              setAddressType('shipping')
+              toggleAddAddressModal()
+            }}>
               <Text style={styles.editText} >Add Address</Text>
             </TouchableOpacity>
           </View>
@@ -371,6 +384,7 @@ function MyAddress({ navigation }) {
             :
             <></>
           }
+
           <View style={styles.textInputOuter}>
             <TextInput
               placeholder={'Full Name'}

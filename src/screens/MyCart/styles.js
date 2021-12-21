@@ -141,6 +141,19 @@ export default StyleSheet.create({
         // flexDirection: 'row',
         // justifyContent: 'space-around',
     },
+    couponBoxPrice:{
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 15,
+        paddingBottom: 15,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
     priceLine:{
         borderWidth: 1,
         borderColor: "#eee",
@@ -175,13 +188,21 @@ export default StyleSheet.create({
     checkoutbtnTxt:{
         fontFamily: 'Poppins-Bold',
         color: '#fff',
-        fontSize: 14
+        fontSize: 14,
     },
     checkoutButton:{
         paddingTop: 10,
         paddingBottom: 10,
         paddingRight: 50,
         paddingLeft: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addAddress:{
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        backgroundColor: '#A20101',
+        flexDirection:"row",
         justifyContent: 'center',
         alignItems: 'center',
     },

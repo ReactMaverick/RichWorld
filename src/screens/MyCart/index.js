@@ -9,17 +9,21 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import DeviceInfo from 'react-native-device-info';
 import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE, APPLY_COUPON } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage, hideMessage } from "react-native-flash-message";
+
+import { useSelector, useDispatch } from "react-redux";
 
 import ActionSheet from "react-native-actions-sheet";
 import { useIsFocused } from "@react-navigation/native";
 const actionSheetRef = createRef();
 function MyCart({ navigation }) {
 
+  const dispatch = useDispatch();
+
   const [check, setCheck] = useState();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
-  const [couponData, setCouponData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [cartList, setCartList] = useState([]);
   const [loyaltyPointDetails, setLoyaltyPointDetails] = useState({});
@@ -36,12 +40,18 @@ function MyCart({ navigation }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [pincodeError, setPincodeError] = useState("");
   const [couponCode, setCouponCode] = useState("");
-  
 
+  const couponData = useSelector((state) => state.couponReducer
+  );
+  const setCoupon = (item) =>
+    dispatch({
+      type: "ADD_COUPON",
+      payload: {
+        item
+      },
+    });
 
-
-
-  const _getCartList = async (customers_id, session_id) => {
+  const _getCartList = async (customers_id, session_id, couponDiscountPercent = null) => {
     fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
       method: "get",
     })
@@ -58,7 +68,7 @@ function MyCart({ navigation }) {
           setLoyaltyPointDetails(response.loyalty_point_details)
           setUserShippingAddressList(response.userShippingAddressList)
           setUserBillingAddress(response.userBillingAddress)
-          _calculateAmounts(response.cart, response.shipping_detail)
+          _calculateAmounts(response.cart, response.shipping_detail, couponDiscountPercent)
 
         } else {
           console.log(status, response);
@@ -71,7 +81,7 @@ function MyCart({ navigation }) {
   }
 
   // _calculateAmounts
-  const _calculateAmounts = (cart, shipping_detail) => {
+  const _calculateAmounts = async (cart, shipping_detail, couponDiscountPercent) => {
     var finalCuponDiscount = 0;
     var totalTax = 0;
     var userLoyaltyPoint = 0;
@@ -80,7 +90,10 @@ function MyCart({ navigation }) {
     var afterDiscTaxableAmountTotal = 0;
     var allProductTotal = 0;
     var coupon_discount_percent = 0;
-
+    if (couponDiscountPercent != null) {
+      coupon_discount_percent = couponDiscountPercent;
+    }
+    console.log(coupon_discount_percent)
     if (isLogin) {
       if (userData.userLoyaltyPoint > loyaltyPointDetails.max_point_per_order) {
         userLoyaltyPoint = loyaltyPointDetails.max_point_per_order;
@@ -157,6 +170,7 @@ function MyCart({ navigation }) {
     // }
     setDeliveryCharges(shipping_detail.rate.toFixed(2));
     setSubTotal(beforeDiscTaxableAmountTotal.toFixed(2));
+    setCouponDiscount(finalCuponDiscount.toFixed(2))
     setTotalTax(totalTax.toFixed(2));
     setTotalPrice(Math.round(finalPrice));
   }
@@ -185,9 +199,11 @@ function MyCart({ navigation }) {
           // console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             if (isLogin) {
-              _getCartList(userData.id, "");
+              _getCartList(userData.id,
+                "",
+                couponData != null ? couponData.item.coupon_discount_percent : null);
             } else {
-              _getCartList("", android_id);
+              _getCartList("", android_id, null);
             }
           }
 
@@ -218,9 +234,9 @@ function MyCart({ navigation }) {
           console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             if (isLogin) {
-              _getCartList(userData.id, "");
+              _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
             } else {
-              _getCartList("", android_id);
+              _getCartList("", android_id, null);
             }
           }
 
@@ -275,7 +291,7 @@ function MyCart({ navigation }) {
       })
       .then(([status, response]) => {
         if (status == 200) {
-          console.log(JSON.stringify(response, null, " "));
+          // console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             setCheck(key)
             setPincodeError("");
@@ -293,11 +309,9 @@ function MyCart({ navigation }) {
         setIsLoading(false)
       });
   }
-  const _applyCoupon = () => {
+  const _applyCoupon = async () => {
     if (isLogin) {
-      // let coupons = "";
-      // let couponDiscountPercent = "";
-      // let couponDiscount = "";
+
       const formData = new FormData();
       formData.append('customers_id', userData.id);
       formData.append('shopNow', 0);
@@ -305,55 +319,60 @@ function MyCart({ navigation }) {
       formData.append('coupons', "");
       formData.append('coupon_discount_percent', "");
       formData.append('coupon_discount', "");
-      console.log(JSON.stringify(formData, null, " "));
-      // fetch(APPLY_COUPON, {
-      //   method: "POST",
-      //   body: formData
-      // })
-      //   .then((response) => {
-      //     const statusCode = response.status;
-      //     const data = response.json();
-      //     return Promise.all([statusCode, data]);
-      //   })
-      //   .then(([status, response]) => {
-      //     if (status == 200) {
-            
-      //       if(response.success == 1){
-      //         AsyncStorage.setItem('couponData', JSON.stringify(response.couponDetails)).then(() => {
-      //           setCouponData(response.couponDetails)
-      //           console.log(JSON.stringify(response.couponDetails, null, " "));
-      //         })
-      //       }
-      //     } else {
-      //       console.log(status, response);
-      //     }
-      //   })
-      //   .catch((error) => console.log("error", error))
-      //   .finally(() => {
-      //     setIsLoading(false)
-      //   });
+      // console.log(JSON.stringify(formData, null, " "));
+      fetch(APPLY_COUPON, {
+        method: "POST",
+
+        body: formData
+      })
+        .then((response) => {
+          const statusCode = response.status;
+          const data = response.json();
+          return Promise.all([statusCode, data]);
+        })
+        .then(([status, response]) => {
+          if (status == 200) {
+            if (response.success === "1") {
+              setCoupon(response.couponDetails)
+              _getCartList(userData.id, "", response.couponDetails.coupon_discount_percent);
+            } else {
+              showMessage({
+                message: response.message,
+                type: "info",
+                backgroundColor: "#808080",
+              });
+            }
+          } else {
+            console.log(status, response);
+          }
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          setIsLoading(false)
+        });
     }
   }
+  const _deleteCoupon = async () => {
+    dispatch({
+      type: "DELETE_COUPON"
+    });
+  }
+
 
   useEffect(() => {
-    console.log("useEffect");
     if (isFocused) {
       AsyncStorage.getItem('userData').then((userData) => {
-        // console.log(couponData);
         if (userData != null) {
           setIsLogin(true)
-          // AsyncStorage.getItem('couponData').then((couponData) =>{
-          //   console.log("couponData",couponData);
-          // } )
           setUserData(JSON.parse(userData))
           var userDetails = JSON.parse(userData)
           setLoyalttyPoint(parseInt(userDetails.userLoyaltyPoint));
-          _getCartList(userDetails.id, "");
+          _getCartList(userDetails.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
         } else {
           setIsLogin(false)
           DeviceInfo.getAndroidId().then((androidId) => {
             setAndroidId(androidId)
-            _getCartList("", androidId)
+            _getCartList("", androidId, null)
           });
         }
       })
@@ -435,6 +454,25 @@ function MyCart({ navigation }) {
             <Text style={styles.priceTitle}>
               Use Coupon Code
             </Text>
+
+            {couponData != null ?
+              <View style={styles.couponBoxPrice}>
+                <Text style={styles.priceTitle}>
+                  Coupon Applied {couponData.item.coupon[0].code}. If you do not want to apply this coupon just click cross button .
+                </Text>
+                <TouchableOpacity onPress={() => {
+                  _deleteCoupon()
+                }}>
+                  <AntDesign name="closecircleo" style={{ color: '#A20101', fontSize: 20 }} />
+                </TouchableOpacity>
+              </View>
+
+              :
+              <></>
+            }
+
+
+
             <View style={styles.priceLine}></View>
             <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between' }}>
               <View style={styles.textInput}>
@@ -562,6 +600,13 @@ function MyCart({ navigation }) {
           }
           <View style={styles.filterBar}>
             <Text style={styles.CategoryText2}>Select Delivery Address</Text>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('MyAddress');
+            }} style={styles.addAddress}>
+              <AntDesign name="plus" style={{ color: '#fff', fontSize: 14 }} />
+              <Text style={styles.btnTxt}>Address</Text>
+            </TouchableOpacity>
+
           </View>
           {userShippingAddressList.map((item, key) => (
             <View style={styles.changeAddressSectionInner} key={key}>

@@ -55,7 +55,7 @@ function ProductList({ navigation, route }) {
     }
     formData.append('session_id', androidId);
     formData.append('customers_id', user_id);
-    console.log(JSON.stringify(formData, null, " "));
+    // console.log(JSON.stringify(formData, null, " "));
     fetch(POST_PRODUCT, {
       method: "POST",
       body: formData
@@ -157,8 +157,8 @@ function ProductList({ navigation, route }) {
       });
   }
   const stringFormat = (str) => {
-    if (str.length > 50) {
-      return str.substring(0, 50) + '...';
+    if (str.length > 40) {
+      return str.substring(0, 40) + '...';
     } else {
       return str;
     }

@@ -6,7 +6,8 @@ import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT } from '../../config/ApiConfig'
+import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProductDetails({ navigation, route }) {
@@ -131,7 +132,7 @@ function ProductDetails({ navigation, route }) {
         if (isLogin) {
           _productDetails(userData.id, "", products_id, response.products_attributes_prices_id)
         } else {
-          _productDetails("", androidId, products_id, products_attributes_prices_id)
+          _productDetails("", androidId, products_id, response.products_attributes_prices_id)
         }
 
       }
@@ -167,6 +168,36 @@ function ProductDetails({ navigation, route }) {
         setIsLoading(false)
       });
   }
+  const _notifyProduct = () => {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('customers_id', userData.id);
+    formData.append('products_id', products_id);
+    formData.append('products_attributes_prices_id', products_attributes_prices_id);
+
+    fetch(NOTIFY_PRODUCT, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        showMessage({
+          message: response.message,
+          type: "info",
+          backgroundColor: "#808080",
+        });
+
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
@@ -244,7 +275,7 @@ function ProductDetails({ navigation, route }) {
                   readonly={true}
                   style={{ alignSelf: 'flex-end', marginLeft: 5 }}
                 />
-                <Text style={styles.reviewText}>(62 Reviews)</Text>
+                <Text style={styles.reviewText}>({productReview.length} Reviews)</Text>
               </View>
 
 
@@ -419,7 +450,7 @@ function ProductDetails({ navigation, route }) {
           {productDetails.defaultStock > 0 ?
             <View style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Buy Now</Text></View>
             :
-            <View style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Notify Me</Text></View>
+            <TouchableOpacity onPress={_notifyProduct} style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Notify Me</Text></TouchableOpacity>
           }
 
           {productDetails.defaultStock > 0 ?

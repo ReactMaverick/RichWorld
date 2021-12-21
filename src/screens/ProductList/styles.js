@@ -19,7 +19,7 @@ export default StyleSheet.create({
     },
     productImage:{
         width:Dimensions.get('window').width/2-20,
-        height:'60%',
+        height:Dimensions.get('window').width/3,        
         borderTopLeftRadius:5,
         borderTopRightRadius:5
     },
