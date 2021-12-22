@@ -6,11 +6,13 @@ import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from "react-redux";
 
 function ProductDetails({ navigation, route }) {
+  const dispatch = useDispatch();
   const { products_id, products_attributes_prices_id } = route.params;
   const [tab, setTab] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,6 +76,32 @@ function ProductDetails({ navigation, route }) {
         setIsLoading(false)
       });
   }
+
+  const _initialize_cart = async (customers_id, session_id) => {
+    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
+      method: "get",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          dispatch({
+            type: "INTIALIZE_CART",
+            payload: response.cart,
+          });
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+
+      });
+  }
   const _addToCart = (quantity) => {
     setIsLoading(true)
     const formData = new FormData();
@@ -89,7 +117,6 @@ function ProductDetails({ navigation, route }) {
     formData.append('products_id', products_id);
     formData.append('prod_attributeids', productDetails.prod_attributeids);
     formData.append('quantity', quantity);
-
     fetch(ADD_TO_CART, {
       method: "POST",
       body: formData
@@ -99,7 +126,14 @@ function ProductDetails({ navigation, route }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
-        console.log("response", response)
+        var customers_id = "";
+        var session_id = "";
+        if (isLogin) {
+          customers_id = userData.id;
+        } else {
+          session_id = androidId;
+        }
+        _initialize_cart(customers_id, session_id)
       }
     })
       .catch((error) => console.log("error", error))
@@ -107,6 +141,41 @@ function ProductDetails({ navigation, route }) {
         setIsLoading(false)
       });
   }
+  const _buyNow = (quantity) => {
+    // setIsLoading(true)
+    const formData = new FormData();
+    var customers_id = "";
+    var session_id = "";
+    if (isLogin) {
+      customers_id = userData.id;
+    } else {
+      session_id = androidId;
+    }
+    formData.append('customers_id', customers_id);
+    formData.append('session_id', session_id);
+    formData.append('products_id', products_id);
+    formData.append('prod_attributeids', productDetails.prod_attributeids);
+    formData.append('quantity', quantity);
+    formData.append('shopNow', 1);
+    // console.log(formData)
+    fetch(ADD_TO_CART, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+        navigation.navigate('MyCart', { shopNow: 1 });
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
 
   const _changeActiveAttributeIds = (old_products_attributes_id, new_products_attributes_id) => {
     var attributes_ids = activeAttributeIds.replace(old_products_attributes_id, new_products_attributes_id);
@@ -160,7 +229,7 @@ function ProductDetails({ navigation, route }) {
           setPincodeMessage(response.massage);
         } else {
           console.log(status, response);
-          
+
         }
       })
       .catch((error) => console.log("error", error))
@@ -335,12 +404,12 @@ function ProductDetails({ navigation, route }) {
           </View> */}
           </View>
           <Text style={styles.pincodeCheckTitle}>Delivery Pincode Availability :</Text>
-          {pincodeMessage.length > 0 ? 
-          <View style={{ margin: 10 }}><Text style={styles.bulkText}>{pincodeMessage}</Text></View>
-          : 
-          <></>
+          {pincodeMessage.length > 0 ?
+            <View style={{ margin: 10 }}><Text style={styles.bulkText}>{pincodeMessage}</Text></View>
+            :
+            <></>
           }
-          
+
 
           <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-between' }}>
             <View style={styles.picodeCheckoutBox}>
@@ -448,7 +517,9 @@ function ProductDetails({ navigation, route }) {
         </ScrollView>
         <View style={styles.attToCartBtn}>
           {productDetails.defaultStock > 0 ?
-            <View style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Buy Now</Text></View>
+            <TouchableOpacity onPress={() => {
+              _buyNow(1)
+            }} View style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Buy Now</Text></TouchableOpacity>
             :
             <TouchableOpacity onPress={_notifyProduct} style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Notify Me</Text></TouchableOpacity>
           }

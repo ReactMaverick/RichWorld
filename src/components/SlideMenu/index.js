@@ -61,7 +61,7 @@ function SlideMenu({ navigation }) {
     navigation.navigate('Login');
 }else{
     navigation.dispatch(DrawerActions.toggleDrawer())
-    navigation.navigate('MyCart');
+    navigation.navigate('MyCart',{shopNow: 0});
 }
             
             }} style={styles.menuItem}>

@@ -84,7 +84,7 @@ function Rewards({ navigation }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => {
-                        navigation.navigate('MyCart');
+                        navigation.navigate('MyCart',{shopNow: 0});
 
                     }}>
                         <AntDesign name="shoppingcart" style={styles.menuIcon} />

@@ -7,14 +7,16 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import RazorpayCheckout from 'react-native-razorpay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_PAYMENT_METHODS, ADD_ORDER } from '../../config/ApiConfig';
+import { useSelector, useDispatch } from "react-redux";
 function Checkout({ navigation, route }) {
 
-    const { orderBillingAddressBookId, address_id_hidden, is_shop_now, orderNote, shipping_rate, coupon_code, coupon_discount_percent, totalPrice } = route.params;
+    const { orderBillingAddressBookId, address_id_hidden, is_shop_now, orderNote, shipping_rate, totalPrice } = route.params;
     const [check, setCheck] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState({});
     const [isLogin, setIsLogin] = useState(false);
-
+    const couponData = useSelector((state) => state.couponReducer
+    );
     const _getPaymentMethods = async () => {
         fetch(GET_PAYMENT_METHODS, {
             method: "get",
@@ -27,7 +29,7 @@ function Checkout({ navigation, route }) {
             .then(([status, response]) => {
                 if (status == 200) {
                     // console.log(JSON.stringify(response, null, " "));
-                    navigation.navigate('Thankyou');
+                    // navigation.navigate('Thankyou');
                 } else {
                     // console.log(status, response);
                 }
@@ -47,12 +49,17 @@ function Checkout({ navigation, route }) {
         formData.append('payment_method', payment_method);
         if (payment_method == "razor_pay") {
             formData.append('razorpay_payment_id', razorpay_payment_id);
+        }else{
+            formData.append('razorpay_payment_id', "");
         }
+        
         formData.append('is_shop_now', is_shop_now);
         formData.append('orderNote', orderNote);
         formData.append('shipping_rate', shipping_rate);
-        formData.append('coupon_code', coupon_code);
-        formData.append('coupon_discount_percent', coupon_discount_percent);
+        if(couponData != null){
+            formData.append('coupon_code', JSON.stringify(couponData.item.coupon));
+            formData.append('coupon_discount_percent', couponData.item.coupon_discount_percent);
+        }
         formData.append('os', Platform.OS);
         formData.append('user_server_details', "");
         console.log(JSON.stringify(formData, null, " "));
@@ -67,9 +74,10 @@ function Checkout({ navigation, route }) {
             })
             .then(([status, response]) => {
                 if (status == 200) {
-                    console.log(response);
+                    console.log(status, response);
+                    navigation.navigate('Thankyou');
                 } else {
-                    console.log(response);
+                    console.log(status, response);
                 }
             })
             .catch((error) => console.log("error", error))

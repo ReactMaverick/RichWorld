@@ -16,8 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 import ActionSheet from "react-native-actions-sheet";
 import { useIsFocused } from "@react-navigation/native";
 const actionSheetRef = createRef();
-function MyCart({ navigation }) {
-
+function MyCart({ navigation, route }) {
+  const { shopNow } = route.params;
   const dispatch = useDispatch();
 
   const [check, setCheck] = useState();
@@ -50,9 +50,21 @@ function MyCart({ navigation }) {
         item
       },
     });
+    
+    const initialize_cart = (item) =>
+    dispatch({
+      type: "INTIALIZE_CART",
+      payload: item,
+    });
+
 
   const _getCartList = async (customers_id, session_id, couponDiscountPercent = null) => {
-    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
+    let VIEW_CART_URL = VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=';
+    if( shopNow == 1 ){
+      VIEW_CART_URL = VIEW_CART_URL+1;
+    }
+    // console.log("VIEW_CART_URL",VIEW_CART_URL)
+    fetch(VIEW_CART_URL, {
       method: "get",
     })
       .then((response) => {
@@ -64,6 +76,7 @@ function MyCart({ navigation }) {
       .then(([status, response]) => {
         if (status == 200) {
           // console.log(JSON.stringify(response, null, " "));
+          initialize_cart(response.cart)
           setCartList(response.cart)
           setLoyaltyPointDetails(response.loyalty_point_details)
           setUserShippingAddressList(response.userShippingAddressList)
@@ -93,7 +106,7 @@ function MyCart({ navigation }) {
     if (couponDiscountPercent != null) {
       coupon_discount_percent = couponDiscountPercent;
     }
-    console.log(coupon_discount_percent)
+    // console.log(coupon_discount_percent)
     if (isLogin) {
       if (userData.userLoyaltyPoint > loyaltyPointDetails.max_point_per_order) {
         userLoyaltyPoint = loyaltyPointDetails.max_point_per_order;
@@ -231,7 +244,7 @@ function MyCart({ navigation }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          console.log(JSON.stringify(response, null, " "));
+          //console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             if (isLogin) {
               _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
@@ -314,7 +327,7 @@ function MyCart({ navigation }) {
 
       const formData = new FormData();
       formData.append('customers_id', userData.id);
-      formData.append('shopNow', 0);
+      formData.append('shopNow', shopNow);
       formData.append('coupon_code', couponCode);
       formData.append('coupons', "");
       formData.append('coupon_discount_percent', "");
@@ -552,11 +565,9 @@ function MyCart({ navigation }) {
                   navigation.navigate('Checkout', {
                     orderBillingAddressBookId: userBillingAddress[0].address_book_id,
                     address_id_hidden: userShippingAddressList[check].address_book_id,
-                    is_shop_now: 0,
+                    is_shop_now: shopNow,
                     orderNote: "",
                     shipping_rate: deliveryCharges,
-                    coupon_code: "",
-                    coupon_discount_percent: "",
                     totalPrice: totalPrice
                   });
 

@@ -14,49 +14,20 @@ import DeviceInfo from 'react-native-device-info';
 import { useIsFocused } from "@react-navigation/native";
 
 function HeaderHome({ navigation }) {
-  const [cartCount,setCartCount] = useState(0);
+  
 
   const isFocused = useIsFocused();
   const userData = useSelector(
     (state) => state.authReducer
   );
-  const _getCartList = async (customers_id, session_id) => {
-    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
-      method: "get",
-    })
-      .then((response) => {
 
-        const statusCode = response.status;
-        const data = response.json();
-        return Promise.all([statusCode, data]);
-      })
-      .then(([status, response]) => {
-        if (status == 200) {
-          setCartCount(response.cart.length)
-          
-
-        } else {
-          console.log(status, response);
-        }
-      })
-      .catch((error) => console.log("error", error))
-      .finally(() => {
-
-      });
-  }
-
+  const cartData = useSelector(
+    (state) => state.cartReducer
+  );
+  
 
   useEffect(() => {
-    if (isFocused) {
-    if (userData == null) {
-      DeviceInfo.getAndroidId().then((androidId) => {
-        _getCartList("", androidId)
-      });
-    } else {
-      _getCartList(userData.item.id, "")
-    }
-  }
-  }, [navigation,isFocused]);
+  }, [navigation]);
 
   return (
     // <View style={styles.headerBox}>
@@ -98,13 +69,13 @@ function HeaderHome({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('MyCart');
+            navigation.navigate('MyCart',{shopNow: 0});
 
           }}>
             <View style={{ flexDirection: 'row' }}>
 
               <AntDesign name="shoppingcart" style={styles.menuIcon} />
-              {cartCount !=0?<View style={styles.countOuter}><Text style={styles.countText}>{cartCount}</Text></View>:<></>}
+              {cartData.length > 0?<View style={styles.countOuter}><Text style={styles.countText}>{cartData.length}</Text></View>:<></>}
               
             </View>
 

@@ -92,20 +92,23 @@ function ProductList({ navigation, route }) {
         setIsLoading(false)
       });
   }
-  const _changeCategory  = (id) => {
-    if(catgorySelected != id){
+  const _changeCategory = (id) => {
+    if (catgorySelected != id) {
       setSelectedCategory(id);
       setSelectedBrands("");
       setSelectedClassification("");
       setSelectedOptions("");
       setMaxPriceFilter(maxPrice)
-    }else{
+    } else {
       setSelectedCategory(id);
     }
   }
-  const _applyFilters = async () => {
+  const _applyFilters = async (type = null) => {
     setFilterApplyed(true)
     let tempFilterParam = {};
+    if (type != null) {
+      tempFilterParam.type = type;
+    }
     tempFilterParam.categories_id = catgorySelected;
     tempFilterParam.brands_id = selectedBrands.substring(0, selectedBrands.length - 1);
     tempFilterParam.classification_values_ids = selectedClassification.substring(0, selectedClassification.length - 1);
@@ -121,7 +124,12 @@ function ProductList({ navigation, route }) {
 
   }
 
+
   const _clearFilters = async () => {
+    setSelectedCategory("");
+    setSelectedBrands("");
+    setSelectedClassification("");
+    setSelectedOptions("");
     setFilterApplyed(false)
     let tempFilterParam = filterParam;
     if (isLogin) {
@@ -135,7 +143,7 @@ function ProductList({ navigation, route }) {
   const _getAllCategory = async () => {
     setIsLoading(true)
 
-    fetch(GET_ALL_CATEGORY+0, {
+    fetch(GET_ALL_CATEGORY + 0, {
       method: "GET",
     })
       .then((response) => {
@@ -201,6 +209,12 @@ function ProductList({ navigation, route }) {
 
 
   useEffect(() => {
+    // console.log("useeffect");
+    setSelectedCategory("");
+    setSelectedBrands("");
+    setSelectedClassification("");
+    setSelectedOptions("");
+    setFilterApplyed(false)
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
         setIsLogin(true)
@@ -335,7 +349,7 @@ function ProductList({ navigation, route }) {
                     </TouchableOpacity>
                   ))
                   :
-                  <View style={{ flex: 1, justifyContent:'center', alignItems:'center' }}>
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={styles.sellingPrice}>No Products Found! </Text>
                   </View>
                 }
@@ -526,7 +540,9 @@ function ProductList({ navigation, route }) {
                   <Text style={styles.btnTxt}>Cancel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]} onPress={(_applyFilters)}>
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]} onPress={() => {
+                  _applyFilters(null)
+                }}>
                   <Text style={styles.btnTxt}>Search</Text>
                 </TouchableOpacity>
               </View>
@@ -541,11 +557,90 @@ function ProductList({ navigation, route }) {
 
         <ActionSheet ref={actionSheetRef}>
           <View style={{ backgroundColor: '#fff', padding: 10 }}>
-            <Text style={styles.sortingText}>New Arrival</Text>
-            <Text style={styles.sortingText}>Price: Low to High </Text>
-            <Text style={styles.sortingText}>Price: High to Low</Text>
-            <Text style={styles.sortingText}>Discount: High to Low </Text>
-            <Text style={styles.sortingText}>Rating: High to Low </Text>
+
+            <TouchableOpacity onPress={() => {
+              if (filterApplyed) {
+                _applyFilters(null);
+              } else {
+                if (isLogin) {
+                  _getProductList(filterParam, "", userData.id);
+                } else {
+                  _getProductList(filterParam, androidId, "");
+                }
+              }
+
+            }}>
+              <Text style={styles.sortingText}>New Arrival</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+              if (filterApplyed) {
+                _applyFilters("lowtohigh");
+              } else {
+                var tempFilters = filterParam;
+                tempFilters.type = "lowtohigh";
+                if (isLogin) {
+                  _getProductList(tempFilters, "", userData.id);
+                } else {
+                  _getProductList(tempFilters, androidId, "");
+                }
+              }
+
+            }}>
+              <Text style={styles.sortingText}>Price: Low to High </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+              if (filterApplyed) {
+                _applyFilters("hightolow");
+              } else {
+                var tempFilters = filterParam;
+                tempFilters.type = "hightolow";
+                if (isLogin) {
+                  _getProductList(tempFilters, "", userData.id);
+                } else {
+                  _getProductList(tempFilters, androidId, "");
+                }
+              }
+
+            }}>
+              <Text style={styles.sortingText}>Price: High to Low</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+              if (filterApplyed) {
+                _applyFilters("discounthightolow");
+              } else {
+                var tempFilters = filterParam;
+                tempFilters.type = "discounthightolow";
+                if (isLogin) {
+                  _getProductList(tempFilters, "", userData.id);
+                } else {
+                  _getProductList(tempFilters, androidId, "");
+                }
+              }
+
+            }}>
+              <Text style={styles.sortingText}>Discount: High to Low </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+              if (filterApplyed) {
+                _applyFilters("ratinghightolow");
+              } else {
+                var tempFilters = filterParam;
+                tempFilters.type = "ratinghightolow";
+                if (isLogin) {
+                  _getProductList(tempFilters, "", userData.id);
+                } else {
+                  _getProductList(tempFilters, androidId, "");
+                }
+              }
+
+            }}>
+              <Text style={styles.sortingText}>Rating: High to Low </Text>
+            </TouchableOpacity>
+
           </View>
         </ActionSheet>
       </>

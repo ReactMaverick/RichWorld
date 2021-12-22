@@ -6,9 +6,14 @@ import Swiper from 'react-native-swiper'
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { GET_HOME } from '../../config/ApiConfig'
+import { GET_HOME,VIEW_CART } from '../../config/ApiConfig'
 import SplashScreen from 'react-native-splash-screen'
+import DeviceInfo from 'react-native-device-info';
+import { useSelector, useDispatch } from "react-redux";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
 
   const [sliders, setSlide] = useState([])
   const [feature_product, setFeature_product] = useState([])
@@ -16,7 +21,15 @@ function HomeScreen({ navigation }) {
   const [brands, setBrands] = useState([])
   const [category, setCategory] = useState([])
 
+  const userData = useSelector(
+    (state) => state.authReducer
+  );
 
+  const initialize_cart = (item) =>
+  dispatch({
+    type: "INTIALIZE_CART",
+    payload: item,
+  });
 
   const _getHomeData = async () => {
     fetch(GET_HOME, {
@@ -48,10 +61,47 @@ function HomeScreen({ navigation }) {
   }
 
 
+  const _getCartList = async (customers_id, session_id) => {
+    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
+      method: "get",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+         
+          initialize_cart(response.cart)
+
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+
+      });
+  }
+
+
 
   useEffect(() => {
     SplashScreen.hide();
     _getHomeData();
+
+    AsyncStorage.getItem('userData').then((userData) => {
+      if (userData != null) {     
+        var userDetails = JSON.parse(userData)       
+        _getCartList(userDetails.id, "")
+      } else {        
+        DeviceInfo.getAndroidId().then((androidId) => {         
+          _getCartList("", androidId)
+        });
+      }
+    })
 
   }, [navigation]);
 
