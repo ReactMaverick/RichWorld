@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -153,7 +153,7 @@ function MyAddress({ navigation }) {
         .catch((error) => console.log("error", error))
         .finally(() => {
           toggleAddressModal()
-          // setIsLoading(false)
+          setIsLoading(false)
         });
     }
 
@@ -182,292 +182,301 @@ function MyAddress({ navigation }) {
       }
     })
   }, [navigation]);
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>My Address</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
 
-  return (
-    <>
-      <Header navigation={navigation} />
-      <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>My Address</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
+          <View style={styles.card}>
+            <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+              <Text style={styles.headerTitle}>Billing Address</Text>
+              {Object.keys(billingAddressList).length === 0 ?
+                <TouchableOpacity onPress={() => {
+                  setAddressType('billing')
+                  toggleAddAddressModal()
+                }}>
+                  <Text style={styles.editText} >Add Address</Text>
+                </TouchableOpacity>
+                :
+                <AntDesign name="enviromento" style={styles.downicon} />
+              }
 
-        <View style={styles.card}>
-          <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-            <Text style={styles.headerTitle}>Billing Address</Text>
-            {Object.keys(billingAddressList).length === 0 ?
+              {/* <AntDesign name="enviromento" style={styles.downicon} /> */}
+            </View>
+            <View style={styles.headerSection}>
+              <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
+              <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
+              <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
+              <Text style={styles.text2}>Email: {billingAddressList.entry_email}</Text>
+            </View>
+            <TouchableOpacity onPress={() => {
+              _setAddressData(billingAddressList).then(() => {
+                toggleAddressModal()
+              })
+            }}
+            >
+              <Text style={styles.editText} >Edit Address</Text>
+            </TouchableOpacity>
+
+          </View>
+
+
+
+
+          <View style={styles.card}>
+            <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+              <Text style={styles.headerTitle}>Shipping Address</Text>
               <TouchableOpacity onPress={() => {
-                setAddressType('billing')
+                setAddressType('shipping')
                 toggleAddAddressModal()
               }}>
                 <Text style={styles.editText} >Add Address</Text>
               </TouchableOpacity>
-              :
-              <AntDesign name="enviromento" style={styles.downicon} />
-            }
-
-            {/* <AntDesign name="enviromento" style={styles.downicon} /> */}
-          </View>
-          <View style={styles.headerSection}>
-            <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
-            <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
-            <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
-            <Text style={styles.text2}>Email: {billingAddressList.entry_email}</Text>
-          </View>
-          <TouchableOpacity onPress={() => {
-            _setAddressData(billingAddressList).then(() => {
-              toggleAddressModal()
-            })
-          }}
-          >
-            <Text style={styles.editText} >Edit Address</Text>
-          </TouchableOpacity>
-
-        </View>
-
-
-
-
-        <View style={styles.card}>
-          <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-            <Text style={styles.headerTitle}>Shipping Address</Text>
-            <TouchableOpacity onPress={() => {
-              setAddressType('shipping')
-              toggleAddAddressModal()
-            }}>
-              <Text style={styles.editText} >Add Address</Text>
-            </TouchableOpacity>
-          </View>
-          {shippingAddressList.map((item, key) => (
-            <View key={key}>
-              <View style={styles.headerSection}>
-                <Text style={styles.text1}>{item.entry_firstname}</Text>
-                <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
-                <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
-                <Text style={styles.text2}>Email: {item.entry_email}</Text>
+            </View>
+            {shippingAddressList.map((item, key) => (
+              <View key={key}>
+                <View style={styles.headerSection}>
+                  <Text style={styles.text1}>{item.entry_firstname}</Text>
+                  <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+                  <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
+                  <Text style={styles.text2}>Email: {item.entry_email}</Text>
+                </View>
+                <TouchableOpacity onPress={() => {
+                  _setAddressData(item).then(() => {
+                    toggleAddressModal()
+                  })
+                }}>
+                  <Text style={styles.editText} >Edit Address</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={() => {
-                _setAddressData(item).then(() => {
-                  toggleAddressModal()
-                })
-              }}>
-                <Text style={styles.editText} >Edit Address</Text>
+            ))}
+          </View>
+
+
+
+        </ScrollView>
+        <Footer navigation={navigation} />
+
+
+
+        <Modal isVisible={addressModal} onBackdropPress={toggleAddressModal}  >
+          <ScrollView style={styles.cancelPopup}>
+            <View style={styles.headerPopup}>
+              <Text style={styles.CategoryText2}>Edit Address</Text>
+              <TouchableOpacity onPress={toggleAddressModal}>
+                <AntDesign name="close" style={styles.closeBtn} />
               </TouchableOpacity>
             </View>
-          ))}
-        </View>
+            {errorMsg != '' ?
+              <View style={styles.headerPopup}>
+                <Text style={styles.errorMessage}>{errorMsg}</Text>
+              </View>
+              :
+              <></>
+            }
 
 
-
-      </ScrollView>
-      <Footer navigation={navigation} />
-
-
-
-      <Modal isVisible={addressModal} onBackdropPress={toggleAddressModal}  >
-        <ScrollView style={styles.cancelPopup}>
-          <View style={styles.headerPopup}>
-            <Text style={styles.CategoryText2}>Edit Address</Text>
-            <TouchableOpacity onPress={toggleAddressModal}>
-              <AntDesign name="close" style={styles.closeBtn} />
-            </TouchableOpacity>
-          </View>
-          {errorMsg != '' ?
-            <View style={styles.headerPopup}>
-              <Text style={styles.errorMessage}>{errorMsg}</Text>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Full Name'}
+                style={[styles.textInput]}
+                value={entryFirstname}
+                onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
             </View>
-            :
-            <></>
-          }
-
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Full Name'}
-              style={[styles.textInput]}
-              value={entryFirstname}
-              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Street Address'}
-              style={[styles.textInput]}
-              value={entryStreetAddress}
-              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Town / City'}
-              style={[styles.textInput]}
-              value={entryCity}
-              onChangeText={(entryCity) => setEntryCity(entryCity)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'State'}
-              style={[styles.textInput]}
-              value={entryState}
-              onChangeText={(entryState) => setEntryState(entryState)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Postcode / ZIP'}
-              style={[styles.textInput]}
-              value={entryPostcode}
-              onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Phone'}
-              style={[styles.textInput]}
-              value={entryPhone}
-              onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Email Address'}
-              style={[styles.textInput]}
-              value={entryEmail}
-              onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
-              onFocus={() => {
-                setErrorMessage('')
-              }}
-            />
-          </View>
-
-          <TouchableOpacity onPress={() => {
-            _updateShippingAddress()
-          }} style={styles.btnOuter}>
-            <Text style={styles.btnMessage}>Send </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Modal>
-
-      <Modal isVisible={addAddressModal} onBackdropPress={toggleAddAddressModal}  >
-        <ScrollView style={styles.cancelPopup}>
-          <View style={styles.headerPopup}>
-            <Text style={styles.CategoryText2}>Add Address</Text>
-            <TouchableOpacity onPress={toggleAddAddressModal}>
-              <AntDesign name="close" style={styles.closeBtn} />
-            </TouchableOpacity>
-
-
-          </View>
-          {addErrorMsg != '' ?
-            <View style={styles.headerPopup}>
-              <Text style={styles.errorMessage}>{addErrorMsg}</Text>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Street Address'}
+                style={[styles.textInput]}
+                value={entryStreetAddress}
+                onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
             </View>
-            :
-            <></>
-          }
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Town / City'}
+                style={[styles.textInput]}
+                value={entryCity}
+                onChangeText={(entryCity) => setEntryCity(entryCity)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'State'}
+                style={[styles.textInput]}
+                value={entryState}
+                onChangeText={(entryState) => setEntryState(entryState)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Postcode / ZIP'}
+                style={[styles.textInput]}
+                value={entryPostcode}
+                onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Phone'}
+                style={[styles.textInput]}
+                value={entryPhone}
+                onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
+            </View>
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Full Name'}
-              style={[styles.textInput]}
-              onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Street Address'}
-              style={[styles.textInput]}
-              onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Town / City'}
-              style={[styles.textInput]}
-              onChangeText={(entryCity) => setEntryCity(entryCity)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'State'}
-              style={[styles.textInput]}
-              onChangeText={(entryState) => setEntryState(entryState)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Postcode / ZIP'}
-              style={[styles.textInput]}
-              onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Phone'}
-              style={[styles.textInput]}
-              onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Email Address'}
+                style={[styles.textInput]}
+                value={entryEmail}
+                onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+                onFocus={() => {
+                  setErrorMessage('')
+                }}
+              />
+            </View>
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Email Address'}
-              style={[styles.textInput]}
-              onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
+            <TouchableOpacity onPress={() => {
+              _updateShippingAddress()
+            }} style={styles.btnOuter}>
+              <Text style={styles.btnMessage}>Send </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </Modal>
 
-          <TouchableOpacity onPress={() => {
-            _addShippingAddress()
-          }} style={styles.btnOuter}>
-            <Text style={styles.btnMessage}>Send </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Modal>
+        <Modal isVisible={addAddressModal} onBackdropPress={toggleAddAddressModal}  >
+          <ScrollView style={styles.cancelPopup}>
+            <View style={styles.headerPopup}>
+              <Text style={styles.CategoryText2}>Add Address</Text>
+              <TouchableOpacity onPress={toggleAddAddressModal}>
+                <AntDesign name="close" style={styles.closeBtn} />
+              </TouchableOpacity>
 
-    </>
-  )
 
+            </View>
+            {addErrorMsg != '' ?
+              <View style={styles.headerPopup}>
+                <Text style={styles.errorMessage}>{addErrorMsg}</Text>
+              </View>
+              :
+              <></>
+            }
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Full Name'}
+                style={[styles.textInput]}
+                onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Street Address'}
+                style={[styles.textInput]}
+                onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Town / City'}
+                style={[styles.textInput]}
+                onChangeText={(entryCity) => setEntryCity(entryCity)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'State'}
+                style={[styles.textInput]}
+                onChangeText={(entryState) => setEntryState(entryState)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Postcode / ZIP'}
+                style={[styles.textInput]}
+                onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Phone'}
+                style={[styles.textInput]}
+                onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Email Address'}
+                style={[styles.textInput]}
+                onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+
+            <TouchableOpacity onPress={() => {
+              _addShippingAddress()
+            }} style={styles.btnOuter}>
+              <Text style={styles.btnMessage}>Send </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </Modal>
+
+      </>
+    )
+  }
 }
 
 

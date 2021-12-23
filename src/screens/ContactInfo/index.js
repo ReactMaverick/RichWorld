@@ -57,7 +57,12 @@ function ContactInfo({ navigation }) {
       })
       .then(([status, response]) => {
         if (status == 200) {
-          console.log(JSON.stringify(response, null, " "));
+          // console.log(JSON.stringify(response, null, " "));
+          showMessage({
+            message: response.message,
+            type: "info",
+            backgroundColor: "#808080",
+          })
           setName("")
           setPhone("")
           setEmail("")

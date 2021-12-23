@@ -12,12 +12,13 @@ function Notifications({ navigation }) {
   const [notificationsList, setNotificationsList] = useState([]);
 
   const _getNotificationsList = async (userData) => {
+    setIsLoading(true)
     var customers_id = userData.id;
-    fetch(NOTIFICATION_LIST+customers_id, {
+    fetch(NOTIFICATION_LIST + customers_id, {
       method: "get",
     })
       .then((response) => {
-  
+
         const statusCode = response.status;
         const data = response.json();
         return Promise.all([statusCode, data]);
@@ -40,34 +41,43 @@ function Notifications({ navigation }) {
       if (userData != null) {
         _getNotificationsList(JSON.parse(userData));
       } else {
-        
-        
+
+
       }
     })
   }, [navigation]);
-  
-  return (
-    <>
-    <Header navigation={navigation} />
-    <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>Notifications</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
-      {notificationsList.map((item,key) => (
-        <View style={styles.notificationOuter} key={key} >
-          <Text style={styles.orderTitle}>{item.redirect_type}</Text>
-          <Text style={styles.orderDescription}>{item.notification_text}</Text>
-          <Text style={styles.orderDate}>{item.created_at}</Text>
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
         </View>
-      ))}
-        
-        
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>Notifications</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          {notificationsList.map((item, key) => (
+            <View style={styles.notificationOuter} key={key} >
+              <Text style={styles.orderTitle}>{item.redirect_type}</Text>
+              <Text style={styles.orderDescription}>{item.notification_text}</Text>
+              <Text style={styles.orderDate}>{item.created_at}</Text>
+            </View>
+          ))}
 
-      </ScrollView>
-    <Footer navigation={navigation} />
-    </>
-  )
 
+
+        </ScrollView>
+        <Footer navigation={navigation} />
+      </>
+    )
+  }
 }
 
 

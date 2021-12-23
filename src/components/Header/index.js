@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { DrawerActions } from '@react-navigation/native';
-
+import SafeAreaViewDecider from 'react-native-smart-statusbar'
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -41,6 +41,7 @@ function Header({ navigation }) {
 
   return (
     <View style={styles.headerBox}>
+      <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" />
       <TouchableOpacity style={styles.box1} onPress={() => {
         navigation.dispatch(DrawerActions.openDrawer())
       }}>

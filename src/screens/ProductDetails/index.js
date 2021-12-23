@@ -126,6 +126,11 @@ function ProductDetails({ navigation, route }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
+        showMessage({
+          message: "Item added to yor Cart!",
+          type: "info",
+          backgroundColor: "#808080",
+        });
         var customers_id = "";
         var session_id = "";
         if (isLogin) {
@@ -287,7 +292,10 @@ function ProductDetails({ navigation, route }) {
   if (isLoading) {
     return (
       <>
-        <ActivityIndicator size="large" color="#AB0000" />
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
       </>
     )
   } else {

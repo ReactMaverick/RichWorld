@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ImageBackground, Platform } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ImageBackground, Platform, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -66,6 +66,7 @@ function MyPurchased({ navigation }) {
   }
 
   const _getPurchasedOrders = async (user_id) => {
+    setIsLoading(true)
     const formData = new FormData();
     formData.append('user_id', user_id);
     fetch(MY_PURCHASED, {
@@ -95,6 +96,7 @@ function MyPurchased({ navigation }) {
   }
 
   const _submitRaitings = async () => {
+    setIsLoading(true);
     if (starRatting == '') {
       setErrorMessage("Please Select Stars");
     } else if (reviewsText == '') {
@@ -136,6 +138,7 @@ function MyPurchased({ navigation }) {
   }
 
   const _submitReturnRequest = async () => {
+    setIsLoading(true);
     if (returnReasonId == '') {
       setReturnErrorMessage("Please Select Return Reason");
     } else if (returnText == '') {
@@ -184,7 +187,7 @@ function MyPurchased({ navigation }) {
       const formData = new FormData();
       formData.append('user_id', userData.id);
       formData.append('products_id', productsId);
-      
+
       if (images.length > 0) {
         for (let i = 0; i < images.length; i++) {
           const imagePath = images[i].path;
@@ -195,12 +198,12 @@ function MyPurchased({ navigation }) {
             type: images[i].mime,
             name: arr[arr.length - 2]
           });
-         
+
 
         }
       }
 
-      
+
 
 
       fetch(UPLOAD_PRODUCTS_IMAGES, {
@@ -265,223 +268,232 @@ function MyPurchased({ navigation }) {
       }
     })
   }, [navigation]);
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>My Purchased</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          {purchasedOrderList.map((item, key) => (
+            <View style={styles.outerBox} key={key}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={{ uri: basePath + "/" + item.image }} style={styles.userImage} />
+                <View style={styles.leftBox}>
+                  <Text style={styles.leftText1}>{stringFormat(item.products_name)}</Text>
+                  <Text style={styles.leftText2}>₹{item.final_price}</Text>
+                  <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
+                  <Text style={styles.leftText2}>Delivery Date : {item.delivery_date}</Text>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.leftText2}>Subtotal:</Text>
+                    <Text style={styles.leftText1}>₹{item.final_price}	</Text>
+                  </View>
 
-  return (
-    <>
-      <Header navigation={navigation} />
-      <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>My Purchased</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
-        {purchasedOrderList.map((item, key) => (
-          <View style={styles.outerBox} key={key}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image source={{ uri: basePath + "/" + item.image }} style={styles.userImage} />
-              <View style={styles.leftBox}>
-                <Text style={styles.leftText1}>{stringFormat(item.products_name)}</Text>
-                <Text style={styles.leftText2}>₹{item.final_price}</Text>
-                <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
-                <Text style={styles.leftText2}>Delivery Date : {item.delivery_date}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={styles.leftText2}>Subtotal:</Text>
-                  <Text style={styles.leftText1}>₹{item.final_price}	</Text>
                 </View>
+              </View>
 
+              <View style={styles.outerBtn}>
+
+                {item.return_request == 0 && item.is_returnable == 1 ?
+                  <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={() => {
+                    setOrdersId(item.orders_id);
+                    setProductsId(item.products_id);
+                    toggleCancelModal();
+                  }}>
+                    <Text style={styles.btnTxt}>Return</Text>
+                  </TouchableOpacity>
+                  : <></>}
+
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={() => {
+                  setProductsId(item.products_id);
+                  toggleRatingModal();
+                }}>
+                  <Text style={styles.btnTxt}>Rating</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={() => {
+                  setProductsId(item.products_id);
+                  toggleImageModal();
+                }}>
+                  <Text style={styles.btnTxt}>Upload images</Text>
+                </TouchableOpacity>
               </View>
             </View>
-
-            <View style={styles.outerBtn}>
-
-              {item.return_request == 0 && item.is_returnable == 1 ?
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101', flex: 1 }]} onPress={() => {
-                  setOrdersId(item.orders_id);
-                  setProductsId(item.products_id);
-                  toggleCancelModal();
-                }}>
-                  <Text style={styles.btnTxt}>Return</Text>
-                </TouchableOpacity>
-                : <></>}
-
-              <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={() => {
-                setProductsId(item.products_id);
-                toggleRatingModal();
-              }}>
-                <Text style={styles.btnTxt}>Rating</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000', flex: 1.5 }]} onPress={()=>{
-                 setProductsId(item.products_id);
-                toggleImageModal();
-                }}>
-                <Text style={styles.btnTxt}>Upload images</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-
-
-      </ScrollView>
-      <Footer navigation={navigation} />
-
-
-      <Modal isVisible={cancelModal} onBackdropPress={toggleCancelModal}  >
-        <View style={styles.cancelPopup}>
-          <View style={styles.headerPopup}>
-            <Text style={styles.CategoryText2}>Write Your Reason</Text>
-            <TouchableOpacity onPress={toggleCancelModal}>
-              <AntDesign name="close" style={styles.closeBtn} />
-            </TouchableOpacity>
-          </View>
-          {returnErrorMsg != '' ?
-            <View style={styles.headerPopup}>
-              <Text style={styles.errorMessage}>{returnErrorMsg}</Text>
-            </View>
-            :
-            <></>
-          }
-          {returnReasons.map((item, key) => (
-            <TouchableOpacity onPress={() => {
-              setReturnReasonId(item.return_reasons_id);
-              setCheck(item.return_reasons_id);
-              setReturnErrorMessage('');
-            }} style={styles.itemOuter} key={key}>
-              <MaterialIcons style={{ fontSize: 20 }} name={check == item.return_reasons_id ? "radio-button-checked" : "radio-button-off"} />
-              <Text style={styles.radioText}>{item.retutn_reason}</Text>
-            </TouchableOpacity>
           ))}
 
-          <Text style={[styles.leftText2, { color: '#000' }]}>Your Comment</Text>
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Your Comment'}
-              style={[styles.textInput, { height: 100 }]}
-              multiline={true}
-              numberOfLines={4}
-              value={returnText}
-              onChangeText={(returnText) => setReturnText(returnText)}
-              onFocus={() => {
-                setReturnErrorMessage('')
-              }}
-            />
-          </View>
-
-          <TouchableOpacity onPress={() => {
-            _submitReturnRequest();
-          }} style={styles.btnOuter}>
-            <Text style={styles.btnMessage}>Send </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+        </ScrollView>
+        <Footer navigation={navigation} />
 
 
-      <Modal isVisible={ratingModal} onBackdropPress={toggleRatingModal}  >
-        <View style={styles.cancelPopup}>
-          <View style={styles.headerPopup}>
-            <Text style={styles.CategoryText2}>Write Your Review</Text>
-            <TouchableOpacity onPress={toggleRatingModal}>
-              <AntDesign name="close" style={styles.closeBtn} />
-            </TouchableOpacity>
-
-
-          </View>
-          {errorMsg != '' ?
+        <Modal isVisible={cancelModal} onBackdropPress={toggleCancelModal}  >
+          <View style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
-              <Text style={styles.errorMessage}>{errorMsg}</Text>
+              <Text style={styles.CategoryText2}>Write Your Reason</Text>
+              <TouchableOpacity onPress={toggleCancelModal}>
+                <AntDesign name="close" style={styles.closeBtn} />
+              </TouchableOpacity>
             </View>
-            :
-            <></>
-          }
-          <Rating
-            startingValue={starRatting}
-            ratingCount={5}
-            showRating={false}
-            imageSize={20}
-            onFinishRating={(value) => {
-              setStarRatting(value);
-            }}
-            onStartRating={() => {
-              setErrorMessage('')
-            }}
-            style={{ alignSelf: 'flex-start', marginTop: 20, marginBottom: 10 }}
-          />
+            {returnErrorMsg != '' ?
+              <View style={styles.headerPopup}>
+                <Text style={styles.errorMessage}>{returnErrorMsg}</Text>
+              </View>
+              :
+              <></>
+            }
+            {returnReasons.map((item, key) => (
+              <TouchableOpacity onPress={() => {
+                setReturnReasonId(item.return_reasons_id);
+                setCheck(item.return_reasons_id);
+                setReturnErrorMessage('');
+              }} style={styles.itemOuter} key={key}>
+                <MaterialIcons style={{ fontSize: 20 }} name={check == item.return_reasons_id ? "radio-button-checked" : "radio-button-off"} />
+                <Text style={styles.radioText}>{item.retutn_reason}</Text>
+              </TouchableOpacity>
+            ))}
 
-          <Text style={[styles.leftText2, { color: '#000' }]}>Your feedback</Text>
+            <Text style={[styles.leftText2, { color: '#000' }]}>Your Comment</Text>
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={''}
-              style={[styles.textInput, { height: 100 }]}
-              multiline={true}
-              numberOfLines={4}
-              value={reviewsText}
-              onChangeText={(reviewsText) => setReviewsText(reviewsText)}
-              onFocus={() => {
-                setAddErrorMessage('')
-              }}
-            />
-          </View>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Your Comment'}
+                style={[styles.textInput, { height: 100 }]}
+                multiline={true}
+                numberOfLines={4}
+                value={returnText}
+                onChangeText={(returnText) => setReturnText(returnText)}
+                onFocus={() => {
+                  setReturnErrorMessage('')
+                }}
+              />
+            </View>
 
-          <TouchableOpacity style={styles.btnOuter} onPress={() => {
-            _submitRaitings();
-          }}>
-            <Text style={styles.btnMessage}>Send </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      <Modal isVisible={imageModal} onBackdropPress={toggleImageModal}  >
-        <View style={styles.cancelPopup}>
-          <View style={styles.headerPopup}>
-            <Text style={styles.CategoryText2}>Upload Your Images</Text>
             <TouchableOpacity onPress={() => {
-              toggleImageModal();
-              setImages([]);
+              _submitReturnRequest();
+            }} style={styles.btnOuter}>
+              <Text style={styles.btnMessage}>Send </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+
+        <Modal isVisible={ratingModal} onBackdropPress={toggleRatingModal}  >
+          <View style={styles.cancelPopup}>
+            <View style={styles.headerPopup}>
+              <Text style={styles.CategoryText2}>Write Your Review</Text>
+              <TouchableOpacity onPress={toggleRatingModal}>
+                <AntDesign name="close" style={styles.closeBtn} />
+              </TouchableOpacity>
+
+
+            </View>
+            {errorMsg != '' ?
+              <View style={styles.headerPopup}>
+                <Text style={styles.errorMessage}>{errorMsg}</Text>
+              </View>
+              :
+              <></>
+            }
+            <Rating
+              startingValue={starRatting}
+              ratingCount={5}
+              showRating={false}
+              imageSize={20}
+              onFinishRating={(value) => {
+                setStarRatting(value);
+              }}
+              onStartRating={() => {
+                setErrorMessage('')
+              }}
+              style={{ alignSelf: 'flex-start', marginTop: 20, marginBottom: 10 }}
+            />
+
+            <Text style={[styles.leftText2, { color: '#000' }]}>Your feedback</Text>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={''}
+                style={[styles.textInput, { height: 100 }]}
+                multiline={true}
+                numberOfLines={4}
+                value={reviewsText}
+                onChangeText={(reviewsText) => setReviewsText(reviewsText)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+
+            <TouchableOpacity style={styles.btnOuter} onPress={() => {
+              _submitRaitings();
             }}>
-              <AntDesign name="close" style={styles.closeBtn} />
+              <Text style={styles.btnMessage}>Send </Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+        <Modal isVisible={imageModal} onBackdropPress={toggleImageModal}  >
+          <View style={styles.cancelPopup}>
+            <View style={styles.headerPopup}>
+              <Text style={styles.CategoryText2}>Upload Your Images</Text>
+              <TouchableOpacity onPress={() => {
+                toggleImageModal();
+                setImages([]);
+              }}>
+                <AntDesign name="close" style={styles.closeBtn} />
+              </TouchableOpacity>
+
+            </View>
+            <ScrollView>
+              <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+                {images.map((item, key) => (
+                  <ImageBackground style={styles.productBox} source={{ uri: item.path }} key={key} >
+                    <TouchableOpacity onPress={() => {
+                      _removeImage(key)
+                    }}>
+                      <AntDesign name="closecircle" style={[styles.closeBtn, { alignSelf: 'flex-end', padding: 10, zIndex: 2 }]} />
+                    </TouchableOpacity>
+                  </ImageBackground>
+                ))}
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity style={styles.btnOuterImage} onPress={() => {
+              ImagePicker.openPicker({
+                width: 300,
+                height: 400,
+                multiple: true
+              }).then((selectedImages) => {
+                setImages(selectedImages);
+                //console.log(selectedImages);
+              });
+            }}>
+              <Text style={styles.btnImageText}>Upload Images </Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.btnOuter} onPress={() => {
+              _uploadProductImages()
+            }}>
+              <Text style={styles.btnMessage}>Submit </Text>
+            </TouchableOpacity>
           </View>
-          <ScrollView>
-            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-              {images.map((item, key) => (
-                <ImageBackground style={styles.productBox} source={{ uri: item.path }} key={key} >
-                  <TouchableOpacity onPress={() => {
-                    _removeImage(key)
-                  }}>
-                    <AntDesign name="closecircle" style={[styles.closeBtn, { alignSelf: 'flex-end', padding: 10, zIndex: 2 }]} />
-                  </TouchableOpacity>
-                </ImageBackground>
-              ))}
-            </View>
-          </ScrollView>
-
-          <TouchableOpacity style={styles.btnOuterImage} onPress={() => {
-            ImagePicker.openPicker({
-              width: 300,
-              height: 400,
-              multiple: true
-            }).then((selectedImages) => {
-              setImages(selectedImages);
-              //console.log(selectedImages);
-            });
-          }}>
-            <Text style={styles.btnImageText}>Upload Images </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.btnOuter} onPress={() => {
-            _uploadProductImages()
-          }}>
-            <Text style={styles.btnMessage}>Submit </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+        </Modal>
 
 
 
-    </>
-  )
-
+      </>
+    )
+  }
 }
 
 

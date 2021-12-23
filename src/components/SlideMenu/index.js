@@ -11,25 +11,25 @@ import { DrawerActions } from '@react-navigation/native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 function SlideMenu({ navigation }) {
 
-    
-  const dispatch = useDispatch();
- 
-  const userData = useSelector(
-    (state) => state.authReducer
-);
+
+    const dispatch = useDispatch();
+
+    const userData = useSelector(
+        (state) => state.authReducer
+    );
 
 
-  
-  const setUserData = () =>
-  dispatch({
-    type: "LOGOUT",
-    
-  });
+
+    const setUserData = () =>
+        dispatch({
+            type: "LOGOUT",
+
+        });
 
     const isDrawerOpen = useDrawerStatus()
     const [isLogin, setIsLogin] = useState(false);
@@ -57,28 +57,26 @@ function SlideMenu({ navigation }) {
 
 
             <TouchableOpacity onPress={() => {
- if(userData==null){
-    navigation.navigate('Login');
-}else{
-    navigation.dispatch(DrawerActions.toggleDrawer())
-    navigation.navigate('MyCart',{shopNow: 0});
-}
-            
+              
+                    navigation.dispatch(DrawerActions.toggleDrawer())
+                    navigation.navigate('MyCart', { shopNow: 0 });
+             
+
             }} style={styles.menuItem}>
                 <View style={{ width: 30 }}><Entypo name="shopping-cart" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>MyCart</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => {
-                
- if(userData==null){
-    navigation.navigate('Login');
-}else{
-    navigation.dispatch(DrawerActions.toggleDrawer())
-    navigation.navigate('Rewards');
-}
-          
-               
+
+                if (userData == null) {
+                    navigation.navigate('Login');
+                } else {
+                    navigation.dispatch(DrawerActions.toggleDrawer())
+                    navigation.navigate('Rewards');
+                }
+
+
             }} style={styles.menuItem}>
                 <View style={{ width: 30 }}><Feather name="gift" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Rewards</Text>
@@ -143,22 +141,22 @@ function SlideMenu({ navigation }) {
                 <Text style={styles.menuText}>Faq</Text>
             </TouchableOpacity>
 
-            {isLogin ?<TouchableOpacity onPress={() => {
-                    navigation.dispatch(DrawerActions.toggleDrawer())
-                    navigation.navigate('Login');
-                }} style={styles.menuItem}>
+            {isLogin ? <TouchableOpacity onPress={() => {
+                navigation.dispatch(DrawerActions.toggleDrawer())
+                navigation.navigate('Login');
+            }} style={styles.menuItem}>
 
-                    <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
-                    <Text style={styles.menuText}>Login</Text>
-                </TouchableOpacity> :
-                 <TouchableOpacity onPress={() => {
-                    AsyncStorage.clear().then(()=>{
+                <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
+                <Text style={styles.menuText}>Login</Text>
+            </TouchableOpacity> :
+                <TouchableOpacity onPress={() => {
+                    AsyncStorage.clear().then(() => {
                         setUserData();
                         setIsLogin(true)
                         navigation.navigate('HomeScreen');
                     })
                 }} style={styles.menuItem}>
-    
+
                     <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
                     <Text style={styles.menuText}>Logout</Text>
                 </TouchableOpacity>

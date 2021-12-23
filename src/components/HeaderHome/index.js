@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { DrawerActions } from '@react-navigation/native';
 import { useSelector, useDispatch } from "react-redux";
-
+import SafeAreaViewDecider from 'react-native-smart-statusbar'
 import { VIEW_CART, UPDATE_CART_QUANTITY } from '../../config/ApiConfig';
 
 import DeviceInfo from 'react-native-device-info';
@@ -50,6 +50,7 @@ function HeaderHome({ navigation }) {
 
     // </View>
     <View style={styles.headerMain}>
+      <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000"/>
       <View style={styles.headerall}>
         <View style={styles.subheader}>
           <TouchableOpacity onPress={() => {
