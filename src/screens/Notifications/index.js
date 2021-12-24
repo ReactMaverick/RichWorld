@@ -11,6 +11,8 @@ function Notifications({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [notificationsList, setNotificationsList] = useState([]);
 
+
+
   const _getNotificationsList = async (userData) => {
     setIsLoading(true)
     var customers_id = userData.id;
@@ -35,6 +37,14 @@ function Notifications({ navigation }) {
       .finally(() => {
         setIsLoading(false)
       });
+  }
+  
+  const _getParsedDate = (date) => {
+    // console.log(date)
+    date = String(date).split(' ');
+    var days = String(date[0]).split('-');
+    var hours = String(date[1]).split(':');
+    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
@@ -67,7 +77,9 @@ function Notifications({ navigation }) {
             <View style={styles.notificationOuter} key={key} >
               <Text style={styles.orderTitle}>{item.redirect_type}</Text>
               <Text style={styles.orderDescription}>{item.notification_text}</Text>
-              <Text style={styles.orderDate}>{item.created_at}</Text>
+              <Text style={styles.orderDate}>{
+              dateFormat(new Date(..._getParsedDate(item.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+              }</Text>
             </View>
           ))}
 

@@ -7,6 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ORDERS } from '../../config/ApiConfig';
 import { useIsFocused } from "@react-navigation/native";
+import dateFormat, { masks } from "dateformat";
 function MyOrder({ navigation }) {
 
   const isFocused = useIsFocused();
@@ -54,7 +55,13 @@ function MyOrder({ navigation }) {
       return str;
     }
   }
-
+  const _getParsedDate = (date) => {
+    // console.log(date)
+    date = String(date).split(' ');
+    var days = String(date[0]).split('-');
+    var hours = String(date[1]).split(':');
+    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
+  }
   const _calculateSubtotal = (totalUsedLp, pricePerLp, order_price, coupon_amount, shipping_cost, total_tax) => {
     var order_show_LP = parseFloat(totalUsedLp);
     var order_show_LP_value = parseFloat(order_show_LP * pricePerLp);
@@ -107,7 +114,9 @@ function MyOrder({ navigation }) {
               setTab(key)
             }} style={styles.card} key={key}>
               <View style={styles.headerBox}>
-                <Text style={styles.headerText}>Purchase Date {item.date_purchased}</Text>
+                <Text style={styles.headerText}>Purchase Date {
+                dateFormat(new Date(..._getParsedDate(item.date_purchased)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                }</Text>
                 <AntDesign name="down" style={styles.downIcon} />
               </View>
               {tab == key ?
@@ -155,7 +164,9 @@ function MyOrder({ navigation }) {
                     {item.orders_status_history.map((item3, key3) => (
                       <View style={styles.priceOuter} key={key3}>
                         <Text style={styles.priceText}>{item3.orders_status_name}</Text>
-                        <Text style={styles.priceText}>{item3.date_added}</Text>
+                        <Text style={styles.priceText}>{
+                        dateFormat(new Date(..._getParsedDate(item3.date_added)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                        }</Text>
                       </View>
                     ))}
 
