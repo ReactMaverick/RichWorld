@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>521633579635-n9mdjb9hlvbj797mu6inab6rbutoc74i.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.521633579635-n9mdjb9hlvbj797mu6inab6rbutoc74i</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>521633579635-apisf4b28kof5mbm0o6n2lv0e05fot14.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDtMxeg_y1eii2bsgR__c3xU33rzCvCkF0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>521633579635</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.richworld</string>
+	<key>PROJECT_ID</key>
+	<string>sociallogin-3a276</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sociallogin-3a276.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:521633579635:ios:85fd25ce559c71cb7ce006</string>
+</dict>
+</plist>

@@ -32,7 +32,7 @@ export default StyleSheet.create({
         alignItems:'center'             
     },
     loginText:{
-        fontFamily:'Poppins-SemiBold',
+        fontFamily:'Poppins-Medium',
         color:'#AB0000',
         fontSize:22,
 
@@ -57,7 +57,8 @@ export default StyleSheet.create({
         borderRadius:7,
         padding:5,
         flexDirection:'row',
-        alignItems:'center'
+        alignItems:'center',
+        height:40,
     },
     btnOuter:{
         backgroundColor:'#AB0000',       
@@ -67,7 +68,7 @@ export default StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         borderRadius:30,
-        height:60,
+        height:Platform.OS=="android"?60:50,
         flexDirection:'row'
 
     },
@@ -80,13 +81,13 @@ export default StyleSheet.create({
     inputicon:{
         fontSize:20,
         color:'#AB0000',
-        marginTop:-5
+        lineHeight: 0,
+        marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{
         color:'#fff',
         fontSize:20,
-        marginTop:-5,
-        marginRight:5
+        lineHeight: 0,
     },
     errorMessage:{
         fontSize:14,

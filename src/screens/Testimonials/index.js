@@ -56,6 +56,7 @@ function Testimonials({ navigation }) {
                 ratingCount={5}
                 showRating={false}
                 imageSize={20}
+                readonly={true}
                 style={{ alignSelf: 'flex-start' }}
               />
             </View>

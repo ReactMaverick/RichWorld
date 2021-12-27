@@ -50,7 +50,7 @@ function HeaderHome({ navigation }) {
 
     // </View>
     <View style={styles.headerMain}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000"/>
+      {/* <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000"/> */}
       <View style={styles.headerall}>
         <View style={styles.subheader}>
           <TouchableOpacity onPress={() => {

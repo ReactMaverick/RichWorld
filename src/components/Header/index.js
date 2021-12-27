@@ -41,7 +41,7 @@ function Header({ navigation }) {
 
   return (
     <View style={styles.headerBox}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" />
+      {/* <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" /> */}
       <TouchableOpacity style={styles.box1} onPress={() => {
         navigation.dispatch(DrawerActions.openDrawer())
       }}>
