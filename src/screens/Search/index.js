@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect, createRef } from "react";
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import AntDesign from "react-native-vector-icons/AntDesign"
 import Feather from "react-native-vector-icons/Feather"
 import styles from "./styles";
 import { SEARCH_SUGGESSION } from '../../config/ApiConfig'
 import Voice from '@react-native-community/voice';
+import ActionSheet from "react-native-actions-sheet";
+const actionSheetRef = createRef();
 
-function Search({ navigation }) {
-
+function Search({ navigation, route }) {
+  const { text } = route.params;
   const [tab, setTab] = useState(1);
   const [result, setResult] = useState('')
   const [products, setProducts] = useState([])
   const [tagvalue, setTagvalue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
   useEffect(() => {
-
+    _search_suggession(text)
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
     Voice.onSpeechResults = onSpeechResultsHandler;
@@ -54,6 +55,7 @@ function Search({ navigation }) {
         .catch((error) => console.log("error", error))
         .finally(() => {
           setIsLoading(false)
+          
         });
     } else {
       setProducts([]);
@@ -66,6 +68,7 @@ function Search({ navigation }) {
   const onSpeechEndHandler = (e) => {
     // setLoading(false)
     console.log("stop handler", e)
+    actionSheetRef.current?.setModalVisible();
   }
 
   const onSpeechResultsHandler = (e) => {
@@ -73,10 +76,12 @@ function Search({ navigation }) {
     setResult(text)
     _search_suggession(text)
     console.log("speech result handler", e)
+    actionSheetRef.current?.setModalVisible();
   }
 
   const startRecording = async () => {
     // setLoading(true)
+    actionSheetRef.current?.setModalVisible();
     try {
       await Voice.start('en-Us')
     } catch (error) {
@@ -105,12 +110,15 @@ function Search({ navigation }) {
           onChangeText={(result) => _search_suggession(result)}
         />
         <TouchableOpacity style={styles.searchBoxAudio}
-          onPressIn={() => {
+          onPress={() => {
             startRecording()
           }}
-          onPressOut={() => {
-            stopRecording()
-          }}
+          // onPressIn={() => {
+          //   startRecording()
+          // }}
+          // onPressOut={() => {
+          //   stopRecording()
+          // }}
         >
           <Feather name="mic" style={styles.menuIconMic} />
         </TouchableOpacity>
@@ -142,7 +150,11 @@ function Search({ navigation }) {
       ))
       }
 
-
+      <ActionSheet ref={actionSheetRef}>
+        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height/4,borderTopEndRadius:20,borderTopStartRadius:20 }}>
+        <Image source={require('../../assets/Image/2SIh.gif')} style={{width: Dimensions.get('window').width}} />
+        </View>
+      </ActionSheet>
 
     </View>
     </>

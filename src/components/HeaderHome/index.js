@@ -26,9 +26,37 @@ function HeaderHome({ navigation }) {
   const cartData = useSelector(
     (state) => state.cartReducer
   );
+  const onSpeechStartHandler = (e) => {
+    console.log("start handler==>>>", e)
+  }
+  const onSpeechEndHandler = (e) => {
+    console.log("stop handler", e)
+    actionSheetRef.current?.setModalVisible();
+  }
 
-
+  const onSpeechResultsHandler = (e) => {
+    let text = e.value[0]
+    console.log("speech result handler", text)
+    actionSheetRef.current?.setModalVisible();
+    navigation.navigate('Search', { text: text })
+    // console.log("speech result handler", e)
+  }
+  const startRecording = async () => {
+    actionSheetRef.current?.setModalVisible();
+    try {
+      await Voice.start('en-Us')
+    } catch (error) {
+      console.log("error raised", error)
+    }
+  }
   useEffect(() => {
+    Voice.onSpeechStart = onSpeechStartHandler;
+    Voice.onSpeechEnd = onSpeechEndHandler;
+    Voice.onSpeechResults = onSpeechResultsHandler;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    }
   }, [navigation]);
 
   return (
@@ -95,15 +123,14 @@ function HeaderHome({ navigation }) {
 
       <View style={styles.searchBoxOuter} >
         <TouchableOpacity style={styles.searchBoxIcon} onPress={() => {
-          navigation.navigate('Search');
-
+          navigation.navigate('Search', { text: "" })
         }}>
           <AntDesign name="search1" style={styles.menuIconSearch} />
           <Text>Search for Products...</Text>
           {/* <TextInput placeholder="Search for Products..."></TextInput> */}
         </TouchableOpacity>
         <TouchableOpacity style={styles.searchBoxAudio} onPress={() => {
-          actionSheetRef.current?.setModalVisible();
+          startRecording()
         }}>
           <Feather name="mic" style={styles.menuIconMic} />
         </TouchableOpacity>
@@ -111,7 +138,7 @@ function HeaderHome({ navigation }) {
 
       <ActionSheet ref={actionSheetRef}>
         <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height/4,borderTopEndRadius:20,borderTopStartRadius:20 }}>
-         
+        <Image source={require('../../assets/Image/2SIh.gif')} style={{width: Dimensions.get('window').width}} />
         </View>
       </ActionSheet>
 

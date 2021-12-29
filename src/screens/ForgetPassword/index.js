@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator,Platform } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { FORGET_PASSWORD } from '../../config/ApiConfig';
