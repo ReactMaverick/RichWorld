@@ -58,6 +58,15 @@ export default StyleSheet.create({
         padding:5,
         flexDirection:'row',
         alignItems:'center',
+    },
+    textInputOuterIos:{
+       
+        backgroundColor:'#DBE2ED',
+        marginBottom:30,
+        borderRadius:7,
+        padding:5,
+        flexDirection:'row',
+        alignItems:'center',
         height:40,
     },
     btnOuter:{

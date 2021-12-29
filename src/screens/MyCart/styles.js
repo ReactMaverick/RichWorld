@@ -145,7 +145,7 @@ export default StyleSheet.create({
         marginTop: 10,
         marginLeft: 10,
         marginRight: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#D4EDDA',
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 15,

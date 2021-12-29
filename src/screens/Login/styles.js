@@ -57,6 +57,14 @@ export default StyleSheet.create({
         marginBottom: 30,
         borderRadius: 7,
         padding: 5,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    textInputOuterIos: {
+        backgroundColor: '#DBE2ED',
+        marginBottom: 30,
+        borderRadius: 7,
+        padding: 5,
         height:40,
         flexDirection: 'row',
         alignItems: 'center'

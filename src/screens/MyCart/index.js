@@ -500,7 +500,7 @@ function MyCart({ navigation, route }) {
 
               {couponData != null ?
                 <View style={styles.couponBoxPrice}>
-                  <Text style={styles.priceTitle}>
+                  <Text style={[styles.priceTitle,{color:'#155724'}]}>
                     Coupon Applied {couponData.item.coupon[0].code}. If you do not want to apply this coupon just click cross button .
                   </Text>
                   <TouchableOpacity onPress={() => {
