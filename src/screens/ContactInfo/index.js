@@ -131,17 +131,9 @@ function ContactInfo({ navigation }) {
           scalesPageToFit={true}
           bounces={false}
           javaScriptEnabled
-          style={{ height: 300, width: 500 }}
+          style={{ height: 300, width: Dimensions.get('window').width }}
           source={{
-            html: `
-                  <!DOCTYPE html>
-                  <html>
-                    <head></head>
-                    <body>
-                      <div id="baseDiv">${contactUs.contact_us_location}</div>
-                    </body>
-                  </html>
-            `,
+            html:contactUs.contact_us_location,
           }}
           automaticallyAdjustContentInsets={false}
         />
