@@ -7,9 +7,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Modal from "react-native-modal";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ADDRESS, ADD_MY_ADDRESS, UPDATE_SHIPPING_ADDRESS } from '../../config/ApiConfig';
+
+import { useIsFocused } from "@react-navigation/native";
 function MyAddress({ navigation }) {
 
 
+  const isFocused = useIsFocused();
   const [addressModal, setAddressModal] = useState(false);
   const [addAddressModal, setAddAddressModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,7 +109,7 @@ function MyAddress({ navigation }) {
       })
         .catch((error) => console.log("error", error))
         .finally(() => {
-          // toggleAddAddressModal()
+          toggleAddAddressModal()
           setIsLoading(false)
         });
     }
@@ -175,18 +178,19 @@ function MyAddress({ navigation }) {
   }
 
   useEffect(() => {
-    console.log('useEffect')
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-        var userDetails = JSON.parse(userData)
-        _getMyAdderss(userDetails.id);
-      } else {
-        setIsLogin(false)
-      }
-    })
-  }, [navigation]);
+    if (isFocused) {
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          _getMyAdderss(userDetails.id);
+        } else {
+          setIsLogin(false)
+        }
+      })
+    }
+  }, [navigation, isFocused]);
   if (isLoading) {
     return (
       <>
@@ -223,7 +227,7 @@ function MyAddress({ navigation }) {
             </View>
             <View style={styles.headerSection}>
               {Object.keys(billingAddressList).length === 0 ?
-                
+
                 <>
                   <Text style={styles.text2}>Billing address not yet added</Text>
                 </>
@@ -277,9 +281,9 @@ function MyAddress({ navigation }) {
                 </View>
               ))
               :
-              <>
+              <View style={styles.headerSection}>
                 <Text style={styles.text2}>Shipping address not yet added</Text>
-              </>
+              </View>
             }
           </View>
 

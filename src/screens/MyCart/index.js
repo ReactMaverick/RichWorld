@@ -30,7 +30,7 @@ function MyCart({ navigation, route }) {
   const [userShippingAddressList, setUserShippingAddressList] = useState([]);
   const [userBillingAddress, setUserBillingAddress] = useState([]);
   const [android_id, setAndroidId] = useState("");
-  const [addressError, setAddressError] = useState(false);
+  const [addressError, setAddressError] = useState("");
 
   const [subTotal, setSubTotal] = useState(0);
   const [loyalttyPoint, setLoyalttyPoint] = useState(0);
@@ -81,6 +81,9 @@ function MyCart({ navigation, route }) {
           setCartList(response.cart)
           setLoyaltyPointDetails(response.loyalty_point_details)
           setUserShippingAddressList(response.userShippingAddressList)
+          if( response.userBillingAddress.length > 0 ){
+            setAddressError("");
+          }
           setUserBillingAddress(response.userBillingAddress)
           _calculateAmounts(response.cart, response.shipping_detail, couponDiscountPercent)
 
@@ -500,7 +503,7 @@ function MyCart({ navigation, route }) {
 
               {couponData != null ?
                 <View style={styles.couponBoxPrice}>
-                  <Text style={[styles.priceTitle,{color:'#155724'}]}>
+                  <Text style={[styles.priceTitle, { color: '#155724' }]}>
                     Coupon Applied {couponData.item.coupon[0].code}. If you do not want to apply this coupon just click cross button .
                   </Text>
                   <TouchableOpacity onPress={() => {
@@ -577,9 +580,9 @@ function MyCart({ navigation, route }) {
               </View>
 
             </View>
-            {addressError ?
+            {addressError != "" ?
               <View style={styles.errorOuter}  >
-                <Text style={styles.error}>No Address Selected!</Text>
+                <Text style={styles.error}>{addressError}</Text>
               </View>
               :
               <></>
@@ -592,17 +595,20 @@ function MyCart({ navigation, route }) {
               <TouchableOpacity onPress={() => {
                 if (isLogin) {
                   if (check != undefined) {
-                    navigation.navigate('Checkout', {
-                      orderBillingAddressBookId: userBillingAddress[0].address_book_id,
-                      address_id_hidden: userShippingAddressList[check].address_book_id,
-                      is_shop_now: shopNow,
-                      orderNote: "",
-                      shipping_rate: deliveryCharges,
-                      totalPrice: totalPrice
-                    });
-
+                    if (userBillingAddress.length > 0) {
+                      navigation.navigate('Checkout', {
+                        orderBillingAddressBookId: userBillingAddress[0].address_book_id,
+                        address_id_hidden: userShippingAddressList[check].address_book_id,
+                        is_shop_now: shopNow,
+                        orderNote: "",
+                        shipping_rate: deliveryCharges,
+                        totalPrice: totalPrice
+                      });
+                    } else {
+                      setAddressError("Billing address not yet added!");
+                    }
                   } else {
-                    setAddressError(true);
+                    setAddressError("No Shipping Address Selected!");
                   }
                 } else {
                   navigation.navigate('Login');
@@ -660,7 +666,7 @@ function MyCart({ navigation, route }) {
                 <TouchableOpacity onPress={() => {
                   _checkAddress(key)
                   // setCheck(key)
-                  setAddressError(false);
+                  setAddressError("");
                 }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
               </View>
             ))}

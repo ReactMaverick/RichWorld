@@ -139,6 +139,7 @@ function ProductDetails({ navigation, route }) {
           session_id = androidId;
         }
         _initialize_cart(customers_id, session_id)
+        _productDetails(customers_id, session_id, products_id, products_attributes_prices_id)
       }
     })
       .catch((error) => console.log("error", error))
@@ -532,7 +533,9 @@ function ProductDetails({ navigation, route }) {
             <TouchableOpacity onPress={_notifyProduct} style={[styles.footerBtn, { backgroundColor: '#A20101' }]}><Text style={styles.btnTxt}>Notify Me</Text></TouchableOpacity>
           }
 
-          {productDetails.defaultStock > 0 ?
+          {productDetails.defaultStock > 0 ? (productDetails.isCartPresent) ?
+            <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Added</Text></View>
+            :
             <TouchableOpacity onPress={() => {
               _addToCart(1)
             }} style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Add to cart</Text></TouchableOpacity>

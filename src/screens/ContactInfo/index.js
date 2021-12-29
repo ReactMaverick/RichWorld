@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
+import { WebView } from 'react-native-webview';
+
 import Entypo from 'react-native-vector-icons/Entypo'
 import { CONTACT_US, CONTACT_US_REQUEST } from '../../config/ApiConfig'
+import { showMessage, hideMessage } from "react-native-flash-message";
 function ContactInfo({ navigation }) {
 
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +49,7 @@ function ContactInfo({ navigation }) {
     formData.append('email', email);
     formData.append('subject', subject);
     formData.append('message', message);
+    console.log(JSON.stringify(formData, null, " "));
     fetch(CONTACT_US_REQUEST, {
       method: "POST",
       body: formData
@@ -122,6 +126,25 @@ function ContactInfo({ navigation }) {
               <Text style={styles.text2}>{contactUs.contact_us_email}</Text>
             </View>
           </View>
+
+          <WebView
+          scalesPageToFit={true}
+          bounces={false}
+          javaScriptEnabled
+          style={{ height: 300, width: 500 }}
+          source={{
+            html: `
+                  <!DOCTYPE html>
+                  <html>
+                    <head></head>
+                    <body>
+                      <div id="baseDiv">${contactUs.contact_us_location}</div>
+                    </body>
+                  </html>
+            `,
+          }}
+          automaticallyAdjustContentInsets={false}
+        />
 
           {/* <View style={[styles.itemOuter, { borderBottomColor: '#CCCCCC', borderBottomWidth: 1, paddingBottom: 10 }]}>
             <View style={styles.itemLeft}>
