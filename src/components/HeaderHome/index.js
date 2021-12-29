@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, TextInput, } from 'react-native';
+import React, { useState, useEffect, createRef } from "react";
+import { View, Image, Text, TouchableOpacity, TextInput, Dimensions, } from 'react-native';
 import styles from "./styles";
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,12 +9,14 @@ import { DrawerActions } from '@react-navigation/native';
 import { useSelector, useDispatch } from "react-redux";
 import SafeAreaViewDecider from 'react-native-smart-statusbar'
 import { VIEW_CART, UPDATE_CART_QUANTITY } from '../../config/ApiConfig';
-
 import DeviceInfo from 'react-native-device-info';
 import { useIsFocused } from "@react-navigation/native";
+import Voice from '@react-native-community/voice';
+import ActionSheet from "react-native-actions-sheet";
+const actionSheetRef = createRef();
 
 function HeaderHome({ navigation }) {
-  
+
 
   const isFocused = useIsFocused();
   const userData = useSelector(
@@ -24,7 +26,7 @@ function HeaderHome({ navigation }) {
   const cartData = useSelector(
     (state) => state.cartReducer
   );
-  
+
 
   useEffect(() => {
   }, [navigation]);
@@ -61,8 +63,8 @@ function HeaderHome({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
             navigation.navigate('HomeScreen')
-          } }>
-          <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
+          }}>
+            <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
           </TouchableOpacity>
         </View>
         <View style={styles.subheader2}>
@@ -74,14 +76,14 @@ function HeaderHome({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
-            navigation.navigate('MyCart',{shopNow: 0});
+            navigation.navigate('MyCart', { shopNow: 0 });
 
           }}>
             <View style={{ flexDirection: 'row' }}>
 
               <AntDesign name="shoppingcart" style={styles.menuIcon} />
-              {cartData.length > 0?<View style={styles.countOuter}><Text style={styles.countText}>{cartData.length}</Text></View>:<></>}
-              
+              {cartData.length > 0 ? <View style={styles.countOuter}><Text style={styles.countText}>{cartData.length}</Text></View> : <></>}
+
             </View>
 
           </TouchableOpacity>
@@ -91,19 +93,30 @@ function HeaderHome({ navigation }) {
 
       </View>
 
-      <TouchableOpacity style={styles.searchBoxOuter} onPress={() => {
-        navigation.navigate('Search');
+      <View style={styles.searchBoxOuter} >
+        <TouchableOpacity style={styles.searchBoxIcon} onPress={() => {
+          navigation.navigate('Search');
 
-      }}>
-        <View style={styles.searchBoxIcon}>
+        }}>
           <AntDesign name="search1" style={styles.menuIconSearch} />
           <Text>Search for Products...</Text>
           {/* <TextInput placeholder="Search for Products..."></TextInput> */}
-        </View>
-        <View style={styles.searchBoxAudio}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.searchBoxAudio} onPress={() => {
+          actionSheetRef.current?.setModalVisible();
+        }}>
           <Feather name="mic" style={styles.menuIconMic} />
+        </TouchableOpacity>
+      </View>
+
+      <ActionSheet ref={actionSheetRef}>
+        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height/4,borderTopEndRadius:20,borderTopStartRadius:20 }}>
+         
         </View>
-      </TouchableOpacity>
+      </ActionSheet>
+
+
+
     </View>
   )
 
