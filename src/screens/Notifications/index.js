@@ -36,6 +36,11 @@ function Notifications({ navigation }) {
         setIsLoading(false)
       });
   }
+  const _formateDate = (date) => {
+
+   return date
+   
+  }
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
@@ -67,7 +72,7 @@ function Notifications({ navigation }) {
             <View style={styles.notificationOuter} key={key} >
               <Text style={styles.orderTitle}>{item.redirect_type}</Text>
               <Text style={styles.orderDescription}>{item.notification_text}</Text>
-              <Text style={styles.orderDate}>{item.created_at}</Text>
+              <Text style={styles.orderDate}>{_formateDate(item.created_at)}</Text>
             </View>
           ))}
 
