@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Image, Text, TouchableOpacity, } from 'react-native';
 import styles from "./styles";
-import HomeIcon from "react-native-vector-icons/AntDesign";
+import HomeIcon from "../../assets/Image/HomeIcon";
 import Settings from '../../assets/Image/Settings';
 import WishIcon from '../../assets/Image/WishIcon'
 import Account from '../../assets/Image/Account'
@@ -43,7 +43,7 @@ function Footer({ navigation }) {
                 navigation.navigate('HomeScreen');
                
             }}>
-                <HomeIcon name="home" color={'#818181'} style={{fontSize:26}}/>
+                <HomeIcon />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
                  if(userData==null){
