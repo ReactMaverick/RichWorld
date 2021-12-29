@@ -50,7 +50,7 @@ function HeaderHome({ navigation }) {
 
     // </View>
     <View style={styles.headerMain}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000"/>
+      {/* <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000"/> */}
       <View style={styles.headerall}>
         <View style={styles.subheader}>
           <TouchableOpacity onPress={() => {
@@ -59,7 +59,11 @@ function HeaderHome({ navigation }) {
           }}>
             <Entypo name="menu" style={styles.menuIcon} />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('HomeScreen')
+          } }>
           <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
+          </TouchableOpacity>
         </View>
         <View style={styles.subheader2}>
           <TouchableOpacity onPress={() => {

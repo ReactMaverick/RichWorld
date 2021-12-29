@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator,Platform } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { FORGET_PASSWORD } from '../../config/ApiConfig';
@@ -59,7 +59,7 @@ function ForgetPassword({ navigation }) {
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
             <Text style={styles.errorMessage}>{errorMsg}</Text>
-            <View style={styles.textInputOuter}>
+            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
               <TextInput
                 placeholder={'email / phone'}

@@ -72,8 +72,7 @@ export default StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 3,
         elevation: 5,
-        backgroundColor: '#fff',
-        flexDirection: 'row'
+        backgroundColor: '#fff'
     },
     menuIcon: {
         fontSize: 24
@@ -92,7 +91,7 @@ export default StyleSheet.create({
         marginTop: 5
     },
     box1: {
-        flex: 1
+        flex: 1,
     },
     box2: {
         flex: 2,

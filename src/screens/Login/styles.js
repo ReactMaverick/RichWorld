@@ -1,4 +1,5 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet,Platform } from 'react-native';
+
 
 export default StyleSheet.create({
     backGround: {
@@ -32,7 +33,7 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     loginText: {
-        fontFamily: 'Poppins-SemiBold',
+        fontFamily: 'Poppins-Medium',
         color: '#AB0000',
         fontSize: 22,
 
@@ -59,6 +60,15 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    textInputOuterIos: {
+        backgroundColor: '#DBE2ED',
+        marginBottom: 30,
+        borderRadius: 7,
+        padding: 5,
+        height:40,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     btnOuter: {
         backgroundColor: '#AB0000',
         margin: 10,
@@ -67,7 +77,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 30,
-        height: 60,
+        height: Platform.OS=="android"?60:50,
         flexDirection: 'row'
 
     },
@@ -80,13 +90,13 @@ export default StyleSheet.create({
     inputicon: {
         fontSize: 20,
         color: '#AB0000',
-        marginTop: -5
+        lineHeight: 0,
+        marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon: {
         color: '#fff',
         fontSize: 20,
-        marginTop: -5,
-        marginRight: 5
+        lineHeight: 0
     },
     socialLoginOuter:
     {

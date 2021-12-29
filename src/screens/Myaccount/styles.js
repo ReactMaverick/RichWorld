@@ -57,7 +57,7 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     btnText:{
-        fontFamily:'Roboto-Regular',
+        fontFamily:'Poppins-Regular',
         fontWeight:'700',
         fontSize:17,
         color:'#fff'

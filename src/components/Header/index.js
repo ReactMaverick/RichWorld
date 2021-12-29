@@ -41,14 +41,17 @@ function Header({ navigation }) {
 
   return (
     <View style={styles.headerBox}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" />
+      {/* <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" /> */}
       <TouchableOpacity style={styles.box1} onPress={() => {
         navigation.dispatch(DrawerActions.openDrawer())
       }}>
         <Entypo name="menu" style={styles.menuIcon} />
       </TouchableOpacity>
       <View style={styles.box2} >
-        <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
+      <TouchableOpacity onPress={() => {
+            navigation.navigate('HomeScreen')
+          } }>
+          <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} /></TouchableOpacity>
 
       </View>
       <View style={styles.box3} >

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator, Modal } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator, Modal, Platform } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -344,7 +344,7 @@ function Login({ navigation }) {
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
             <Text style={styles.errorMessage}>{errorMsg}</Text>
-            <View style={styles.textInputOuter}>
+            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
               <TextInput
                 placeholder={'Username'}
@@ -356,7 +356,7 @@ function Login({ navigation }) {
               />
             </View>
 
-            <View style={styles.textInputOuter}>
+            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
               <AntDesign name="lock" style={styles.inputicon} />
               <TextInput
                 placeholder={'Password'}
@@ -449,7 +449,7 @@ function Login({ navigation }) {
               <Text style={styles.errorMessage}>{errorMsg}</Text>
 
 
-              <View style={styles.textInputOuter}>
+              <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
                 <FontAwesome name="phone" style={styles.inputicon} />
                 <TextInput
                   placeholder={'Phone Number'}

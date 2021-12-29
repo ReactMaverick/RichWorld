@@ -30,6 +30,38 @@ export default StyleSheet.create({
         shadowRadius: 3,
         elevation: 5,   
     },
+
+
+    outerBox:{
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        elevation: 5,
+        backgroundColor: '#fff',
+        margin:10,
+        padding:10,
+        borderRadius:10
+    },
+    boxheader:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+      
+    },
+    boxheaderTxt:{
+        fontFamily: 'Poppins-Bold',
+        fontSize: 14,
+        color:'#620000'
+    },
+    boxIcon:{
+        fontSize:16,
+        color:'#620000'
+    },
+    BoxDescription:{
+        fontFamily: 'Poppins-Regular',
+        fontSize: 12, 
+        color:'#898989'
+    },
  
 
 

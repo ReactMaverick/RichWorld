@@ -11,6 +11,7 @@ import { Rating } from 'react-native-ratings';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT, UPLOAD_PRODUCTS_IMAGES } from '../../config/ApiConfig';
+import dateFormat, { masks } from "dateformat";
 
 function MyPurchased({ navigation }) {
 
@@ -253,6 +254,15 @@ function MyPurchased({ navigation }) {
     setImages(tempArr);
 
   }
+
+  
+  const _getParsedDate = (date) => {
+    // console.log(date)
+    date = String(date).split(' ');
+    var days = String(date[0]).split('-');
+    var hours = String(date[1]).split(':');
+    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
+  }
   useEffect(() => {
 
     AsyncStorage.getItem('userData').then((userData) => {
@@ -293,7 +303,9 @@ function MyPurchased({ navigation }) {
                   <Text style={styles.leftText1}>{stringFormat(item.products_name)}</Text>
                   <Text style={styles.leftText2}>₹{item.final_price}</Text>
                   <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
-                  <Text style={styles.leftText2}>Delivery Date : {item.delivery_date}</Text>
+                  <Text style={styles.leftText2}>Delivery Date : {
+                  dateFormat(new Date(..._getParsedDate(item.delivery_date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                  }</Text>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.leftText2}>Subtotal:</Text>
                     <Text style={styles.leftText1}>₹{item.final_price}	</Text>

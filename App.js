@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
+import SafeAreaViewDecider from 'react-native-smart-statusbar'
 
 
 
@@ -149,6 +150,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
+      <SafeAreaViewDecider statusBarHiddenForNotch={true}  backgroundColor="#fff" />
     <NavigationContainer>     
       <Stack1 />           
       <FlashMessage position="bottom" floating={true} duration={2000} />

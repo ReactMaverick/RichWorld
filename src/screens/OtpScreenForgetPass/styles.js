@@ -32,7 +32,7 @@ export default StyleSheet.create({
         alignItems:'center'             
     },
     loginText:{
-        fontFamily:'Poppins-SemiBold',
+        fontFamily:'Poppins-Medium',
         color:'#AB0000',
         fontSize:22,
 

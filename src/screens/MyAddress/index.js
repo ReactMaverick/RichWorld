@@ -51,7 +51,11 @@ function MyAddress({ navigation }) {
     }).then(([status, response]) => {
       if (status == 200) {
         // console.log(response.userShippingAddressList)
-        setBillingAddress(response.userBillingAddress);
+        if (response.userBillingAddress != null) {
+          setBillingAddress(response.userBillingAddress);
+        } else {
+          setBillingAddress({});
+        }
         setShippingAddressList(response.userShippingAddressList);
       }
     })
@@ -171,6 +175,7 @@ function MyAddress({ navigation }) {
   }
 
   useEffect(() => {
+    console.log('useEffect')
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
         setIsLogin(true)
@@ -217,10 +222,20 @@ function MyAddress({ navigation }) {
               {/* <AntDesign name="enviromento" style={styles.downicon} /> */}
             </View>
             <View style={styles.headerSection}>
-              <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
-              <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
-              <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
-              <Text style={styles.text2}>Email: {billingAddressList.entry_email}</Text>
+              {Object.keys(billingAddressList).length === 0 ?
+                
+                <>
+                  <Text style={styles.text2}>Billing address not yet added</Text>
+                </>
+                :
+                <>
+                  <Text style={styles.text1}>{billingAddressList.entry_firstname}</Text>
+                  <Text style={styles.text2}>{billingAddressList.entry_street_address}, {billingAddressList.entry_firstname}, {billingAddressList.entry_city}, {billingAddressList.entry_state}, {billingAddressList.entry_postcode}</Text>
+                  <Text style={styles.text2}>Mobile: {billingAddressList.entry_phone}</Text>
+                  <Text style={styles.text2}>Email: {billingAddressList.entry_email}</Text>
+                </>
+              }
+
             </View>
             <TouchableOpacity onPress={() => {
               _setAddressData(billingAddressList).then(() => {
@@ -233,9 +248,6 @@ function MyAddress({ navigation }) {
 
           </View>
 
-
-
-
           <View style={styles.card}>
             <View style={[styles.headerSection, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
               <Text style={styles.headerTitle}>Shipping Address</Text>
@@ -246,23 +258,29 @@ function MyAddress({ navigation }) {
                 <Text style={styles.editText} >Add Address</Text>
               </TouchableOpacity>
             </View>
-            {shippingAddressList.map((item, key) => (
-              <View key={key}>
-                <View style={styles.headerSection}>
-                  <Text style={styles.text1}>{item.entry_firstname}</Text>
-                  <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
-                  <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
-                  <Text style={styles.text2}>Email: {item.entry_email}</Text>
+            {shippingAddressList.length > 0 ?
+              shippingAddressList.map((item, key) => (
+                <View key={key}>
+                  <View style={styles.headerSection}>
+                    <Text style={styles.text1}>{item.entry_firstname}</Text>
+                    <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+                    <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
+                    <Text style={styles.text2}>Email: {item.entry_email}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => {
+                    _setAddressData(item).then(() => {
+                      toggleAddressModal()
+                    })
+                  }}>
+                    <Text style={styles.editText} >Edit Address</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => {
-                  _setAddressData(item).then(() => {
-                    toggleAddressModal()
-                  })
-                }}>
-                  <Text style={styles.editText} >Edit Address</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+              ))
+              :
+              <>
+                <Text style={styles.text2}>Shipping address not yet added</Text>
+              </>
+            }
           </View>
 
 
