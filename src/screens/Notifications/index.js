@@ -38,6 +38,7 @@ function Notifications({ navigation }) {
         setIsLoading(false)
       });
   }
+
   
   const _getParsedDate = (date) => {
     // console.log(date)
@@ -46,6 +47,7 @@ function Notifications({ navigation }) {
     var hours = String(date[1]).split(':');
     return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
+
   useEffect(() => {
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
@@ -77,6 +79,7 @@ function Notifications({ navigation }) {
             <View style={styles.notificationOuter} key={key} >
               <Text style={styles.orderTitle}>{item.redirect_type}</Text>
               <Text style={styles.orderDescription}>{item.notification_text}</Text>
+
               <Text style={styles.orderDate}>{
               dateFormat(new Date(..._getParsedDate(item.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")
               }</Text>
