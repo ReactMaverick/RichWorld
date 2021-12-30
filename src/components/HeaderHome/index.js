@@ -50,14 +50,16 @@ function HeaderHome({ navigation }) {
     }
   }
   useEffect(() => {
-    Voice.onSpeechStart = onSpeechStartHandler;
-    Voice.onSpeechEnd = onSpeechEndHandler;
-    Voice.onSpeechResults = onSpeechResultsHandler;
+    if (isFocused) {
+      Voice.onSpeechStart = onSpeechStartHandler;
+      Voice.onSpeechEnd = onSpeechEndHandler;
+      Voice.onSpeechResults = onSpeechResultsHandler;
 
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
+      return () => {
+        Voice.destroy().then(Voice.removeAllListeners);
+      }
     }
-  }, [navigation]);
+  }, [navigation, isFocused]);
 
   return (
     // <View style={styles.headerBox}>
@@ -137,8 +139,8 @@ function HeaderHome({ navigation }) {
       </View>
 
       <ActionSheet ref={actionSheetRef}>
-        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height/4,borderTopEndRadius:20,borderTopStartRadius:20 }}>
-        <Image source={require('../../assets/Image/2SIh.gif')} style={{width: Dimensions.get('window').width}} />
+        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height / 4, borderTopEndRadius: 20, borderTopStartRadius: 20 }}>
+          <Image source={require('../../assets/Image/2SIh.gif')} style={{ width: Dimensions.get('window').width }} />
         </View>
       </ActionSheet>
 
