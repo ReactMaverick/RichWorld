@@ -379,7 +379,6 @@ function Login({ navigation }) {
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _signIn()
           }}>
-            <AntDesign name="arrowright" style={styles.btnIcon} />
             <Text style={styles.btnMessage}>Sign in</Text>
           </TouchableOpacity>
           <View style={styles.socialLoginOuter}>
@@ -467,7 +466,6 @@ function Login({ navigation }) {
               <TouchableOpacity style={styles.btnOuter} onPress={() => {
                 _socialOtpSend()
               }}>
-                <AntDesign name="arrowright" style={styles.btnIcon} />
                 <Text style={styles.btnMessage}>Verify</Text>
               </TouchableOpacity>
             </View>
@@ -514,7 +512,6 @@ function Login({ navigation }) {
             <TouchableOpacity style={styles.btnOuter} onPress={() => {
               checkOtp()
             }}>
-              <AntDesign name="arrowright" style={styles.btnIcon} />
               <Text style={styles.btnMessage}>Submit</Text>
             </TouchableOpacity>
           </View>

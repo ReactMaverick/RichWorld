@@ -134,7 +134,7 @@ function Wishlist({ navigation }) {
         <ScrollView style={{ flex: 1 }}>
           {Products.map((item, key) => (
             <View style={styles.outerBox} key={key}>
-              <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image source={{ uri: basePath + "/" + item.image_path }} style={styles.userImage} />
 
                 <View style={styles.leftBox}>

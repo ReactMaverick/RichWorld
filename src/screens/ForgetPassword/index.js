@@ -77,7 +77,6 @@ function ForgetPassword({ navigation }) {
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _getOTP()
           }}>
-            <AntDesign name="arrowright" style={styles.btnIcon} />
             <Text style={styles.btnMessage}>Send OTP</Text>
           </TouchableOpacity>
         </ScrollView>

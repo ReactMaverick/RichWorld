@@ -583,9 +583,21 @@ function MyCart({ navigation, route }) {
 
             </View>
             {addressError != "" ?
-              <View style={styles.errorOuter}  >
-                <Text style={styles.error}>{addressError}</Text>
+              // <View style={styles.errorOuter}  >
+              //   <Text style={styles.error}>{addressError}</Text>
+              // </View>
+              <View style={styles.outerBoxAddress}>
+              <View style={styles.outerBoxAddressInner}>
+              <Text style={styles.error}>{addressError}</Text>
               </View>
+              <View>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('MyAddress');
+              }} style={styles.addAddress}>
+                <AntDesign name="plus" style={{ color: '#fff', fontSize: 14 }} />
+                <Text style={styles.btnTxt}>Address</Text>
+              </TouchableOpacity></View>
+            </View>
               :
               <></>
             }

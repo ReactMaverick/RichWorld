@@ -95,7 +95,7 @@ export default StyleSheet.create({
         marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{
-        color:'#fff',
+        color:'#000',
         fontSize:20,
         lineHeight: 0,
     },

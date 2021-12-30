@@ -153,7 +153,6 @@ function OtpScreenForgetPass({ navigation, route }) {
             <TouchableOpacity style={styles.btnOuter} onPress={() => {
               checkOtp()
             }}>
-              <AntDesign name="arrowright" style={styles.btnIcon} />
               <Text style={styles.btnMessage}>Submit</Text>
             </TouchableOpacity>
           </View>

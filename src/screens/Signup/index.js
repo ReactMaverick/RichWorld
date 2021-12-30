@@ -133,7 +133,6 @@ function Signup({ navigation }) {
               
               checkSignup()
             }}>
-              <AntDesign name="arrowright" style={styles.btnIcon} />
               <Text style={styles.btnMessage}>Create Account</Text>
             </TouchableOpacity>
 

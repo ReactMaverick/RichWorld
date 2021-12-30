@@ -59,7 +59,7 @@ export default StyleSheet.create({
         fontSize:14
     },
     leftBox:{
-        padding:10,
+        marginTop: 10,
         flex:1
     },
     leftText1:{
