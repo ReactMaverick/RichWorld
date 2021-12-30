@@ -55,7 +55,7 @@ function Search({ navigation, route }) {
         .catch((error) => console.log("error", error))
         .finally(() => {
           setIsLoading(false)
-          
+
         });
     } else {
       setProducts([]);
@@ -64,9 +64,9 @@ function Search({ navigation, route }) {
   }
   const onSpeechStartHandler = (e) => {
     console.log("start handler==>>>", e)
+    // actionSheetRef.current?.setModalVisible();
   }
   const onSpeechEndHandler = (e) => {
-    // setLoading(false)
     console.log("stop handler", e)
     actionSheetRef.current?.setModalVisible();
   }
@@ -81,8 +81,8 @@ function Search({ navigation, route }) {
 
   const startRecording = async () => {
     // setLoading(true)
-    actionSheetRef.current?.setModalVisible();
     try {
+      actionSheetRef.current?.setModalVisible();
       await Voice.start('en-Us')
     } catch (error) {
       console.log("error raised", error)
@@ -113,12 +113,12 @@ function Search({ navigation, route }) {
           onPress={() => {
             startRecording()
           }}
-          // onPressIn={() => {
-          //   startRecording()
-          // }}
-          // onPressOut={() => {
-          //   stopRecording()
-          // }}
+        // onPressIn={() => {
+        //   startRecording()
+        // }}
+        // onPressOut={() => {
+        //   stopRecording()
+        // }}
         >
           <Feather name="mic" style={styles.menuIconMic} />
         </TouchableOpacity>
@@ -128,35 +128,35 @@ function Search({ navigation, route }) {
         {tagvalue.length > 0 ?
           < TouchableOpacity onPress={() => {
             navigation.navigate('ProductList', { title1: tagvalue, title2: "", filterParam: { 'search': tagvalue } })
-          }}  style={styles.searchResult} >
-        
-        <View>
-          <Text style={styles.searchResultText}>{tagvalue} </Text>
-        </View>
-      </TouchableOpacity>
-      : 
-      products.map((item, key) => (
-      <TouchableOpacity onPress={() => {
-        navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id })
-      }} style={styles.searchResult} key={key} >
-        <View>
-          <Image source={{ uri: item.image_path }} style={styles.searchImage} />
-        </View>
-        <View style={{flex:1}}>
-          <Text style={styles.searchResultText}>{item.products_name} </Text>
-          <Text style={styles.searchResultTextCat}>{item.categories_name} </Text>
-        </View>
-      </TouchableOpacity>
-      ))
-      }
+          }} style={styles.searchResult} >
 
-      <ActionSheet ref={actionSheetRef}>
-        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height/4,borderTopEndRadius:20,borderTopStartRadius:20 }}>
-        <Image source={require('../../assets/Image/2SIh.gif')} style={{width: Dimensions.get('window').width}} />
-        </View>
-      </ActionSheet>
+            <View>
+              <Text style={styles.searchResultText}>{tagvalue} </Text>
+            </View>
+          </TouchableOpacity>
+          :
+          products.map((item, key) => (
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id })
+            }} style={styles.searchResult} key={key} >
+              <View>
+                <Image source={{ uri: item.image_path }} style={styles.searchImage} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.searchResultText}>{item.products_name} </Text>
+                <Text style={styles.searchResultTextCat}>{item.categories_name} </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        }
 
-    </View>
+        <ActionSheet ref={actionSheetRef}>
+          <View style={styles.listening}>
+            <Text style={{ fontSize: 20 }}>Listening...</Text>
+          </View>
+        </ActionSheet>
+
+      </View>
     </>
   )
 

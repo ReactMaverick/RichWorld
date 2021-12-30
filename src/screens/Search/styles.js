@@ -72,7 +72,14 @@ export default StyleSheet.create({
     searchSeparator:{
         borderWidth: 1,
         borderColor: "#000",
+    },
+    listening:{ 
+        backgroundColor: '#fff', 
+        height: Dimensions.get('window').height / 4, 
+        borderTopEndRadius: 20, 
+        borderTopStartRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center', 
     }
-
 
 });

@@ -185,7 +185,8 @@ function MyCart({ navigation, route }) {
     //   var lp_value = userData.userLoyaltyPoint * userData.loyaltyPointPrice;
     //   finalPrice = finalPrice + lp_value;
     // }
-    setDeliveryCharges(shipping_detail.rate.toFixed(2));
+    // console.log(shipping_detail.rate)
+    setDeliveryCharges(shipping_detail.rate);
     setSubTotal(beforeDiscTaxableAmountTotal.toFixed(2));
     setCouponDiscount(finalCuponDiscount.toFixed(2))
     setTotalTax(totalTax.toFixed(2));
@@ -357,6 +358,7 @@ function MyCart({ navigation, route }) {
           if (status == 200) {
             if (response.success === "1") {
               setCoupon(response.couponDetails)
+              setCouponCode("")
               _getCartList(userData.id, "", response.couponDetails.coupon_discount_percent);
             } else {
               showMessage({

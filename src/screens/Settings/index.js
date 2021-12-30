@@ -14,6 +14,7 @@ function Settings({ navigation }) {
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [socialId, setSocialId] = useState(null);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -64,7 +65,8 @@ function Settings({ navigation }) {
           setUserData(JSON.parse(userData))
           var userDetails = JSON.parse(userData)
           setFirstName(userDetails.first_name);
-          
+          setSocialId(userDetails.social_id);
+          console.log(userDetails.social_id)
         } else {
           setIsLogin(false)
         }
@@ -110,39 +112,44 @@ function Settings({ navigation }) {
               style={[styles.textInput]}
             />
           </View>
-
-          <View style={styles.passChange}>
-            <Text style={styles.passChangeText}>Password change</Text>
-          </View>
-
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Current Password'}
-              style={[styles.textInput]}
-              value={currentPassword}
-              onChangeText={(currentPassword) => setCurrentPassword(currentPassword)}
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'New Password'}
-              style={[styles.textInput]}
-              value={newPassword}
-              onChangeText={(newPassword) => setNewPassword(newPassword)}
-            />
-          </View>
+          {socialId == null ?
+            <>
+              <View style={styles.passChange}>
+                <Text style={styles.passChangeText}>Password change</Text>
+              </View>
 
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Confirm Password'}
-              style={[styles.textInput]}
-              value={confirmPassword}
-              onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-            />
-          </View>
+              <View style={styles.textInputOuter}>
+                <TextInput
+                  placeholder={'Current Password'}
+                  style={[styles.textInput]}
+                  value={currentPassword}
+                  onChangeText={(currentPassword) => setCurrentPassword(currentPassword)}
+                />
+              </View>
+
+              <View style={styles.textInputOuter}>
+                <TextInput
+                  placeholder={'New Password'}
+                  style={[styles.textInput]}
+                  value={newPassword}
+                  onChangeText={(newPassword) => setNewPassword(newPassword)}
+                />
+              </View>
+
+
+              <View style={styles.textInputOuter}>
+                <TextInput
+                  placeholder={'Confirm Password'}
+                  style={[styles.textInput]}
+                  value={confirmPassword}
+                  onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+                />
+              </View>
+            </>
+            : <></>
+          }
+
 
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _uploadAccount();

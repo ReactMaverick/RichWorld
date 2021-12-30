@@ -91,7 +91,7 @@ function MyOrder({ navigation }) {
         }
       })
     }
-  }, [navigation]);
+  }, [navigation,isFocused]);
   if (isLoading) {
     return (
       <>

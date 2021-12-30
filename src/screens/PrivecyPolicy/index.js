@@ -10,18 +10,20 @@ function PrivecyPolicy({ navigation }) {
 
 
   const [policy, setPolicy] = useState()
+  const [isLoading, setIsLoading] = useState(true);
   const _getData = async () => {
+    setIsLoading(true)
     fetch(GET_PRIVACY_POLICY, {
       method: "GET",
     })
       .then((response) => {
-      
+
         const statusCode = response.status;
         const data = response.json();
         return Promise.all([statusCode, data]);
       })
       .then(([status, response]) => {
-     
+
         if (status == 200) {
           // console.log(status, response);
           setPolicy(response.privacyPolicyDetails.cms_text)
@@ -29,36 +31,47 @@ function PrivecyPolicy({ navigation }) {
           console.log(status, response);
         }
       })
-      .catch((error) => console.log("error",error))
+      .catch((error) => console.log("error", error))
       .finally(() => {
-        
-       });
+        setIsLoading(false)
+      });
   }
 
 
   useEffect(() => {
     _getData();
   }, [navigation]);
-  return (
-    <>
-     <Header navigation={navigation} />
-      <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>Privacy Policy</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
-        
-      <View style={styles.card}>
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>Privacy Policy</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
 
-      <HTMLView
-        value={policy}
-        stylesheet={styles}
-      />
-      </View>
+          <View style={styles.card}>
 
-      </ScrollView>
-      <Footer navigation={navigation} />
-    </>
-  )
+            <HTMLView
+              value={policy}
+              stylesheet={styles}
+            />
+          </View>
+
+        </ScrollView>
+        <Footer navigation={navigation} />
+      </>
+    )
+  }
 
 }
 

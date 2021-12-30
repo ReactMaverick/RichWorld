@@ -42,8 +42,8 @@ function HeaderHome({ navigation }) {
     // console.log("speech result handler", e)
   }
   const startRecording = async () => {
-    actionSheetRef.current?.setModalVisible();
     try {
+      actionSheetRef.current?.setModalVisible();
       await Voice.start('en-Us')
     } catch (error) {
       console.log("error raised", error)
@@ -139,8 +139,8 @@ function HeaderHome({ navigation }) {
       </View>
 
       <ActionSheet ref={actionSheetRef}>
-        <View style={{ backgroundColor: '#fff', height: Dimensions.get('window').height / 4, borderTopEndRadius: 20, borderTopStartRadius: 20 }}>
-          <Image source={require('../../assets/Image/2SIh.gif')} style={{ width: Dimensions.get('window').width }} />
+        <View style={styles.listening}>
+          <Text style={{fontSize: 20}}>Listening...</Text>
         </View>
       </ActionSheet>
 

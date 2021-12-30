@@ -150,7 +150,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={true}  backgroundColor="#fff" />
+      <SafeAreaViewDecider statusBarHiddenForNotch={true}  backgroundColor="#620000" />
     <NavigationContainer>     
       <Stack1 />           
       <FlashMessage position="bottom" floating={true} duration={2000} />

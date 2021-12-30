@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 function Checkout({ navigation, route }) {
 
     const { orderBillingAddressBookId, address_id_hidden, is_shop_now, orderNote, shipping_rate, totalPrice } = route.params;
+    const dispatch = useDispatch();
     const [check, setCheck] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState({});
@@ -41,6 +42,7 @@ function Checkout({ navigation, route }) {
     }
 
     const _placeOrder = async (payment_method, razorpay_payment_id) => {
+        setIsLoading(true)
         const formData = new FormData();
         formData.append('customers_id', userData.id);
         formData.append('customers_email', userData.email);
@@ -49,14 +51,14 @@ function Checkout({ navigation, route }) {
         formData.append('payment_method', payment_method);
         if (payment_method == "razor_pay") {
             formData.append('razorpay_payment_id', razorpay_payment_id);
-        }else{
+        } else {
             formData.append('razorpay_payment_id', "");
         }
-        
+
         formData.append('is_shop_now', is_shop_now);
         formData.append('orderNote', orderNote);
         formData.append('shipping_rate', shipping_rate);
-        if(couponData != null){
+        if (couponData != null) {
             formData.append('coupon_code', JSON.stringify(couponData.item.coupon));
             formData.append('coupon_discount_percent', couponData.item.coupon_discount_percent);
         }
@@ -74,6 +76,15 @@ function Checkout({ navigation, route }) {
             })
             .then(([status, response]) => {
                 if (status == 200) {
+                    dispatch({
+                        type: "DELETE_COUPON"
+                    });
+                    if (is_shop_now == 0) {
+                        dispatch({
+                            type: "DELETE_CART_ITEM"
+                        });
+                    }
+                    setCheck(0);
                     console.log(status, response);
                     navigation.navigate('Thankyou');
                 } else {
@@ -96,76 +107,86 @@ function Checkout({ navigation, route }) {
             }
         })
     }, [navigation]);
-
-    return (
-        <>
-            <Header navigation={navigation} />
-            <ScrollView style={{ flex: 1 }}>
-
-                <View style={styles.outerSection}>
-                    <View><Text style={styles.checkoutTextHead}>Choose Payment Method</Text></View>
-
-                    <TouchableOpacity onPress={() => {
-                        setCheck(1);
-                        _placeOrder("cash_on_delivery", "");
-                    }} style={styles.checkoutInner}>
-                        <Fontisto name={check == 1 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
-                        <Text style={styles.checkoutTextInner}>Cash on delivery</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => {
-                        setCheck(2);
-                        navigation.navigate('Thankyou');
-                    }} style={styles.checkoutInner}>
-                        <Fontisto name={check == 2 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
-                        <Text style={styles.checkoutTextInner}>Direct Bank Transfer</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => {
-                        setCheck(3);
-                        var options = {
-                            description: 'Payment to RichWorld Expert',
-                            image: 'https://richworld.online/frontEnd/images/richworldlogo.png',
-                            currency: 'INR',
-                            key: 'rzp_test_CX62akPXgMwPrk',
-                            amount: totalPrice * 100,
-                            name: 'Richworld',
-                            // order_id: response.order_id,//Replace this with an order_id created using Orders API.
-                            //order_id: 5, 
-                            prefill: {
-                                email: userData.email,
-                                contact: "9832249852",
-                                name: userData.first_name
-                            },
-                            theme: { color: '#AB0000' }
-                        }
-                        RazorpayCheckout.open(options).then((data) => {
-
-
-                            // navigation.navigate('Thankyou');
-                            // handle success
-                            // alert(`Success: ${data.razorpay_payment_id}`);
-                            _placeOrder("razor_pay", data.razorpay_payment_id);
-                        }).catch((error) => {
-
-                            //  navigation.navigate('Thankyou');
-                            console.log(error.code, error.description);
-                            // handle failure
-                            // alert(`Error: ${error.code} | ${error.description}`);
-                        });
-                    }} style={styles.checkoutInner}>
-                        <Fontisto name={check == 3 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
-                        <Text style={styles.checkoutTextInner}>Razorpay</Text>
-                    </TouchableOpacity>
-
+    if (isLoading) {
+        return (
+            <>
+                <Header navigation={navigation} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#620000" />
                 </View>
+            </>
+        )
+    } else {
+        return (
+            <>
+                <Header navigation={navigation} />
+                <ScrollView style={{ flex: 1 }}>
+
+                    <View style={styles.outerSection}>
+                        <View><Text style={styles.checkoutTextHead}>Choose Payment Method</Text></View>
+
+                        <TouchableOpacity onPress={() => {
+                            setCheck(1);
+                            _placeOrder("cash_on_delivery", "");
+                        }} style={styles.checkoutInner}>
+                            <Fontisto name={check == 1 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
+                            <Text style={styles.checkoutTextInner}>Cash on delivery</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            setCheck(2);
+                            navigation.navigate('Thankyou');
+                        }} style={styles.checkoutInner}>
+                            <Fontisto name={check == 2 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
+                            <Text style={styles.checkoutTextInner}>Direct Bank Transfer</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            setCheck(3);
+                            var options = {
+                                description: 'Payment to RichWorld Expert',
+                                image: 'https://richworld.online/frontEnd/images/richworldlogo.png',
+                                currency: 'INR',
+                                key: 'rzp_test_CX62akPXgMwPrk',
+                                amount: totalPrice * 100,
+                                name: 'Richworld',
+                                // order_id: response.order_id,//Replace this with an order_id created using Orders API.
+                                //order_id: 5, 
+                                prefill: {
+                                    email: userData.email,
+                                    contact: "9832249852",
+                                    name: userData.first_name
+                                },
+                                theme: { color: '#AB0000' }
+                            }
+                            RazorpayCheckout.open(options).then((data) => {
+
+
+                                // navigation.navigate('Thankyou');
+                                // handle success
+                                // alert(`Success: ${data.razorpay_payment_id}`);
+                                _placeOrder("razor_pay", data.razorpay_payment_id);
+                            }).catch((error) => {
+
+                                //  navigation.navigate('Thankyou');
+                                console.log(error.code, error.description);
+                                // handle failure
+                                // alert(`Error: ${error.code} | ${error.description}`);
+                            });
+                        }} style={styles.checkoutInner}>
+                            <Fontisto name={check == 3 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
+                            <Text style={styles.checkoutTextInner}>Razorpay</Text>
+                        </TouchableOpacity>
+
+                    </View>
 
 
 
-            </ScrollView>
-            <Footer navigation={navigation} />
-        </>
-    )
+                </ScrollView>
+                <Footer navigation={navigation} />
+            </>
+        )
+    }
 
 }
 

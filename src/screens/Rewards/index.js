@@ -19,6 +19,7 @@ function Rewards({ navigation }) {
     const [rewards, setRewards] = useState([]);
 
     const _getRewards = async (user_id) => {
+        setIsLoading(true)
         const formData = new FormData();
         formData.append('user_id', user_id);
         fetch(REWARDS, {
@@ -61,73 +62,83 @@ function Rewards({ navigation }) {
             })
         }
     }, [navigation, isFocused]);
-
-    return (
-        <View>
-            <View style={styles.headerBox}>
-                <TouchableOpacity style={styles.box1} onPress={() => {
-                    navigation.openDrawer();
-                }}>
-                    <Entypo name="menu" style={styles.menuIcon} />
-                </TouchableOpacity>
-                <View style={styles.box2} >
-                    <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
-
+    if (isLoading) {
+        return (
+            <>
+                <Header navigation={navigation} />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#620000" />
                 </View>
-                <View style={styles.box3} >
-
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('Search');
-
+            </>
+        )
+    } else {
+        return (
+            <View>
+                <View style={styles.headerBox}>
+                    <TouchableOpacity style={styles.box1} onPress={() => {
+                        navigation.openDrawer();
                     }}>
-                        <Feather name="search" style={styles.menuIcon2} />
+                        <Entypo name="menu" style={styles.menuIcon} />
                     </TouchableOpacity>
+                    <View style={styles.box2} >
+                        <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
 
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('MyCart',{shopNow: 0});
+                    </View>
+                    <View style={styles.box3} >
 
-                    }}>
-                        <AntDesign name="shoppingcart" style={styles.menuIcon} />
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('Search');
+
+                        }}>
+                            <Feather name="search" style={styles.menuIcon2} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('MyCart', { shopNow: 0 });
+
+                        }}>
+                            <AntDesign name="shoppingcart" style={styles.menuIcon} />
+                        </TouchableOpacity>
 
 
-                    {/* <Image source={require('../../assets/Image/userImage.png')} style={styles.userLogo} /> */}
+                        {/* <Image source={require('../../assets/Image/userImage.png')} style={styles.userLogo} /> */}
+
+                    </View>
+
+                </View>
+                <View style={styles.headingSection}>
+
+                    <Image style={styles.rewardImage} source={require('../../assets/Image/loyalty.png')}></Image>
+                    <Text style={styles.menuText}>Rewards</Text>
+
 
                 </View>
 
+                <ScrollView>
+                    <View style={styles.rewardFullSection}>
+                        {/* rewards */}
+                        {rewards.map((item, key) => (
+                            <View style={styles.rewardSection} key={key}>
+                                {item.points_earn == 0 ?
+                                    <>
+                                        <View style={styles.rewardSectionText}><Text style={styles.rewardText}>{item.orderProductStr}</Text></View>
+                                        <View><Text style={styles.rewardText1}>-{item.points_spent}</Text></View>
+                                    </>
+                                    :
+                                    <>
+                                        <View style={styles.rewardSectionText}><Text style={styles.rewardText}>{item.orderProductStr}</Text></View>
+                                        <View><Text style={styles.rewardText2}>+{item.points_earn}</Text></View>
+                                    </>
+                                }
+                            </View>
+                        ))}
+
+
+                    </View>
+                </ScrollView>
             </View>
-            <View style={styles.headingSection}>
-
-                <Image style={styles.rewardImage} source={require('../../assets/Image/loyalty.png')}></Image>
-                <Text style={styles.menuText}>Rewards</Text>
-
-
-            </View>
-
-            <ScrollView>
-                <View style={styles.rewardFullSection}>
-                    {/* rewards */}
-                    {rewards.map((item, key) => (
-                        <View style={styles.rewardSection} key={key}>
-                            {item.points_earn == 0 ?
-                                <>
-                                    <View style={styles.rewardSectionText}><Text style={styles.rewardText}>{item.orderProductStr}</Text></View>
-                                    <View><Text style={styles.rewardText1}>-{item.points_spent}</Text></View>
-                                </>
-                                :
-                                <>
-                                    <View style={styles.rewardSectionText}><Text style={styles.rewardText}>{item.orderProductStr}</Text></View>
-                                    <View><Text style={styles.rewardText2}>+{item.points_earn}</Text></View>
-                                </>
-                            }
-                        </View>
-                    ))}
-
-
-                </View>
-            </ScrollView>
-        </View>
-    )
+        )
+    }
 
 }
 

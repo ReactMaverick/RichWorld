@@ -233,20 +233,19 @@ function ProductList({ navigation, route }) {
     })
   }, [navigation, route]);
 
-
-
   if (isLoading) {
     return (
       <>
-        <ActivityIndicator size="large" color="#AB0000" />
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
       </>
     )
   } else {
-
     return (
       <>
         <Header navigation={navigation} />
-        {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
             {filterApplyed ?

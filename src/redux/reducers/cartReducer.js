@@ -14,7 +14,7 @@ let defaultState = []
         break
       }
       case "DELETE_CART_ITEM":{
-        return action.payload
+        return []
         break
       }
           

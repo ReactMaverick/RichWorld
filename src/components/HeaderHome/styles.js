@@ -122,6 +122,15 @@ export default StyleSheet.create({
     countText: {
         fontSize: 10,
         color:'#fff'
+    },
+    listening:{ 
+        backgroundColor: '#fff', 
+        height: Dimensions.get('window').height / 4, 
+        borderTopEndRadius: 20, 
+        borderTopStartRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center', 
     }
+
 
 });

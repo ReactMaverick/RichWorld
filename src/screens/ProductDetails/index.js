@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 function ProductDetails({ navigation, route }) {
   const dispatch = useDispatch();
   const { products_id, products_attributes_prices_id } = route.params;
+  const [productsAttributesPricesId, setProductsAttributesPricesId] = useState("");
   const [tab, setTab] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [productImage, setProductImage] = useState([]);
@@ -103,7 +104,7 @@ function ProductDetails({ navigation, route }) {
       });
   }
   const _addToCart = (quantity) => {
-    setIsLoading(true)
+    // setIsLoading(true)
     const formData = new FormData();
     var customers_id = "";
     var session_id = "";
@@ -139,7 +140,7 @@ function ProductDetails({ navigation, route }) {
           session_id = androidId;
         }
         _initialize_cart(customers_id, session_id)
-        _productDetails(customers_id, session_id, products_id, products_attributes_prices_id)
+        _productDetails(customers_id, session_id, products_id, productsAttributesPricesId)
       }
     })
       .catch((error) => console.log("error", error))
@@ -204,6 +205,7 @@ function ProductDetails({ navigation, route }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
+        setProductsAttributesPricesId(response.products_attributes_prices_id)
         if (isLogin) {
           _productDetails(userData.id, "", products_id, response.products_attributes_prices_id)
         } else {
@@ -274,6 +276,7 @@ function ProductDetails({ navigation, route }) {
   }
 
   useEffect(() => {
+    setProductsAttributesPricesId(products_attributes_prices_id)
     AsyncStorage.getItem('userData').then((userData) => {
       if (userData != null) {
         setIsLogin(true)

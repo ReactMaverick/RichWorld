@@ -13,9 +13,9 @@ function Faq({ navigation }) {
   const [faqList, setFaqList] = useState([]);
   const [openBox, setOpenBox] = useState(null);
   const _changeOpenBox = (key) => {
-    if( openBox == key ){
+    if (openBox == key) {
       setOpenBox(null)
-    }else{
+    } else {
       setOpenBox(key)
     }
   };
@@ -31,7 +31,7 @@ function Faq({ navigation }) {
   ];
 
   const _getFaqs = async () => {
-
+    setIsLoading(true)
     fetch(FAQ, {
       method: "get",
     })
@@ -58,39 +58,49 @@ function Faq({ navigation }) {
   useEffect(() => {
     _getFaqs()
   }, [navigation]);
-
-  return (
-    <>
-      <Header navigation={navigation} />
-      <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>Faq</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
-
-        <View>
-        {faqList.map((item, key) => (
-          <View style={styles.outerBox} key={key}>
-            <TouchableOpacity onPress={() => { _changeOpenBox(key) }} style={styles.boxheader}>
-              <Text style={styles.boxheaderTxt}>{item.faq_title}</Text>
-              <AntDesign name={openBox == key ? "up" : "down"} style={styles.boxIcon} />
-            </TouchableOpacity>
-            {openBox == key ?
-              <Text style={styles.BoxDescription}><HTMLView
-              value={item.faq_desc}
-              stylesheet={styles.contentText}
-            /></Text>
-              : <></>}
-
-          </View>
-        ))}
-          
-          {/* <AccordionComponent item={faqList}  /> */}
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
         </View>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>Faq</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
 
-      </ScrollView>
-      <Footer navigation={navigation} />
-    </>
-  )
+          <View>
+            {faqList.map((item, key) => (
+              <View style={styles.outerBox} key={key}>
+                <TouchableOpacity onPress={() => { _changeOpenBox(key) }} style={styles.boxheader}>
+                  <Text style={styles.boxheaderTxt}>{item.faq_title}</Text>
+                  <AntDesign name={openBox == key ? "up" : "down"} style={styles.boxIcon} />
+                </TouchableOpacity>
+                {openBox == key ?
+                  <Text style={styles.BoxDescription}><HTMLView
+                    value={item.faq_desc}
+                    stylesheet={styles.contentText}
+                  /></Text>
+                  : <></>}
+
+              </View>
+            ))}
+
+            {/* <AccordionComponent item={faqList}  /> */}
+          </View>
+
+        </ScrollView>
+        <Footer navigation={navigation} />
+      </>
+    )
+  }
 
 }
 

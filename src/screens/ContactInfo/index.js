@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Dimensions } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, TextInput, Dimensions, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -20,6 +20,7 @@ function ContactInfo({ navigation }) {
   const [message, setMessage] = useState("");
 
   const _getContactUs = async () => {
+    setIsLoading(true)
     fetch(CONTACT_US, {
       method: "get",
     })
@@ -84,61 +85,70 @@ function ContactInfo({ navigation }) {
   useEffect(() => {
     _getContactUs();
   }, [navigation]);
+  if (isLoading) {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#620000" />
+        </View>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Header navigation={navigation} />
+        <View style={styles.filterBar}>
+          <Text style={styles.CategoryText2}>Contact Info</Text>
+        </View>
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.card}>
 
-  return (
-    <>
-      <Header navigation={navigation} />
-      <View style={styles.filterBar}>
-        <Text style={styles.CategoryText2}>Contact Info</Text>
-      </View>
-      <ScrollView style={{ flex: 1 }}>
-        <View style={styles.card}>
-
-          <View style={styles.itemOuter}>
-            <View style={styles.itemLeft}>
-              <Entypo name="location-pin" style={styles.itemIcon} />
+            <View style={styles.itemOuter}>
+              <View style={styles.itemLeft}>
+                <Entypo name="location-pin" style={styles.itemIcon} />
+              </View>
+              <View style={styles.itemRight}>
+                <Text style={styles.text1}>Our Address</Text>
+                {/* <Text style={styles.text2}>77 seventh Street, USA.</Text> */}
+                <HTMLView
+                  value={contactUs.contact_us_address}
+                  stylesheet={styles}
+                />
+              </View>
             </View>
-            <View style={styles.itemRight}>
-              <Text style={styles.text1}>Our Address</Text>
-              {/* <Text style={styles.text2}>77 seventh Street, USA.</Text> */}
-              <HTMLView
-                value={contactUs.contact_us_address}
-                stylesheet={styles}
-              />
-            </View>
-          </View>
 
-          <View style={styles.itemOuter}>
-            <View style={styles.itemLeft}>
-              <Entypo name="old-phone" style={styles.itemIcon} />
+            <View style={styles.itemOuter}>
+              <View style={styles.itemLeft}>
+                <Entypo name="old-phone" style={styles.itemIcon} />
+              </View>
+              <View style={styles.itemRight}>
+                <Text style={styles.text2}>{contactUs.contact_us_phone}</Text>
+              </View>
             </View>
-            <View style={styles.itemRight}>
-              <Text style={styles.text2}>{contactUs.contact_us_phone}</Text>
+
+            <View style={styles.itemOuter}>
+              <View style={styles.itemLeft}>
+                <Entypo name="email" style={styles.itemIcon} />
+              </View>
+              <View style={styles.itemRight}>
+
+                <Text style={styles.text2}>{contactUs.contact_us_email}</Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.itemOuter}>
-            <View style={styles.itemLeft}>
-              <Entypo name="email" style={styles.itemIcon} />
-            </View>
-            <View style={styles.itemRight}>
+            <WebView
+              scalesPageToFit={true}
+              bounces={false}
+              javaScriptEnabled
+              style={{ height: 200, width: Dimensions.get('window').width }}
+              source={{
+                html: contactUs.contact_us_location,
+              }}
+              automaticallyAdjustContentInsets={false}
+            />
 
-              <Text style={styles.text2}>{contactUs.contact_us_email}</Text>
-            </View>
-          </View>
-
-          <WebView
-          scalesPageToFit={true}
-          bounces={false}
-          javaScriptEnabled
-          style={{ height: 300, width: Dimensions.get('window').width }}
-          source={{
-            html:contactUs.contact_us_location,
-          }}
-          automaticallyAdjustContentInsets={false}
-        />
-
-          {/* <View style={[styles.itemOuter, { borderBottomColor: '#CCCCCC', borderBottomWidth: 1, paddingBottom: 10 }]}>
+            {/* <View style={[styles.itemOuter, { borderBottomColor: '#CCCCCC', borderBottomWidth: 1, paddingBottom: 10 }]}>
             <View style={styles.itemLeft}>
               <Entypo name="stopwatch" style={styles.itemIcon} />
             </View>
@@ -148,64 +158,65 @@ function ContactInfo({ navigation }) {
             </View>
           </View> */}
 
-          <Text style={styles.formTitle}>Get In Touch</Text>
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Name'}
-              style={[styles.textInput]}
-              value={name}
-              onChangeText={(name) => setName(name)}
-            />
+            <Text style={styles.formTitle}>Get In Touch</Text>
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Name'}
+                style={[styles.textInput]}
+                value={name}
+                onChangeText={(name) => setName(name)}
+              />
+            </View>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Email'}
+                style={[styles.textInput]}
+                value={email}
+                onChangeText={(email) => setEmail(email)}
+              />
+            </View>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Phone'}
+                style={[styles.textInput]}
+                value={phone}
+                onChangeText={(phone) => setPhone(phone)}
+              />
+            </View>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Subject'}
+                style={[styles.textInput]}
+                value={subject}
+                onChangeText={(subject) => setSubject(subject)}
+              />
+            </View>
+
+            <View style={styles.textInputOuter}>
+              <TextInput
+                placeholder={'Your Message'}
+                style={[styles.textInput, { height: 100 }]}
+                multiline={true}
+                value={message}
+                onChangeText={(message) => setMessage(message)}
+              />
+            </View>
+
+            <TouchableOpacity onPress={() => {
+              _sendContactUsRequest();
+            }} style={styles.btnOuter}>
+              <Text style={styles.btnMessage}>Send Message</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Email'}
-              style={[styles.textInput]}
-              value={email}
-              onChangeText={(email) => setEmail(email)}
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Phone'}
-              style={[styles.textInput]}
-              value={phone}
-              onChangeText={(phone) => setPhone(phone)}
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Subject'}
-              style={[styles.textInput]}
-              value={subject}
-              onChangeText={(subject) => setSubject(subject)}
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Your Message'}
-              style={[styles.textInput, { height: 100 }]}
-              multiline={true}
-              value={message}
-              onChangeText={(message) => setMessage(message)}
-            />
-          </View>
-
-          <TouchableOpacity onPress={() => {
-            _sendContactUsRequest();
-          }} style={styles.btnOuter}>
-            <Text style={styles.btnMessage}>Send Message</Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
-      <Footer navigation={navigation} />
-    </>
-  )
+        </ScrollView>
+        <Footer navigation={navigation} />
+      </>
+    )
+  }
 
 }
 
