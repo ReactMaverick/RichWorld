@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StatusBar, Dimensions } from 'react-native';
+import { View, Text, ActivityIndicator, StatusBar, Dimensions,Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,6 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
 import SafeAreaViewDecider from 'react-native-smart-statusbar'
+import messaging from '@react-native-firebase/messaging';
 
 
 
@@ -52,7 +53,7 @@ const store = configureStore();
 
 
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const Drawer = createDrawerNavigator();
 
@@ -144,17 +145,32 @@ function Stack1() {
 
 export default function App() {
 
+  const checkToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+       console.log(fcmToken);
+    } 
+   }
+   
+
   useEffect(() => {
 
+ checkToken();
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
     <Provider store={store}>
-      <SafeAreaViewDecider statusBarHiddenForNotch={true}  backgroundColor="#620000" />
-    <NavigationContainer>     
-      <Stack1 />           
-      <FlashMessage position="bottom" floating={true} duration={2000} />
-    </NavigationContainer>
+      <SafeAreaViewDecider statusBarHiddenForNotch={true} backgroundColor="#620000" />
+      <NavigationContainer>
+        <Stack1 />
+        <FlashMessage position="bottom" floating={true} duration={2000} />
+      </NavigationContainer>
     </Provider>
 
   );
