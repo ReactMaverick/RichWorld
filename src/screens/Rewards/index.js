@@ -4,6 +4,7 @@ import styles from "./styles";
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Header from "../../components/Header";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { REWARDS } from '../../config/ApiConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -74,38 +75,7 @@ function Rewards({ navigation }) {
     } else {
         return (
             <View>
-                <View style={styles.headerBox}>
-                    <TouchableOpacity style={styles.box1} onPress={() => {
-                        navigation.openDrawer();
-                    }}>
-                        <Entypo name="menu" style={styles.menuIcon} />
-                    </TouchableOpacity>
-                    <View style={styles.box2} >
-                        <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} />
-
-                    </View>
-                    <View style={styles.box3} >
-
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate('Search');
-
-                        }}>
-                            <Feather name="search" style={styles.menuIcon2} />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate('MyCart', { shopNow: 0 });
-
-                        }}>
-                            <AntDesign name="shoppingcart" style={styles.menuIcon} />
-                        </TouchableOpacity>
-
-
-                        {/* <Image source={require('../../assets/Image/userImage.png')} style={styles.userLogo} /> */}
-
-                    </View>
-
-                </View>
+                <Header navigation={navigation} />
                 <View style={styles.headingSection}>
 
                     <Image style={styles.rewardImage} source={require('../../assets/Image/loyalty.png')}></Image>

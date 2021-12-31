@@ -609,6 +609,7 @@
 				DEVELOPMENT_TEAM = 49F35T284B;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RichWorld/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -635,6 +636,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 49F35T284B;
 				INFOPLIST_FILE = RichWorld/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

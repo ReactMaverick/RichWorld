@@ -298,6 +298,8 @@ PODS:
     - React
   - react-native-voice (1.1.9):
     - React
+  - react-native-webview (11.15.0):
+    - React-Core
   - React-perflogger (0.64.0)
   - React-RCTActionSheet (0.64.0):
     - React-Core/RCTActionSheetHeaders (= 0.64.0)
@@ -453,6 +455,7 @@ DEPENDENCIES:
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - "react-native-voice (from `../node_modules/@react-native-community/voice`)"
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -547,6 +550,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-voice:
     :path: "../node_modules/@react-native-community/voice"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -640,6 +645,7 @@ SPEC CHECKSUMS:
   react-native-slider: b0b4c575507df69bc8ceb307eaad0a8f89455a8e
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-voice: 0355d771838b00acfb4b112b2c496c2653e2f8c8
+  react-native-webview: fcadb5d977e7098e14eb3b27d339feae16c549ff
   React-perflogger: 9c547d8f06b9bf00cb447f2b75e8d7f19b7e02af
   React-RCTActionSheet: 3080b6e12e0e1a5b313c8c0050699b5c794a1b11
   React-RCTAnimation: 3f96f21a497ae7dabf4d2f150ee43f906aaf516f
@@ -667,6 +673,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: d2d0aa59967ca2e08f10f46de9084ca53ab049b0
+PODFILE CHECKSUM: cf581b76df2fd744aa2ac04fce0f5d458d64a8d6
 
 COCOAPODS: 1.11.2
