@@ -57,7 +57,7 @@ function Header({ navigation }) {
       <View style={styles.box3} >
 
         <TouchableOpacity onPress={() => {
-          navigation.navigate('Search');
+          navigation.navigate('Search', { text: "" });
 
         }}>
           <Feather name="search" style={styles.menuIcon2} />

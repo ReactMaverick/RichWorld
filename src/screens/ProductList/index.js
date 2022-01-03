@@ -374,6 +374,7 @@ function ProductList({ navigation, route }) {
 
             setFilterModalVisible(!modalVisible);
           }}
+          style={{marginVertical:Platform.OS=="android"?0:45,}}
         >
           <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <View style={styles.filterAreaMain}>

@@ -35,7 +35,8 @@ function ProductDetails({ navigation, route }) {
 
 
   const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
-    // console.log("products_id: ", products_id);
+    console.log("products_id: ", products_id);
+    console.log("products_attributes_prices_id: ", products_attributes_prices_id);
     setIsLoading(true)
     fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&customers_id=' + customers_id + '&session_id=' + deviceId, {
       method: "GET",
@@ -58,8 +59,8 @@ function ProductDetails({ navigation, route }) {
           if (response.detail.product_data[0].BulkPriceList != undefined) {
             setBulkPriceList(response.detail.product_data[0].BulkPriceList);
           }
-          if (response.detail.product_data[0].product_review != undefined) {
-            setProductReview(response.detail.product_data[0].product_review);
+          if (response.product_review != undefined) {
+            setProductReview(response.product_review);
           }
           if (response.detail.product_data[0]['images'].length > 0) {
             setHighListedImage(response.detail.product_data[0]['images'][0].image_path)
@@ -494,7 +495,7 @@ function ProductDetails({ navigation, route }) {
             </View>
             :
             <View style={styles.tabContent2}>
-              {bulkPriceList.length > 0 ?
+              {productReview.length > 0 ?
                 productReview.map((item, key) => (
                   <View style={styles.reviewBox} key={key}>
                     <View style={styles.reviewTopSection}>

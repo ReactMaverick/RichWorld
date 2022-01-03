@@ -9,11 +9,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ImagePicker from 'react-native-image-crop-picker';
 import { Rating } from 'react-native-ratings';
 
+import { showMessage, hideMessage } from "react-native-flash-message";
+import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT, UPLOAD_PRODUCTS_IMAGES } from '../../config/ApiConfig';
 import dateFormat, { masks } from "dateformat";
 
 function MyPurchased({ navigation }) {
+  const isFocused = useIsFocused();
 
   const [cancelModal, setCancelModal] = useState(false);
 
@@ -123,6 +126,11 @@ function MyPurchased({ navigation }) {
         .then(([status, response]) => {
           if (status == 200) {
             console.log(JSON.stringify(response, null, " "));
+            showMessage({
+              message: response.message,
+              type: "info",
+              backgroundColor: "#808080",
+            });
           } else {
             console.log(status, response);
           }
@@ -190,12 +198,14 @@ function MyPurchased({ navigation }) {
       formData.append('products_id', productsId);
 
       if (images.length > 0) {
+        console.log('images: ', images)
         for (let i = 0; i < images.length; i++) {
           const imagePath = images[i].path;
           const arr = imagePath.split("/");
 
           formData.append('images[]', {
-            uri: Platform.OS === 'ios' ? `file:///${images[i].path}` : images[i].path,
+            // uri: Platform.OS === 'ios' ? `file:///${images[i].path}` : images[i].path,
+            uri: images[i].path,
             type: images[i].mime,
             name: arr[arr.length - 2]
           });
@@ -203,10 +213,6 @@ function MyPurchased({ navigation }) {
 
         }
       }
-
-
-
-
       fetch(UPLOAD_PRODUCTS_IMAGES, {
         method: "POST",
         headers: {
@@ -255,29 +261,31 @@ function MyPurchased({ navigation }) {
 
   }
 
-  
+
   const _getParsedDate = (date) => {
     // console.log(date)
     date = String(date).split(' ');
     var days = String(date[0]).split('-');
     var hours = String(date[1]).split(':');
-    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
+    return [parseInt(days[0]), parseInt(days[1]) - 1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
   useEffect(() => {
+    if (isFocused) {
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          // console.log(userDetails)
+          _getPurchasedOrders(userDetails.id);
+        } else {
+          setIsLogin(false)
+          navigation.navigate('Login');
+        }
+      })
+    }
 
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-        var userDetails = JSON.parse(userData)
-        // console.log(userDetails)
-        _getPurchasedOrders(userDetails.id);
-      } else {
-        setIsLogin(false)
-        navigation.navigate('Login');
-      }
-    })
-  }, [navigation]);
+  }, [navigation, isFocused]);
   if (isLoading) {
     return (
       <>
@@ -304,7 +312,7 @@ function MyPurchased({ navigation }) {
                   <Text style={styles.leftText2}>₹{item.final_price}</Text>
                   <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
                   <Text style={styles.leftText2}>Delivery Date : {
-                  dateFormat(new Date(..._getParsedDate(item.delivery_date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                    dateFormat(new Date(..._getParsedDate(item.delivery_date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
                   }</Text>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.leftText2}>Subtotal:</Text>
@@ -348,7 +356,8 @@ function MyPurchased({ navigation }) {
         <Footer navigation={navigation} />
 
 
-        <Modal isVisible={cancelModal} onBackdropPress={toggleCancelModal}  >
+        <Modal isVisible={cancelModal} onBackdropPress={toggleCancelModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }} >
           <View style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
               <Text style={styles.CategoryText2}>Write Your Reason</Text>
@@ -399,7 +408,8 @@ function MyPurchased({ navigation }) {
         </Modal>
 
 
-        <Modal isVisible={ratingModal} onBackdropPress={toggleRatingModal}  >
+        <Modal isVisible={ratingModal} onBackdropPress={toggleRatingModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }} >
           <View style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
               <Text style={styles.CategoryText2}>Write Your Review</Text>
@@ -440,9 +450,9 @@ function MyPurchased({ navigation }) {
                 numberOfLines={4}
                 value={reviewsText}
                 onChangeText={(reviewsText) => setReviewsText(reviewsText)}
-                onFocus={() => {
-                  setAddErrorMessage('')
-                }}
+                // onFocus={() => {
+                //   setAddErrorMessage('')
+                // }}
               />
             </View>
 
@@ -454,7 +464,8 @@ function MyPurchased({ navigation }) {
           </View>
         </Modal>
 
-        <Modal isVisible={imageModal} onBackdropPress={toggleImageModal}  >
+        <Modal isVisible={imageModal} onBackdropPress={toggleImageModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }} >
           <View style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
               <Text style={styles.CategoryText2}>Upload Your Images</Text>

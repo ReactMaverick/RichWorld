@@ -21,6 +21,7 @@ export const UPDATE_CART_QUANTITY = BASE_URL + 'updateCartQuantity';
 export const MY_ADDRESS = BASE_URL + 'myAddress';
 export const ADD_MY_ADDRESS = BASE_URL + 'addMyAddress';
 export const UPDATE_SHIPPING_ADDRESS = BASE_URL + 'updateMyAddress';
+export const DELETE_SHIPPING_ADDRESS = BASE_URL + 'deleteAddress?address_book_id=';
 export const UPDATE_ACCOUNT = BASE_URL + 'accountUpdate';
 export const MY_ORDERS = BASE_URL + 'myOrders';
 export const MY_PURCHASED = BASE_URL + 'myPurchased';

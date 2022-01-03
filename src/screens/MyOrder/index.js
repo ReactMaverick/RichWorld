@@ -11,7 +11,7 @@ import dateFormat, { masks } from "dateformat";
 function MyOrder({ navigation }) {
 
   const isFocused = useIsFocused();
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);

@@ -23,7 +23,7 @@ function TermsCondition({ navigation }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          console.log(status, response);
+          // console.log(status, response);
           setTerms(response.termsDetails.cms_text)
         } else {
           console.log(status, response);

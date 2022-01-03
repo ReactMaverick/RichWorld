@@ -434,6 +434,7 @@ function Login({ navigation }) {
           setErrorMessage('')
           toggleOtpModal();
         }}
+        style={{marginVertical:Platform.OS=="android"?0:45,}}
 
       >
         <View style={styles.backGround}>
@@ -487,6 +488,7 @@ function Login({ navigation }) {
           setErrorMessage('')
           setSocialOtpCheck(!socialOtpCheck)
         }}
+        style={{marginVertical:Platform.OS=="android"?0:45,}}
 
       >
         <View style={styles.backGround}>

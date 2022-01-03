@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 
 export default StyleSheet.create({
 
@@ -14,8 +14,8 @@ export default StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         paddingLeft: 5,
-        paddingTop: 3,
-        paddingBottom: 3,
+        paddingTop: Platform.OS=="android"?3:10,
+        paddingBottom: Platform.OS=="android"?3:10,
         flexDirection: 'row',
         justifyContent:'flex-start',
     },

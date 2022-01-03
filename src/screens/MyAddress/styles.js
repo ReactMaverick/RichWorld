@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { color } from 'react-native-reanimated';
 
 export default StyleSheet.create({
@@ -105,8 +105,16 @@ export default StyleSheet.create({
         color:'#000',
         fontFamily:'Poppins-Regular',
         fontSize:12,
-        width:'100%'
-      
+        width:'100%',
+        ...Platform.select({
+            ios: {
+                paddingVertical: 8
+            },
+            android: {
+            },
+            default: {
+            }
+        })
     },
     textInputOuter:{
        
@@ -122,6 +130,21 @@ export default StyleSheet.create({
         textAlign: 'center',
         margin: 10
     },
-
+    outerBtn:{
+        marginLeft:10,
+        marginRight:10,
+        marginBottom:10,
+        padding:10,
+        borderRadius:10,        
+        backgroundColor:'#AB0000',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    btnText:{
+        fontFamily:'Poppins-Regular',
+        fontWeight:'700',
+        fontSize:17,
+        color:'#fff'
+    }
 
 });

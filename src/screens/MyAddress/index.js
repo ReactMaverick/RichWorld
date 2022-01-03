@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
+import { Platform } from 'react-native';
 import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -6,9 +7,12 @@ import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Modal from "react-native-modal";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MY_ADDRESS, ADD_MY_ADDRESS, UPDATE_SHIPPING_ADDRESS } from '../../config/ApiConfig';
+import { MY_ADDRESS, ADD_MY_ADDRESS, UPDATE_SHIPPING_ADDRESS, DELETE_SHIPPING_ADDRESS } from '../../config/ApiConfig';
 
+import { showMessage, hideMessage } from "react-native-flash-message";
+import ActionSheet from "react-native-actions-sheet";
 import { useIsFocused } from "@react-navigation/native";
+const actionSheetRef = createRef();
 function MyAddress({ navigation }) {
 
 
@@ -165,7 +169,35 @@ function MyAddress({ navigation }) {
     }
 
   }
+  const _deleteShippingAddress = () => {
+    console.log("addressBookId", addressBookId)
+    fetch(DELETE_SHIPPING_ADDRESS + addressBookId, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          console.log(status, response);
+          _getMyAdderss(userData.id)
+          showMessage({
+            message: response.message,
+            type: "info",
+            backgroundColor: "#808080",
+          });
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log(error))
+      .finally(() => {
 
+        setIsLoading(false)
+      });
+  }
   const _setAddressData = async (address) => {
     setAddressBookId(address.address_book_id);
     setEntryStreetAddress(address.entry_street_address);
@@ -266,7 +298,17 @@ function MyAddress({ navigation }) {
               shippingAddressList.map((item, key) => (
                 <View key={key}>
                   <View style={styles.headerSection}>
-                    <Text style={styles.text1}>{item.entry_firstname}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={styles.text1}>{item.entry_firstname}</Text>
+                      <TouchableOpacity onPress={() => {
+                        // _deleteShippingAddress(item.address_book_id)
+                        setAddressBookId(item.address_book_id);
+                        actionSheetRef.current?.setModalVisible();
+                      }}>
+
+                        <AntDesign name="delete" style={styles.downicon} />
+                      </TouchableOpacity>
+                    </View>
                     <Text style={styles.text2}>{item.entry_street_address}, {item.entry_firstname}, {item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
                     <Text style={styles.text2}>Mobile: {item.entry_phone}</Text>
                     <Text style={styles.text2}>Email: {item.entry_email}</Text>
@@ -294,7 +336,11 @@ function MyAddress({ navigation }) {
 
 
 
-        <Modal isVisible={addressModal} onBackdropPress={toggleAddressModal}  >
+        <Modal
+          isVisible={addressModal}
+          onBackdropPress={toggleAddressModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }}
+        >
           <ScrollView style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
               <Text style={styles.CategoryText2}>Edit Address</Text>
@@ -398,7 +444,11 @@ function MyAddress({ navigation }) {
           </ScrollView>
         </Modal>
 
-        <Modal isVisible={addAddressModal} onBackdropPress={toggleAddAddressModal}  >
+        <Modal
+          isVisible={addAddressModal}
+          onBackdropPress={toggleAddAddressModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }}
+        >
           <ScrollView style={styles.cancelPopup}>
             <View style={styles.headerPopup}>
               <Text style={styles.CategoryText2}>Add Address</Text>
@@ -495,7 +545,19 @@ function MyAddress({ navigation }) {
             </TouchableOpacity>
           </ScrollView>
         </Modal>
-
+        <ActionSheet ref={actionSheetRef}>
+          <TouchableOpacity onPress={() => {
+            _deleteShippingAddress()
+            actionSheetRef.current?.hide();
+          }} style={[styles.outerBtn, { marginTop: 10 }]}>
+            <Text style={styles.btnText}>Conferm</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            actionSheetRef.current?.hide();
+          }} style={[styles.outerBtn, { backgroundColor: '#808080' }]}>
+            <Text style={styles.btnText}>Cancle</Text>
+          </TouchableOpacity>
+        </ActionSheet>
       </>
     )
   }

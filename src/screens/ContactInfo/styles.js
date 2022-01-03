@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { color } from 'react-native-reanimated';
 
 export default StyleSheet.create({
@@ -66,8 +66,16 @@ export default StyleSheet.create({
         color:'#000',
         fontFamily:'Poppins-Regular',
         fontSize:12,
-        width:'100%'
-      
+        width:'100%',
+        ...Platform.select({
+            ios: {
+                paddingVertical: 8
+            },
+            android: {
+            },
+            default: {
+            }
+        })
     },
     textInputOuter:{
         flex:1,
