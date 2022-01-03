@@ -513,10 +513,11 @@ function ProductDetails({ navigation, route }) {
                           imageSize={20}
                           style={{ alignItems: 'flex-start' }}
                         />
+                        <Text style={styles.reviewDescription}>{item.reviews_text} </Text>
                       </View>
-
+                      
                     </View>
-                    <Text style={styles.reviewDescription}>{item.reviews_text} </Text>
+                    
                   </View>
                 ))
                 :

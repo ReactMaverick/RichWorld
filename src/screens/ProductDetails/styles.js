@@ -293,7 +293,8 @@ export default StyleSheet.create({
     reviewUserImage:{
         width:80,
         height:80,
-        borderRadius:40
+        borderRadius:40,
+        marginRight:10
     },
     reviewUserName:{
         fontFamily:'Poppins-Regular',

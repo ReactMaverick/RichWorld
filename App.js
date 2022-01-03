@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StatusBar, Dimensions,Alert } from 'react-native';
+import { View, Text, ActivityIndicator, StatusBar, Dimensions, Alert, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,8 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
 import SafeAreaViewDecider from 'react-native-smart-statusbar'
 import messaging from '@react-native-firebase/messaging';
-
-
 
 
 import HomeScreen from './src/screens/HomeScreen'
@@ -145,23 +143,24 @@ function Stack1() {
 
 export default function App() {
 
-  const checkToken = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-       console.log(fcmToken);
-    } 
-   }
-   
+  if (Platform.OS == "android") {
+    const checkToken = async () => {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        console.log(fcmToken);
+      }
+    }
+  }
 
   useEffect(() => {
+    if (Platform.OS == "android") {
+      checkToken();
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
 
- checkToken();
-
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-
-    return unsubscribe;
+      return unsubscribe;
+    }
   }, []);
 
   return (
