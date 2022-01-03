@@ -143,8 +143,9 @@ function Stack1() {
 
 export default function App() {
 
-  if (Platform.OS == "android") {
-    const checkToken = async () => {
+
+  const checkToken = async () => {
+    if (Platform.OS == "android") {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
         console.log(fcmToken);
