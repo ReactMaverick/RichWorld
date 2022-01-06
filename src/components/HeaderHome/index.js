@@ -99,7 +99,11 @@ function HeaderHome({ navigation }) {
         </View>
         <View style={styles.subheader2}>
           <TouchableOpacity onPress={() => {
-            navigation.navigate('Notifications');
+            if (userData == null) {
+              navigation.navigate('Login');
+            } else {
+              navigation.navigate('Notifications');
+            }
 
           }}>
             <FontAwesome5 name="bell" style={styles.menuIcon2} />
@@ -140,7 +144,7 @@ function HeaderHome({ navigation }) {
 
       <ActionSheet ref={actionSheetRef}>
         <View style={styles.listening}>
-          <Text style={{fontSize: 20}}>Listening...</Text>
+          <Text style={{ fontSize: 20 }}>Listening...</Text>
         </View>
       </ActionSheet>
 

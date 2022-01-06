@@ -149,6 +149,7 @@ export default function App() {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
         console.log(fcmToken);
+        AsyncStorage.setItem('fcmToken', fcmToken)
       }
     }
   }
@@ -157,7 +158,7 @@ export default function App() {
     if (Platform.OS == "android") {
       checkToken();
       const unsubscribe = messaging().onMessage(async remoteMessage => {
-        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
       });
 
       return unsubscribe;

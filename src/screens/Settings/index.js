@@ -40,6 +40,7 @@ function Settings({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
+
         console.log(response)
         let tempUserData = userData;
         tempUserData.first_name = response.user_details.first_name;
@@ -72,7 +73,7 @@ function Settings({ navigation }) {
         }
       })
     }
-  }, [navigation]);
+  }, [navigation, isFocused]);
 
   return (
     <>

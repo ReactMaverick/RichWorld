@@ -439,7 +439,7 @@ function MyAddress({ navigation }) {
             <TouchableOpacity onPress={() => {
               _updateShippingAddress()
             }} style={styles.btnOuter}>
-              <Text style={styles.btnMessage}>Send </Text>
+              <Text style={styles.btnMessage}>Submit </Text>
             </TouchableOpacity>
           </ScrollView>
         </Modal>
@@ -541,7 +541,7 @@ function MyAddress({ navigation }) {
             <TouchableOpacity onPress={() => {
               _addShippingAddress()
             }} style={styles.btnOuter}>
-              <Text style={styles.btnMessage}>Send </Text>
+              <Text style={styles.btnMessage}>Submit </Text>
             </TouchableOpacity>
           </ScrollView>
         </Modal>

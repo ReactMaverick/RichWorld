@@ -6,12 +6,13 @@ import styles from "./styles";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NOTIFICATION_LIST } from '../../config/ApiConfig';
 import dateFormat, { masks } from "dateformat";
+import { useIsFocused } from "@react-navigation/native";
 
 function Notifications({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [notificationsList, setNotificationsList] = useState([]);
 
-
+  const isFocused = useIsFocused();
 
   const _getNotificationsList = async (userData) => {
     setIsLoading(true)
@@ -39,25 +40,27 @@ function Notifications({ navigation }) {
       });
   }
 
-  
+
   const _getParsedDate = (date) => {
     // console.log(date)
     date = String(date).split(' ');
     var days = String(date[0]).split('-');
     var hours = String(date[1]).split(':');
-    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
+    return [parseInt(days[0]), parseInt(days[1]) - 1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
 
   useEffect(() => {
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        _getNotificationsList(JSON.parse(userData));
-      } else {
+    if (isFocused) {
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          _getNotificationsList(JSON.parse(userData));
+        } else {
 
 
-      }
-    })
-  }, [navigation]);
+        }
+      })
+    }
+  }, [navigation, isFocused]);
   if (isLoading) {
     return (
       <>
@@ -81,7 +84,7 @@ function Notifications({ navigation }) {
               <Text style={styles.orderDescription}>{item.notification_text}</Text>
 
               <Text style={styles.orderDate}>{
-              dateFormat(new Date(..._getParsedDate(item.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                dateFormat(new Date(..._getParsedDate(item.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")
               }</Text>
             </View>
           ))}

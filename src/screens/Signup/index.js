@@ -31,7 +31,7 @@ function Signup({ navigation }) {
       formData.append('phone', phoneNumber);
       formData.append('email', email);
       formData.append('password', password);
-
+      console.log(JSON.stringify(formData, null, " "));
       fetch(POST_SIGNUP, {
         method: "POST",
         body: formData
@@ -59,6 +59,7 @@ function Signup({ navigation }) {
         .finally(() => {
           setIsLoading(false)
         });
+      setIsLoading(false)
     }
   }
 
