@@ -99,7 +99,8 @@ function Login({ navigation }) {
               setPassword();
               setUserData(response.userDetails[0])
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-                navigation.navigate('HomeScreen');
+                // navigation.navigate('HomeScreen');
+                navigation.goBack()
               })
             }
 
@@ -157,7 +158,8 @@ function Login({ navigation }) {
             //add user details to localstorage
             setUserData(response.userDetails[0])
             AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-              navigation.navigate('HomeScreen');
+              // navigation.navigate('HomeScreen');
+              navigation.goBack()
             })
 
           }
