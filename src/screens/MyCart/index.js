@@ -395,6 +395,8 @@ function MyCart({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
+      setCheck();
+      setSameAsBilling(0);
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
           setIsLogin(true)
