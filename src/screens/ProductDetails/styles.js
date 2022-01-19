@@ -326,6 +326,10 @@ export default StyleSheet.create({
         alignItems:'center',
         backgroundColor:'#AB0000'
     },
+    heartIcon:{
+        fontSize:25,
+        color: '#620000'
+    }
     
 
 });
