@@ -89,13 +89,13 @@ function SlideMenu({ navigation }) {
                 <View style={{width:30}}><FontAwesome5 name="clipboard-list" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Introduction</Text>
             </TouchableOpacity> */}
-            {/* 
+            
             <TouchableOpacity onPress={()=>{
                   navigation.navigate('Blog');
             }} style={styles.menuItem}>
                 <View style={{width:30}}><FontAwesome5 name="blog" style={styles.menuIcon} /></View>
                 <Text style={styles.menuText}>Blog</Text>
-            </TouchableOpacity>*/}
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer())
