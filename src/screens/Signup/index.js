@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView,ActivityIndicator, Platform } from 'react-native';
+import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, ActivityIndicator, Platform } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { POST_SIGNUP } from '../../config/ApiConfig'
+import { useValidation } from 'react-native-form-validator';
 function Signup({ navigation }) {
 
   const [fullName, setFullName] = useState("")
@@ -13,6 +14,22 @@ function Signup({ navigation }) {
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  const { validate, isFieldInError, getErrorsInField, getErrorMessages, isFormValid } =
+    useValidation({
+      state: { fullName, email, phoneNumber, password },
+    });
+
+  const checkFields = () => {
+    validate({
+      fullName: { minlength: 3, maxlength: 7, required: true },
+      email: { email: true, required: true },
+      phoneNumber: { numbers: true, minlength: 10, maxlength: 10, required: true },
+      password: { required: true },
+    });
+    if(isFormValid()){
+      checkSignup()
+    }
+  }
   const checkSignup = () => {
 
     if (fullName == "") {
@@ -59,7 +76,7 @@ function Signup({ navigation }) {
         .finally(() => {
           setIsLoading(false)
         });
-      setIsLoading(false)
+        setIsLoading(false)
     }
   }
 
@@ -70,15 +87,17 @@ function Signup({ navigation }) {
   return (
     <>
       <View style={styles.backGround}>
-      {isLoading?<ActivityIndicator size="large" color="#AB0000" />:<></>}   
+        {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <ScrollView showsVerticalScrollIndicator={false}>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>Create Account</Text>
           </ImageBackground>
-          <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
+          <View style={{ flex: 1, marginHorizontal:10 }}>
+            
+
             <Text style={styles.errorMessage}>{errorMsg}</Text>
 
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="user" style={styles.inputicon} />
               <TextInput
                 placeholder={'Full Name'}
@@ -89,8 +108,11 @@ function Signup({ navigation }) {
                 }}
               />
             </View>
+            {isFieldInError('fullName') &&
+              <Text style={styles.bottomErrorMessage}>{getErrorsInField('fullName')[0]}</Text>
+              }
 
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
               <TextInput
                 placeholder={'Enter Email ID'}
@@ -102,8 +124,12 @@ function Signup({ navigation }) {
                 }}
               />
             </View>
+            {isFieldInError('email') &&
+              <Text style={styles.bottomErrorMessage}>{getErrorsInField('email')[0]}</Text>}
 
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+
+
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
 
               <FontAwesome name="phone" style={styles.inputicon} />
               <TextInput
@@ -117,8 +143,10 @@ function Signup({ navigation }) {
                 }}
               />
             </View>
+            {isFieldInError('phoneNumber') &&
+              <Text style={styles.bottomErrorMessage}>{getErrorsInField('phoneNumber')[0]}</Text>}
 
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="lock" style={styles.inputicon} />
               <TextInput
                 placeholder={'Password'}
@@ -129,10 +157,12 @@ function Signup({ navigation }) {
                 }}
               />
             </View>
+            {isFieldInError('password') &&
+             <Text style={styles.bottomErrorMessage}>{getErrorsInField('password')[0]}</Text>}
 
             <TouchableOpacity style={styles.btnOuter} onPress={() => {
-              
-              checkSignup()
+
+              checkFields()
             }}>
               <Text style={styles.btnMessage}>Create Account</Text>
             </TouchableOpacity>
