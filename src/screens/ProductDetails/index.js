@@ -335,7 +335,7 @@ function ProductDetails({ navigation, route }) {
   if (isLoading) {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#620000" />
         </View>
@@ -344,7 +344,7 @@ function ProductDetails({ navigation, route }) {
   } else {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
             <Text style={styles.CategoryText1}>{productDetails.brands_name} </Text>

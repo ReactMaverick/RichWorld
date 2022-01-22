@@ -68,6 +68,7 @@ function Blog({ navigation }) {
               blogs.length > 0 ?
                 blogs.map((item, key) => (
                   <ProductBox
+                  key={key}
                     navigation={navigation}
                     id={item.news_id}
                     name={item.news_name}
@@ -119,9 +120,9 @@ const _getParsedDate = (date) => {
 
 function ProductBox({ navigation, id, name, description, date, image }) {
   return (
-    <TouchableOpacity onPress={() => {
+    <TouchableOpacity  onPress={() => {
       navigation.navigate('BlogDetails', { id: id });
-    }} style={styles.productBox}>
+    }} style={styles.productBox}  >
       <Image style={styles.productImage} source={{ uri: image }} />
       {/* <View style={{ flexDirection: 'row' }}>
         <Text style={styles.productTitle}>{name} |</Text>

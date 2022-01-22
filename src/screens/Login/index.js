@@ -60,11 +60,13 @@ function Login({ navigation }) {
   };
 
   const _signIn = async () => {
-
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (username == '') {
       setErrorMessage("Enter Email/Phone");
     } else if (password == '') {
       setErrorMessage("Enter Password");
+    }else if((reg.test(username) === false) && username.length!=10){
+      setErrorMessage("Please Enter Valid Email/Phone");
     } else {
       setIsLoading(true)
       const formData = new FormData();

@@ -58,7 +58,7 @@ function BlogDetails({ navigation, route }) {
   if (isLoading) {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#620000" />
         </View>
@@ -67,7 +67,7 @@ function BlogDetails({ navigation, route }) {
   } else {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
         <Text style={styles.CategoryText2}>Blog</Text>
           <TouchableOpacity onPress={() => {

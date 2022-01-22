@@ -15,42 +15,53 @@ import { VIEW_CART, UPDATE_CART_QUANTITY } from '../../config/ApiConfig';
 import DeviceInfo from 'react-native-device-info';
 import { useIsFocused } from "@react-navigation/native";
 
-function Header({ navigation }) { 
-  const [cartCount,setCartCount] = useState(0);
+function Header({ navigation, backArrow }) {
+  const [cartCount, setCartCount] = useState(0);
 
   const isFocused = useIsFocused();
   const userData = useSelector(
     (state) => state.authReducer
   );
-  
+
   const cartData = useSelector(
     (state) => state.cartReducer
   );
 
   useEffect(() => {
-  //   if (isFocused) {
-  //   if (userData == null) {
-  //     DeviceInfo.getAndroidId().then((androidId) => {
-  //       _getCartList("", androidId)
-  //     });
-  //   } else {
-  //     _getCartList(userData.item.id, "")
-  //   }
-  // }
+    //   if (isFocused) {
+    //   if (userData == null) {
+    //     DeviceInfo.getAndroidId().then((androidId) => {
+    //       _getCartList("", androidId)
+    //     });
+    //   } else {
+    //     _getCartList(userData.item.id, "")
+    //   }
+    // }
   }, [navigation]);
 
   return (
     <View style={styles.headerBox}>
       {/* <SafeAreaViewDecider statusBarHiddenForNotch={false}  backgroundColor="#620000" /> */}
-      <TouchableOpacity style={styles.box1} onPress={() => {
-        navigation.dispatch(DrawerActions.openDrawer())
-      }}>
-        <Entypo name="menu" style={styles.menuIcon} />
-      </TouchableOpacity>
+
+
+
+       {backArrow ?
+        <TouchableOpacity style={styles.box1} onPress={() => {
+          navigation.goBack()         
+        }}>
+          <AntDesign name="arrowleft" style={styles.menuIcon} />
+        </TouchableOpacity>
+        :
+        <TouchableOpacity style={styles.box1} onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer())
+        }}>
+          <Entypo name="menu" style={styles.menuIcon} />
+        </TouchableOpacity>}
+
       <View style={styles.box2} >
-      <TouchableOpacity onPress={() => {
-            navigation.navigate('HomeScreen')
-          } }>
+        <TouchableOpacity onPress={() => {
+          navigation.navigate('HomeScreen')
+        }}>
           <Image source={require('../../assets/Image/richworldlogo.png')} style={styles.logo} /></TouchableOpacity>
 
       </View>
@@ -64,13 +75,13 @@ function Header({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
-          navigation.navigate('MyCart',{shopNow: 0});
+          navigation.navigate('MyCart', { shopNow: 0 });
 
         }}>
           <View style={{ flexDirection: 'row' }}>
 
             <AntDesign name="shoppingcart" style={styles.menuIcon} />
-            {cartData.length > 0?<View style={styles.countOuter}><Text style={styles.countText}>{cartData.length}</Text></View>:<></>}
+            {cartData.length > 0 ? <View style={styles.countOuter}><Text style={styles.countText}>{cartData.length}</Text></View> : <></>}
           </View>
         </TouchableOpacity>
 
