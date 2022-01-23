@@ -110,6 +110,18 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Bold',
         color:'#AB0000',
         
-    }
+    },
+    socialLoginOuter:
+    {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    socialLoginText: {
+        fontFamily: 'Poppins-Medium',
+        color: '#620000',
+        fontSize: 14,
+    },
 
 });
