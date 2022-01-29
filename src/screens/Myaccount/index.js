@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 const actionSheetRef = createRef();
 
 
@@ -127,6 +128,8 @@ function Myaccount({ navigation }) {
   };
   const socialSignOut = async () =>{
     try{
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
     await  auth().signOut();
     }catch (error) {
       console.log(error.message);
@@ -216,7 +219,7 @@ function Myaccount({ navigation }) {
                 }catch(e){
 
                 }
-               
+                dispatch({type: "LOGOUT"});
                 navigation.navigate('HomeScreen');
               })
             

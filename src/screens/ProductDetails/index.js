@@ -11,6 +11,7 @@ import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID,
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 function ProductDetails({ navigation, route }) {
   const dispatch = useDispatch();

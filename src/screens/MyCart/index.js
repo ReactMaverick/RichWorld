@@ -559,7 +559,7 @@ function MyCart({ navigation, route }) {
                   <Text style={styles.priceItemText}>₹{subTotal}</Text>
                 </View>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
+                  <Text style={styles.priceItemText}>Used Loyalty Point</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
                     <Image source={require('../../assets/Image/loyalty.png')} style={{ width: 30, height: 30, marginLeft: 5 }} />

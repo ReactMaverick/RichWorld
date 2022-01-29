@@ -41,6 +41,7 @@
     "react-native-ratings": "^8.1.0",
     "react-native-razorpay": "^2.2.8",
     "react-native-reanimated": "^2.2.0",
+    "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.6.0",
     "react-native-skeleton-placeholder": "^5.0.0",
