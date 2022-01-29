@@ -390,6 +390,7 @@ function MyCart({ navigation, route }) {
     dispatch({
       type: "DELETE_COUPON"
     });
+    _getCartList(userData.id, "", null);
   }
 
 
@@ -628,7 +629,8 @@ function MyCart({ navigation, route }) {
                       setAddressError("Billing address not yet added!");
                     }
                   } else {
-                    setAddressError("No Shipping Address Selected!");
+                    // setAddressError("No Shipping Address Selected!");
+                    actionSheetRef.current?.setModalVisible()
                   }
                 } else {
                   navigation.navigate('Login');

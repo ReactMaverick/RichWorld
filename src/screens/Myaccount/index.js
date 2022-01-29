@@ -51,7 +51,7 @@ function Myaccount({ navigation }) {
     if (isFocused) {
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
-          //  console.log(userData);
+           console.log(userData);
           setIsLogin(true)
           setUserData(JSON.parse(userData))
         } else {
