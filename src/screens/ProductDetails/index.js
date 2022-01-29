@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Header from "../../components/Header";
 import styles from "./styles";
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
@@ -35,8 +36,8 @@ function ProductDetails({ navigation, route }) {
 
 
   const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
-    console.log("products_id: ", products_id);
-    console.log("products_attributes_prices_id: ", products_attributes_prices_id);
+    // console.log("products_id: ", products_id);
+    // console.log("products_attributes_prices_id: ", products_attributes_prices_id);
     setIsLoading(true)
     fetch(GET_PRODUCT_DETAILS + 'products_id=' + products_id + '&products_attributes_prices_id=' + products_attributes_prices_id + '&customers_id=' + customers_id + '&session_id=' + deviceId, {
       method: "GET",
@@ -276,6 +277,43 @@ function ProductDetails({ navigation, route }) {
       });
   }
 
+  const _addToWishlist = (products_id, products_attributes_prices_id, key) => {
+    
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('customers_id', userData.id);
+    formData.append('products_id', products_id);
+    formData.append('products_attributes_prices_id', products_attributes_prices_id);
+
+    fetch(ADD_WISHLIST, {
+      method: "POST",
+      body: formData
+    }).then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    }).then(([status, response]) => {
+      if (status == 200) {
+
+
+        var productDetailsData = productDetails;
+        if (response.result.success == 1) {
+          productDetailsData.isLiked = 0;
+        } else if (response.result.success == 2) {
+          productDetailsData.isLiked = 1;
+        }
+
+        setProductDetails(productDetailsData);
+      } else {
+        console.log(status, response);
+      }
+    })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+
   useEffect(() => {
     setProductsAttributesPricesId(products_attributes_prices_id)
     AsyncStorage.getItem('userData').then((userData) => {
@@ -297,7 +335,7 @@ function ProductDetails({ navigation, route }) {
   if (isLoading) {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#620000" />
         </View>
@@ -306,12 +344,24 @@ function ProductDetails({ navigation, route }) {
   } else {
     return (
       <>
-        <Header navigation={navigation} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
             <Text style={styles.CategoryText1}>{productDetails.brands_name} </Text>
             {/* <Text style={styles.CategoryText2}>Socks</Text> */}
           </View>
+          {isLogin ?
+            <TouchableOpacity onPress={() => {
+              _addToWishlist(products_id, products_attributes_prices_id)
+            }}>
+              {productDetails.isLiked != 0 ?
+                <AntDesign name="heart" style={styles.heartIcon} />
+                :
+                <AntDesign name="hearto" style={styles.heartIcon} />
+              }
+            </TouchableOpacity>
+            :
+            <></>}
 
         </View>
         <ScrollView style={{ flex: 1 }} nestedScrollEnabled={true}>
@@ -515,9 +565,9 @@ function ProductDetails({ navigation, route }) {
                         />
                         <Text style={styles.reviewDescription}>{item.reviews_text} </Text>
                       </View>
-                      
+
                     </View>
-                    
+
                   </View>
                 ))
                 :

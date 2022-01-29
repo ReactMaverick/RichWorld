@@ -47,6 +47,8 @@ export const ADD_ORDER = BASE_URL + 'add_order';
 export const CHECK_PINCODE = BASE_URL + 'pincodeCheck?pincode=';
 export const APPLY_COUPON = BASE_URL + 'apply_coupon';
 export const NOTIFY_PRODUCT = BASE_URL + 'notifyProduct';
+export const BLOGS = BASE_URL + 'getBlogs';
+export const BLOG_DETAILS = BASE_URL + 'getBlogDetails?blog_id=';
 
 
 

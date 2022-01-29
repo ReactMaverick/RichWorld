@@ -21,11 +21,13 @@ function Myaccount({ navigation }) {
 
   const dispatch = useDispatch();
 
-  const logoutData = () =>
+  const logoutData = () =>{
     dispatch({
       type: "LOGOUT",
 
     });
+    AsyncStorage.setItem('fcmToken', fcmToken);
+  }
 
 
   const loginData = useSelector(
@@ -38,12 +40,15 @@ function Myaccount({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
+  const [fcmToken, setFcmToken] = useState("");
 
   let actionSheet;
 
   useEffect(() => {
+    AsyncStorage.getItem('fcmToken').then((fcmToken) => {
+      setFcmToken(fcmToken);
+    })
     if (isFocused) {
-
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
           //  console.log(userData);

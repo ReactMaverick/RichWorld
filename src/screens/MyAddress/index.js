@@ -72,20 +72,25 @@ function MyAddress({ navigation }) {
       });
   }
   const _addShippingAddress = () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (entryFirstname == '') {
-      setAddErrorMessage("Enter First Name");
+      setAddErrorMessage("Please enter First Name");
     } else if (entryStreetAddress == '') {
-      setAddErrorMessage("Enter Street Address");
+      setAddErrorMessage("Please enter Street Address");
     } else if (entryCity == '') {
-      setAddErrorMessage("Enter City");
+      setAddErrorMessage("Please enter City");
     } else if (entryState == '') {
-      setAddErrorMessage("Enter State");
+      setAddErrorMessage("Please enter State");
     } else if (entryPostcode == '') {
-      setAddErrorMessage("Enter Postcode");
+      setAddErrorMessage("Please enter Postcode");
     } else if (entryPhone == '') {
-      setAddErrorMessage("Enter Phone");
+      setAddErrorMessage("Please enter Phone");
+    } else if (entryPhone.length != 10) {
+      setAddErrorMessage("Please enter valid Phone");
     } else if (entryEmail == '') {
-      setAddErrorMessage("Enter Email");
+      setAddErrorMessage("Please enter Email");
+    } else if ((reg.test(entryEmail) === false)) {
+      setAddErrorMessage("Please enter valid Email");
     } else {
       setIsLoading(true)
       const formData = new FormData();
@@ -109,6 +114,15 @@ function MyAddress({ navigation }) {
         if (status == 200) {
           console.log(response)
           _getMyAdderss(userData.id)
+          setEntryFirstname('')
+          setEntryStreetAddress('')
+          setEntryCity('')
+          setEntryState('')
+          setEntryPostcode('')
+          setEntryPhone('')
+          setEntryEmail('')
+          setAddressType('')
+
         }
       })
         .catch((error) => console.log("error", error))
@@ -121,22 +135,27 @@ function MyAddress({ navigation }) {
   }
 
   const _updateShippingAddress = () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (addressBookId == '') {
       setErrorMessage("No Address Selected! ");
     } else if (entryFirstname == '') {
-      setErrorMessage("Enter First Name");
+      setErrorMessage("Please enter First Name");
     } else if (entryStreetAddress == '') {
-      setErrorMessage("Enter Street Address");
+      setErrorMessage("Please enter Street Address");
     } else if (entryCity == '') {
-      setErrorMessage("Enter City");
+      setErrorMessage("Please enter City");
     } else if (entryState == '') {
-      setErrorMessage("Enter State");
+      setErrorMessage("Please enter State");
     } else if (entryPostcode == '') {
-      setErrorMessage("Enter Postcode");
+      setErrorMessage("Please enter Postcode");
     } else if (entryPhone == '') {
-      setErrorMessage("Enter Phone");
+      setAddErrorMessage("Please enter Phone");
+    } else if (entryPhone.length != 10) {
+      setErrorMessage("Please enter valid Phone");
     } else if (entryEmail == '') {
-      setErrorMessage("Enter Email");
+      setAddErrorMessage("Please enter Email");
+    } else if ((reg.test(entryEmail) === false)) {
+      setErrorMessage("Please enter valid Email");
     } else {
       setIsLoading(true)
       const formData = new FormData();
@@ -159,6 +178,14 @@ function MyAddress({ navigation }) {
         if (status == 200) {
           console.log(response)
           _getMyAdderss(userData.id)
+          setEntryFirstname('')
+          setEntryStreetAddress('')
+          setEntryCity('')
+          setEntryState('')
+          setEntryPostcode('')
+          setEntryPhone('')
+          setEntryEmail('')
+          setAddressBookId('')
         }
       })
         .catch((error) => console.log("error", error))
@@ -407,6 +434,7 @@ function MyAddress({ navigation }) {
                 style={[styles.textInput]}
                 value={entryPostcode}
                 onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+                keyboardType={'phone-pad'}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
@@ -430,6 +458,7 @@ function MyAddress({ navigation }) {
                 style={[styles.textInput]}
                 value={entryEmail}
                 onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+                keyboardType={'email-address'}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
@@ -439,7 +468,7 @@ function MyAddress({ navigation }) {
             <TouchableOpacity onPress={() => {
               _updateShippingAddress()
             }} style={styles.btnOuter}>
-              <Text style={styles.btnMessage}>Send </Text>
+              <Text style={styles.btnMessage}>Submit </Text>
             </TouchableOpacity>
           </ScrollView>
         </Modal>
@@ -521,6 +550,7 @@ function MyAddress({ navigation }) {
                 placeholder={'Phone'}
                 style={[styles.textInput]}
                 onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+                keyboardType={'phone-pad'}
                 onFocus={() => {
                   setAddErrorMessage('')
                 }}
@@ -532,6 +562,7 @@ function MyAddress({ navigation }) {
                 placeholder={'Email Address'}
                 style={[styles.textInput]}
                 onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+                keyboardType={'email-address'}
                 onFocus={() => {
                   setAddErrorMessage('')
                 }}
@@ -541,7 +572,7 @@ function MyAddress({ navigation }) {
             <TouchableOpacity onPress={() => {
               _addShippingAddress()
             }} style={styles.btnOuter}>
-              <Text style={styles.btnMessage}>Send </Text>
+              <Text style={styles.btnMessage}>Submit </Text>
             </TouchableOpacity>
           </ScrollView>
         </Modal>

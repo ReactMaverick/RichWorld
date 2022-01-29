@@ -16,7 +16,7 @@ export default StyleSheet.create({
     
   },
   menuIcon:{
-    fontSize:20,
+    fontSize:25,
     marginRight:10,
     marginTop:-7,
     color:'#620000'
@@ -24,7 +24,7 @@ export default StyleSheet.create({
   menuText:{
     fontFamily:'Poppins-Medium',
     color:'#620000',
-    fontSize:14
+    fontSize:16
   }
 
 });

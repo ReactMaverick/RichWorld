@@ -10,7 +10,7 @@ import { GET_PAYMENT_METHODS, ADD_ORDER } from '../../config/ApiConfig';
 import { useSelector, useDispatch } from "react-redux";
 function Checkout({ navigation, route }) {
 
-    const { orderBillingAddressBookId, address_id_hidden, is_shop_now, orderNote, shipping_rate, totalPrice } = route.params;
+    const { orderBillingAddressBookId, address_id_hidden, same_as_billing, is_shop_now, orderNote, shipping_rate, totalPrice } = route.params;
     const dispatch = useDispatch();
     const [check, setCheck] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +48,7 @@ function Checkout({ navigation, route }) {
         formData.append('customers_email', userData.email);
         formData.append('orderBillingAddressBookId', orderBillingAddressBookId);
         formData.append('address_id_hidden', address_id_hidden);
+        formData.append('same_as_billing', same_as_billing);
         formData.append('payment_method', payment_method);
         if (payment_method == "razor_pay") {
             formData.append('razorpay_payment_id', razorpay_payment_id);

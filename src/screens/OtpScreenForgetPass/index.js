@@ -139,7 +139,9 @@ function OtpScreenForgetPass({ navigation, route }) {
             <Text style={styles.errorMessage}>{errorMsg}</Text>
 
             <View style={styles.otpBoxOuter}>
-              <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} />
+              <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} 
+              //  ref={e => (console.log(e))}
+               />
             </View>
 
 

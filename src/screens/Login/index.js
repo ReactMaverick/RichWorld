@@ -43,10 +43,11 @@ function Login({ navigation }) {
 
   const [socialOtpCheck, setSocialOtpCheck] = useState(false);
   const [otpInput, setOtp] = useState("");
+  const [fcmToken, setFcmToken] = useState("");
 
 
   const setUserData = (item) =>
-  dispatch({
+  dispatch({  
     type: "LOGINUSER",
     payload: {
       item
@@ -59,19 +60,21 @@ function Login({ navigation }) {
   };
 
   const _signIn = async () => {
-
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (username == '') {
       setErrorMessage("Enter Email/Phone");
     } else if (password == '') {
       setErrorMessage("Enter Password");
+    }else if((reg.test(username) === false) && username.length!=10){
+      setErrorMessage("Please Enter Valid Email/Phone");
     } else {
       setIsLoading(true)
       const formData = new FormData();
       formData.append('user_name', username);
       formData.append('password', password);
       formData.append('session_id', deviceToken);
-
-
+      formData.append('fcmToken', fcmToken);
+      formData.append('device_os', Platform.OS);
 
 
       fetch(POST_SIGNIN, {
@@ -98,7 +101,8 @@ function Login({ navigation }) {
               setPassword();
               setUserData(response.userDetails[0])
               AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-                navigation.navigate('HomeScreen');
+                // navigation.navigate('HomeScreen');
+                navigation.goBack()
               })
             }
 
@@ -119,7 +123,6 @@ function Login({ navigation }) {
     }
   }
 
-
   const _socialLogin = async (social_id, social, email, name) => {
 
     setIsLoading(true)
@@ -129,6 +132,8 @@ function Login({ navigation }) {
     formData.append('email', email);
     formData.append('name', name);
     formData.append('session_id', deviceToken);
+    formData.append('fcmToken', fcmToken);
+    formData.append('device_os', Platform.OS);
 
 
 
@@ -155,7 +160,8 @@ function Login({ navigation }) {
             //add user details to localstorage
             setUserData(response.userDetails[0])
             AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-              navigation.navigate('HomeScreen');
+              // navigation.navigate('HomeScreen');
+              navigation.goBack()
             })
 
           }
@@ -174,9 +180,6 @@ function Login({ navigation }) {
       });
 
   }
-
-
-
 
   const _socialOtpSend = async () => {
 
@@ -226,8 +229,6 @@ function Login({ navigation }) {
     }
   }
 
-
-
   const checkOtp = () => {
     if (otpInput == "") {
       setErrorMessage("Please enter otp");
@@ -243,6 +244,8 @@ function Login({ navigation }) {
       formData.append('email', email);
       formData.append('phone', phoneNumber);
       formData.append('session_id', deviceToken);
+      formData.append('fcmToken', fcmToken);
+      formData.append('device_os', Platform.OS);
       
      
 
@@ -327,6 +330,9 @@ function Login({ navigation }) {
 
 
   useEffect(() => {
+    AsyncStorage.getItem('fcmToken').then((fcmToken) => {
+      setFcmToken(fcmToken);
+    })
     DeviceInfo.getAndroidId().then((androidId) => {
       setDeviceToken(androidId);
 
