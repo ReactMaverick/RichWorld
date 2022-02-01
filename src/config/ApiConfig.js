@@ -38,6 +38,7 @@ export const GET_ATTRIBUTE_PRICE_ID = BASE_URL + 'getAttributePriceId';
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
 export const FORGET_PASSWORD_OTP_CHECK = BASE_URL + 'passwordOtpCheck';
 export const RESEND_OTP = BASE_URL + 'resendOtp';
+export const UPDATE_NEW_PASSWORD = BASE_URL + 'updateNewPassword';
 export const SEARCH_SUGGESSION = BASE_URL + 'searchSuggession?searchChar=';
 export const POST_SOCIAL_LOGIN = BASE_URL + 'socialLogin';
 export const POST_SOCIAL_OTP = BASE_URL + 'socialOtp';

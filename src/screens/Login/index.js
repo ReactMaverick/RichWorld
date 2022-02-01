@@ -3,13 +3,14 @@ import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, I
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP,POST_PROCESS_SOCIAL_LOGIN } from '../../config/ApiConfig'
+import Entypo from 'react-native-vector-icons/Entypo'
+import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN } from '../../config/ApiConfig'
 import DeviceInfo from 'react-native-device-info';
 import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
@@ -29,6 +30,7 @@ function Login({ navigation }) {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordEye, setPasswordEye] = useState(true);
   const [errorMsg, setErrorMessage] = useState("")
   const [deviceToken, setDeviceToken] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -47,12 +49,12 @@ function Login({ navigation }) {
 
 
   const setUserData = (item) =>
-  dispatch({  
-    type: "LOGINUSER",
-    payload: {
-      item
-    },
-  });
+    dispatch({
+      type: "LOGINUSER",
+      payload: {
+        item
+      },
+    });
 
 
   const toggleOtpModal = () => {
@@ -65,7 +67,7 @@ function Login({ navigation }) {
       setErrorMessage("Enter Email/Phone");
     } else if (password == '') {
       setErrorMessage("Enter Password");
-    }else if((reg.test(username) === false) && username.length!=10){
+    } else if ((reg.test(username) === false) && username.length != 10) {
       setErrorMessage("Please Enter Valid Email/Phone");
     } else {
       setIsLoading(true)
@@ -246,8 +248,8 @@ function Login({ navigation }) {
       formData.append('session_id', deviceToken);
       formData.append('fcmToken', fcmToken);
       formData.append('device_os', Platform.OS);
-      
-     
+
+
 
       fetch(POST_PROCESS_SOCIAL_LOGIN, {
         method: "POST",
@@ -262,7 +264,7 @@ function Login({ navigation }) {
         .then(([status, response]) => {
 
           if (status == 200) {
-            console.log(status,response);
+            console.log(status, response);
             if (response.status == false) {
               setErrorMessage(response.message);
             } else {
@@ -350,7 +352,7 @@ function Login({ navigation }) {
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
             <Text style={styles.errorMessage}>{errorMsg}</Text>
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
               <TextInput
                 placeholder={'Username'}
@@ -362,16 +364,22 @@ function Login({ navigation }) {
               />
             </View>
 
-            <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+            <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="lock" style={styles.inputicon} />
               <TextInput
                 placeholder={'Password'}
-                style={[styles.textInput]}
+                style={styles.textInput}
+                secureTextEntry={passwordEye}
                 onChangeText={(password) => setPassword(password)}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
               />
+              <TouchableOpacity onPress={() => {
+                setPasswordEye(!passwordEye); 
+              }}>
+                <Entypo name={passwordEye ? 'eye-with-line' : 'eye'} style={[styles.inputicon]} />
+              </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={() => {
               navigation.navigate('ForgetPassword');
@@ -429,7 +437,7 @@ function Login({ navigation }) {
 
 
 
-{/* social phone verification */}
+      {/* social phone verification */}
 
 
       <Modal
@@ -440,7 +448,7 @@ function Login({ navigation }) {
           setErrorMessage('')
           toggleOtpModal();
         }}
-        style={{marginVertical:Platform.OS=="android"?0:45,}}
+        style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }}
 
       >
         <View style={styles.backGround}>
@@ -455,7 +463,7 @@ function Login({ navigation }) {
               <Text style={styles.errorMessage}>{errorMsg}</Text>
 
 
-              <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
+              <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
                 <FontAwesome name="phone" style={styles.inputicon} />
                 <TextInput
                   placeholder={'Phone Number'}
@@ -483,7 +491,7 @@ function Login({ navigation }) {
 
 
 
-{/* Social otp check */}
+      {/* Social otp check */}
 
 
       <Modal
@@ -494,41 +502,41 @@ function Login({ navigation }) {
           setErrorMessage('')
           setSocialOtpCheck(!socialOtpCheck)
         }}
-        style={{marginVertical:Platform.OS=="android"?0:45,}}
+        style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }}
 
       >
         <View style={styles.backGround}>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
-            <Text style={styles.loginText}>OTP Verification</Text>
-          </ImageBackground>
-          <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
-            <Text style={styles.signupText1}>We have sent and OTP to your</Text>
-            <Text style={styles.signupText2}>{phoneNumber}</Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
+              <Text style={styles.loginText}>OTP Verification</Text>
+            </ImageBackground>
+            <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
+              <Text style={styles.signupText1}>We have sent and OTP to your</Text>
+              <Text style={styles.signupText2}>{phoneNumber}</Text>
 
-            <Text style={styles.errorMessage}>{errorMsg}</Text>
+              <Text style={styles.errorMessage}>{errorMsg}</Text>
 
-            <View style={styles.otpBoxOuter}>
-              <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} />
+              <View style={styles.otpBoxOuter}>
+                <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} />
+              </View>
+
+
+
+
+
+              <TouchableOpacity style={styles.btnOuter} onPress={() => {
+                checkOtp()
+              }}>
+                <Text style={styles.btnMessage}>Submit</Text>
+              </TouchableOpacity>
             </View>
 
 
-          
-
-
-            <TouchableOpacity style={styles.btnOuter} onPress={() => {
-              checkOtp()
-            }}>
-              <Text style={styles.btnMessage}>Submit</Text>
-            </TouchableOpacity>
-          </View>
 
 
 
-
-
-        </ScrollView>
+          </ScrollView>
 
         </View>
       </Modal>

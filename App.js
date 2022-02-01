@@ -40,6 +40,7 @@ import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
 import OtpScreen from "./src/screens/OtpScreen";
 import OtpScreenForgetPass from "./src/screens/OtpScreenForgetPass";
+import ResetPassword from "./src/screens/ResetPassword";
 import Category from './src/screens/Category';
 import Brands from './src/screens/Brands';
 
@@ -127,6 +128,7 @@ function Stack1() {
       <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreenForgetPass" component={OtpScreenForgetPass} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
       <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
       {/* <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />

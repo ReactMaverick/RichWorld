@@ -55,7 +55,7 @@ function OtpScreenForgetPass({ navigation, route }) {
                 console.log('OtpScreenForgetPass',response.userDetails[0])
                 setUserData(response.userDetails[0])
                 AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-                  navigation.navigate('HomeScreen');
+                  navigation.navigate('ResetPassword',{ user_id: response.userDetails[0].id });
                 })
               }
             } else {
@@ -90,8 +90,10 @@ function OtpScreenForgetPass({ navigation, route }) {
                 setErrorMessage(response.message);
                 console.log(response.message);
               } else {
+                console.log('OtpScreenForgetPass',response.userDetails[0])
+                setUserData(response.userDetails[0])
                 AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-                  navigation.navigate('HomeScreen');
+                  navigation.navigate('ResetPassword',{ user_id: response.userDetails[0].id });
                 })
               }
             } else {

@@ -90,7 +90,7 @@ export default StyleSheet.create({
     inputicon:{
         fontSize:20,
         color:'#AB0000',
-        lineHeight: 0,
+        // lineHeight: 0,
         marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{

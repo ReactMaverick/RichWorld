@@ -7,9 +7,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import DeviceInfo from 'react-native-device-info';
-import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE, APPLY_COUPON } from '../../config/ApiConfig';
+import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE, APPLY_COUPON, ADD_MY_ADDRESS } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import Modal from "react-native-modal";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -41,10 +42,94 @@ function MyCart({ navigation, route }) {
   const [pincodeError, setPincodeError] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [sameAsBilling, setSameAsBilling] = useState(0);
-  
+  const [addAddressModal, setAddAddressModal] = useState(false);
+  const [addErrorMsg, setAddErrorMessage] = useState("")
 
-  const couponData = useSelector((state) => state.couponReducer
-  );
+  const [entryStreetAddress, setEntryStreetAddress] = useState('')
+  const [entryCity, setEntryCity] = useState('')
+  const [entryState, setEntryState] = useState('')
+  const [entryPostcode, setEntryPostcode] = useState('')
+  const [entryPhone, setEntryPhone] = useState('')
+  const [entryEmail, setEntryEmail] = useState('')
+  const [entryFirstname, setEntryFirstname] = useState('')
+  // console.log('sameAsBilling',sameAsBilling);
+
+  const couponData = useSelector((state) => state.couponReducer);
+  const toggleAddAddressModal = () => {
+    setAddAddressModal(!addAddressModal);
+  };
+
+  const _addShippingAddress = () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (entryFirstname == '') {
+      setAddErrorMessage("Please enter First Name");
+    } else if (entryStreetAddress == '') {
+      setAddErrorMessage("Please enter Street Address");
+    } else if (entryCity == '') {
+      setAddErrorMessage("Please enter City");
+    } else if (entryState == '') {
+      setAddErrorMessage("Please enter State");
+    } else if (entryPostcode == '') {
+      setAddErrorMessage("Please enter Postcode");
+    } else if (entryPhone == '') {
+      setAddErrorMessage("Please enter Phone");
+    } else if (entryPhone.length != 10) {
+      setAddErrorMessage("Please enter valid Phone");
+    } else if (entryEmail == '') {
+      setAddErrorMessage("Please enter Email");
+    } else if ((reg.test(entryEmail) === false)) {
+      setAddErrorMessage("Please enter valid Email");
+    } else {
+      setIsLoading(true)
+      const formData = new FormData();
+      formData.append('user_id', userData.id);
+      formData.append('address_type', 'billing');
+      formData.append('entry_firstname', entryFirstname);
+      formData.append('entry_street_address', entryStreetAddress);
+      formData.append('entry_city', entryCity);
+      formData.append('entry_state', entryState);
+      formData.append('entry_postcode', entryPostcode);
+      formData.append('entry_phone', entryPhone);
+      formData.append('entry_email', entryEmail);
+      formData.append('sameAsBilling', sameAsBilling);
+      console.log('formData', formData);
+      setIsLoading(false)
+      fetch(ADD_MY_ADDRESS, {
+        method: "POST",
+        body: formData
+      }).then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      }).then(([status, response]) => {
+        if (status == 200) {
+          console.log(response)
+          if (isLogin) {
+            _getCartList(userData.id,
+              "",
+              couponData != null ? couponData.item.coupon_discount_percent : null);
+          } else {
+            _getCartList("", android_id, null);
+          }
+          setEntryFirstname('')
+          setEntryStreetAddress('')
+          setEntryCity('')
+          setEntryState('')
+          setEntryPostcode('')
+          setEntryPhone('')
+          setEntryEmail('')
+
+        }
+      })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          toggleAddAddressModal()
+          setIsLoading(false)
+        });
+    }
+
+  }
+
   const setCoupon = (item) =>
     dispatch({
       type: "ADD_COUPON",
@@ -82,11 +167,21 @@ function MyCart({ navigation, route }) {
           initialize_cart(response.cart)
           setCartList(response.cart)
           setLoyaltyPointDetails(response.loyalty_point_details)
-          setUserShippingAddressList(response.userShippingAddressList)
-          if( response.userBillingAddress.length > 0 ){
+
+          if (response.userBillingAddress.length > 0) {
             setAddressError("");
           }
           setUserBillingAddress(response.userBillingAddress)
+          setUserShippingAddressList(response.userShippingAddressList)
+
+          if (sameAsBilling == 1 && response.userShippingAddressList.length == 1) {
+            _checkAddress(0, response.userShippingAddressList)
+          }
+
+
+
+
+
           _calculateAmounts(response.cart, response.shipping_detail, couponDiscountPercent)
 
         } else {
@@ -303,8 +398,8 @@ function MyCart({ navigation, route }) {
     return discountedPrice.toFixed(2);
   }
 
-  const _checkAddress = (key) => {
-    let pincode = userShippingAddressList[key].entry_postcode;
+  const _checkAddress = async (key, list) => {
+    let pincode = list[key].entry_postcode;
     fetch(CHECK_PINCODE + pincode, {
       method: "GET",
     })
@@ -437,27 +532,32 @@ function MyCart({ navigation, route }) {
         {cartList.length > 0 ?
           <ScrollView style={{ flex: 1 }}>
 
-            <View style={styles.outerBoxAddress}>
-              <View style={styles.outerBoxAddressInner}>
-                <Text>
-                  {check == undefined ? "No Address Selected!" : userShippingAddressList[check].entry_street_address}
-                </Text>
-              </View>
-              <View>
-                <TouchableOpacity onPress={() => {
-                  isLogin ?
-                    actionSheetRef.current?.setModalVisible() :
-                    showMessage({
-                      message: "Please login to change address!",
-                      type: "info",
-                      backgroundColor: "#808080",
-                    })
-                }} style={[styles.changeAddress, { backgroundColor: '#A20101' }]}>
-                  <Text style={styles.btnTxt}>
-                    Change
+            {
+
+              userShippingAddressList.length != 0 &&
+              <View style={styles.outerBoxAddress}>
+                <View style={styles.outerBoxAddressInner}>
+                  <Text>
+                    {check == undefined ? "No Address Selected!" : userShippingAddressList[check].entry_street_address}
                   </Text>
-                </TouchableOpacity></View>
-            </View>
+                </View>
+                <View>
+                  <TouchableOpacity onPress={() => {
+                    isLogin ?
+                      actionSheetRef.current?.setModalVisible() :
+                      showMessage({
+                        message: "Please login to change address!",
+                        type: "info",
+                        backgroundColor: "#808080",
+                      })
+                  }} style={[styles.changeAddress, { backgroundColor: '#A20101' }]}>
+                    <Text style={styles.btnTxt}>
+                      Change
+                    </Text>
+                  </TouchableOpacity></View>
+              </View>
+            }
+
 
             {cartList.map((item, key) => (
               <View style={styles.outerBox} key={key}>
@@ -593,17 +693,17 @@ function MyCart({ navigation, route }) {
               //   <Text style={styles.error}>{addressError}</Text>
               // </View>
               <View style={styles.outerBoxAddress}>
-              <View style={styles.outerBoxAddressInner}>
-              <Text style={styles.error}>{addressError}</Text>
+                <View style={styles.outerBoxAddressInner}>
+                  <Text style={styles.error}>{addressError}</Text>
+                </View>
+                <View>
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate('MyAddress');
+                  }} style={styles.addAddress}>
+                    <AntDesign name="plus" style={{ color: '#fff', fontSize: 14 }} />
+                    <Text style={styles.btnTxt}>Address</Text>
+                  </TouchableOpacity></View>
               </View>
-              <View>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate('MyAddress');
-              }} style={styles.addAddress}>
-                <AntDesign name="plus" style={{ color: '#fff', fontSize: 14 }} />
-                <Text style={styles.btnTxt}>Address</Text>
-              </TouchableOpacity></View>
-            </View>
               :
               <></>
             }
@@ -614,24 +714,24 @@ function MyCart({ navigation, route }) {
               </View>
               <TouchableOpacity onPress={() => {
                 if (isLogin) {
-                  if (check != undefined || sameAsBilling == 1 ) {
-                    if (userBillingAddress.length > 0) {
+                  if (userBillingAddress.length > 0) {
+                    if (check != undefined) {
                       navigation.navigate('Checkout', {
                         orderBillingAddressBookId: userBillingAddress[0].address_book_id,
-                        address_id_hidden: check != undefined ? userShippingAddressList[check].address_book_id : "",
-                        same_as_billing: check != undefined ? 0 : sameAsBilling,
+                        address_id_hidden: userShippingAddressList[check].address_book_id,
+                        same_as_billing: 0,
                         is_shop_now: shopNow,
                         orderNote: "",
                         shipping_rate: deliveryCharges,
                         totalPrice: totalPrice
                       });
                     } else {
-                      setAddressError("Billing address not yet added!");
+                      actionSheetRef.current?.setModalVisible()
                     }
                   } else {
-                    // setAddressError("No Shipping Address Selected!");
-                    actionSheetRef.current?.setModalVisible()
+                    toggleAddAddressModal()
                   }
+
                 } else {
                   navigation.navigate('Login');
                 }
@@ -654,7 +754,122 @@ function MyCart({ navigation, route }) {
 
         <Footer navigation={navigation} />
 
+        {/* ADD MODAL */}
+        <Modal
+          isVisible={addAddressModal}
+          onBackdropPress={toggleAddAddressModal}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45, }}
+        >
+          <ScrollView style={styles.cancelPopup}>
+            <View style={styles.headerPopup}>
+              <Text style={styles.CategoryText2}>Add Billing Address</Text>
+              <TouchableOpacity onPress={toggleAddAddressModal}>
+                <AntDesign name="close" style={styles.closeBtn} />
+              </TouchableOpacity>
 
+
+            </View>
+            {addErrorMsg != '' ?
+              <View style={styles.headerPopup}>
+                <Text style={styles.errorMessage}>{addErrorMsg}</Text>
+              </View>
+              :
+              <></>
+            }
+
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Full Name'}
+                style={[styles.textInputModal]}
+                value={entryFirstname}
+                onChangeText={(entryFirstname) => setEntryFirstname(entryFirstname)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Street Address'}
+                style={[styles.textInputModal]}
+                value={entryStreetAddress}
+                onChangeText={(entryStreetAddress) => setEntryStreetAddress(entryStreetAddress)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Town / City'}
+                style={[styles.textInputModal]}
+                value={entryCity}
+                onChangeText={(entryCity) => setEntryCity(entryCity)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'State'}
+                style={[styles.textInputModal]}
+                value={entryState}
+                onChangeText={(entryState) => setEntryState(entryState)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Postcode / ZIP'}
+                style={[styles.textInputModal]}
+                value={entryPostcode}
+                onChangeText={(entryPostcode) => setEntryPostcode(entryPostcode)}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Phone'}
+                style={[styles.textInputModal]}
+                value={entryPhone}
+                onChangeText={(entryPhone) => setEntryPhone(entryPhone)}
+                keyboardType={'phone-pad'}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+
+            <View style={styles.textInputOuterModal}>
+              <TextInput
+                placeholder={'Email Address'}
+                style={[styles.textInputModal]}
+                value={entryEmail}
+                onChangeText={(entryEmail) => setEntryEmail(entryEmail)}
+                keyboardType={'email-address'}
+                onFocus={() => {
+                  setAddErrorMessage('')
+                }}
+              />
+            </View>
+            <View style={styles.changeAddressSectionInner} >
+              <Text style={styles.nameTitle}>Shipping same as Billing Address</Text>
+              <TouchableOpacity onPress={() => {
+                sameAsBilling == 1 ? setSameAsBilling(0) : setSameAsBilling(1);
+              }}><Fontisto name={sameAsBilling == 1 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => {
+              _addShippingAddress()
+            }} style={styles.btnOuter}>
+              <Text style={styles.btnMessage}>Submit </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </Modal>
 
 
         {/* MODAL */}
@@ -677,33 +892,25 @@ function MyCart({ navigation, route }) {
               </TouchableOpacity>
 
             </View>
-            
-            {
-              
-            userShippingAddressList.length != 0 ?
-            userShippingAddressList.map((item, key) => (
-              <View style={styles.changeAddressSectionInner} key={key}>
-                <View>
-                  <Text style={styles.nameTitle}>{item.entry_firstname} {item.entry_lastname}</Text>
-                  <Text style={styles.nameSubTitle}>{item.entry_street_address} </Text>
-                  <Text style={styles.nameSubTitle}>{item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
-                </View>
 
-                <TouchableOpacity onPress={() => {
-                  _checkAddress(key)
-                  // setCheck(key)
-                  setAddressError("");
-                }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
-              </View>
-            ))
-            :
-            <View style={styles.changeAddressSectionInner} >
-              <Text style={styles.nameTitle}>Same as Billing Address</Text>
-              <TouchableOpacity onPress={() => {
-                  sameAsBilling == 1 ? setSameAsBilling(0) : setSameAsBilling(1);
-                }}><Fontisto name={sameAsBilling == 1 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
-            </View>
-            
+            {
+
+              userShippingAddressList.length != 0 &&
+              userShippingAddressList.map((item, key) => (
+                <View style={styles.changeAddressSectionInner} key={key}>
+                  <View>
+                    <Text style={styles.nameTitle}>{item.entry_firstname} {item.entry_lastname}</Text>
+                    <Text style={styles.nameSubTitle}>{item.entry_street_address} </Text>
+                    <Text style={styles.nameSubTitle}>{item.entry_city}, {item.entry_state}, {item.entry_postcode}</Text>
+                  </View>
+
+                  <TouchableOpacity onPress={() => {
+                    _checkAddress(key, userShippingAddressList)
+                    // setCheck(key)
+                    setAddressError("");
+                  }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+                </View>
+              ))
             }
 
 

@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 function Checkout({ navigation, route }) {
 
     const { orderBillingAddressBookId, address_id_hidden, same_as_billing, is_shop_now, orderNote, shipping_rate, totalPrice } = route.params;
+    console.log("Checkout",route.params);
     const dispatch = useDispatch();
     const [check, setCheck] = useState(0);
     const [isLoading, setIsLoading] = useState(true);

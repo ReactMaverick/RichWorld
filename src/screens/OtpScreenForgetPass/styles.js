@@ -78,9 +78,10 @@ export default StyleSheet.create({
         color:'#fff'
     },
     inputicon:{
-        fontSize:20,
-        color:'#AB0000',
-        marginTop:-5
+        fontSize: 20,
+        color: '#AB0000',
+       // lineHeight: 0,
+        marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{
         color:'#fff',
