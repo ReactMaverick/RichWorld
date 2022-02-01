@@ -15,6 +15,13 @@ function ForgetPassword({ navigation }) {
 
 
   const _getOTP = async () => {
+
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if((reg.test(email_phone) === false) && email_phone.length!=10){
+      setErrorMessage("Please Enter Valid Email/Phone");
+    } else {
+
+
     const formData = new FormData();
     formData.append('email_phone', email_phone);
     fetch(FORGET_PASSWORD, {
@@ -42,6 +49,8 @@ function ForgetPassword({ navigation }) {
       .finally(() => {
         setIsLoading(false)
       });
+    } 
+
   }
 
 

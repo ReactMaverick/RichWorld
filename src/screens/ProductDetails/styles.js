@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { color } from 'react-native-reanimated';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default StyleSheet.create({
 
@@ -31,11 +32,11 @@ export default StyleSheet.create({
         margin: 10,
         flexDirection: 'row',
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
     productZoomImage: {
-        width: '70%',
-        height: 300,
+        width: wp("65%"),
+        height: hp("35%"),
         marginRight: 5
     },
     imageThumbSection: {
@@ -326,6 +327,10 @@ export default StyleSheet.create({
         alignItems:'center',
         backgroundColor:'#AB0000'
     },
+    heartIcon:{
+        fontSize:25,
+        color: '#620000'
+    }
     
 
 });

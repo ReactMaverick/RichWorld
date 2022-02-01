@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Text, TouchableOpacity, TextInput, Dimensions, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, TextInput, Dimensions, ActivityIndicator, Linking } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -123,7 +123,10 @@ function ContactInfo({ navigation }) {
                 <Entypo name="old-phone" style={styles.itemIcon} />
               </View>
               <View style={styles.itemRight}>
-                <Text style={styles.text2}>{contactUs.contact_us_phone}</Text>
+                <Text style={styles.text2} onPress={()=>{
+                  Linking.openURL(`tel:${contactUs.contact_us_phone}`);
+                  // for ios - `telprompt:${number}`
+                }}>{contactUs.contact_us_phone}</Text>
               </View>
             </View>
 
@@ -133,7 +136,10 @@ function ContactInfo({ navigation }) {
               </View>
               <View style={styles.itemRight}>
 
-                <Text style={styles.text2}>{contactUs.contact_us_email}</Text>
+                <Text style={styles.text2} onPress={()=>{
+                  Linking.openURL(`mailto:${contactUs.contact_us_email}`);
+                  // Example: Linking.openURL('mailto:example@gmail.com?subject=example&body=example')
+                }}>{contactUs.contact_us_email}</Text>
               </View>
             </View>
 

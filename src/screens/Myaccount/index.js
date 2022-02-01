@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 const actionSheetRef = createRef();
 
 
@@ -21,11 +22,13 @@ function Myaccount({ navigation }) {
 
   const dispatch = useDispatch();
 
-  const logoutData = () =>
+  const logoutData = () =>{
     dispatch({
       type: "LOGOUT",
 
     });
+    AsyncStorage.setItem('fcmToken', fcmToken);
+  }
 
 
   const loginData = useSelector(
@@ -38,15 +41,18 @@ function Myaccount({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
+  const [fcmToken, setFcmToken] = useState("");
 
   let actionSheet;
 
   useEffect(() => {
+    AsyncStorage.getItem('fcmToken').then((fcmToken) => {
+      setFcmToken(fcmToken);
+    })
     if (isFocused) {
-
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
-          //  console.log(userData);
+           console.log(userData);
           setIsLogin(true)
           setUserData(JSON.parse(userData))
         } else {
@@ -122,6 +128,8 @@ function Myaccount({ navigation }) {
   };
   const socialSignOut = async () =>{
     try{
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
     await  auth().signOut();
     }catch (error) {
       console.log(error.message);
@@ -211,7 +219,7 @@ function Myaccount({ navigation }) {
                 }catch(e){
 
                 }
-               
+                dispatch({type: "LOGOUT"});
                 navigation.navigate('HomeScreen');
               })
             

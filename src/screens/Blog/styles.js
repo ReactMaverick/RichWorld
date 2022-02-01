@@ -22,7 +22,7 @@ export default StyleSheet.create({
 
     productBox: {
         width: Dimensions.get('window').width / 2 - 20,
-        height: Dimensions.get('window').width / 2 + 50,
+        height: Dimensions.get('window').width / 2 + 130,
         backgroundColor: '#fff',
         margin: 10,
         borderRadius: 5,

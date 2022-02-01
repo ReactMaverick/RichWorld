@@ -3,10 +3,12 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
-import { VIEW_WISHLIST, ADD_WISHLIST, ADD_TO_CART } from '../../config/ApiConfig';
+import { VIEW_WISHLIST, ADD_WISHLIST, ADD_TO_CART, VIEW_CART } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 function Wishlist({ navigation }) {
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [Products, setProducts] = useState([]);
@@ -40,6 +42,33 @@ function Wishlist({ navigation }) {
         setIsLoading(false)
       });
   }
+
+  const _initialize_cart = async (customers_id, session_id) => {
+    fetch(VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=', {
+      method: "get",
+    })
+      .then((response) => {
+
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          dispatch({
+            type: "INTIALIZE_CART",
+            payload: response.cart,
+          });
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+
+      });
+  }
+
   const _removeFromWishlist = (products_id, products_attributes_prices_id) => {
     setIsLoading(true)
     const formData = new FormData();
@@ -59,6 +88,7 @@ function Wishlist({ navigation }) {
       if (status == 200) {
         // console.log("response", response)
         _getWishList(customers_id)
+        _initialize_cart(customers_id, "")
       }
     })
       .catch((error) => console.log("error", error))
@@ -92,6 +122,8 @@ function Wishlist({ navigation }) {
       return Promise.all([statusCode, data]);
     }).then(([status, response]) => {
       if (status == 200) {
+        _getWishList(customers_id)
+        _initialize_cart(customers_id, session_id)
         console.log("response", response)
       }
     })
@@ -149,9 +181,9 @@ function Wishlist({ navigation }) {
                 }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
                   <Text style={styles.btnTxt}>Remove</Text>
                 </TouchableOpacity>
-                {item.defaultStock <= 0 ?
-                  <View style={[styles.btn, { backgroundColor: '#000000' }]}>
-                    <Text style={styles.btnTxt}>Out Of Stock</Text>
+                {item.defaultStock > 0 ? (item.is_cart_present == 1) ?
+                  <View  style={[styles.btn, { backgroundColor: '#000000' }]}>
+                    <Text style={styles.btnTxt}>Added</Text>
                   </View>
                   :
                   <TouchableOpacity onPress={() => {
@@ -159,6 +191,11 @@ function Wishlist({ navigation }) {
                   }} style={[styles.btn, { backgroundColor: '#000000' }]}>
                     <Text style={styles.btnTxt}>Add to cart</Text>
                   </TouchableOpacity>
+
+                  :
+                  <View style={[styles.btn, { backgroundColor: '#000000' }]}>
+                    <Text style={styles.btnTxt}>Out Of Stock</Text>
+                  </View>
                 }
 
               </View>

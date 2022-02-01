@@ -96,5 +96,10 @@ export default StyleSheet.create({
         fontSize:15,
         textTransform:'uppercase',
         color:'#fff'
-    }
+    },
+    titleIcon: {
+        fontSize: 24,
+        color: '#620000',
+        marginLeft:5
+    },
 });

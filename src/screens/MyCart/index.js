@@ -40,6 +40,8 @@ function MyCart({ navigation, route }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [pincodeError, setPincodeError] = useState("");
   const [couponCode, setCouponCode] = useState("");
+  const [sameAsBilling, setSameAsBilling] = useState(0);
+  
 
   const couponData = useSelector((state) => state.couponReducer
   );
@@ -376,22 +378,26 @@ function MyCart({ navigation, route }) {
           setIsLoading(false)
         });
     } else {
-      showMessage({
-        message: "Please login to apply Coupon!",
-        type: "info",
-        backgroundColor: "#808080",
-      });
+      navigation.navigate('Login');
+      // showMessage({
+      //   message: "Please login to apply Coupon!",
+      //   type: "info",
+      //   backgroundColor: "#808080",
+      // });
     }
   }
   const _deleteCoupon = async () => {
     dispatch({
       type: "DELETE_COUPON"
     });
+    _getCartList(userData.id, "", null);
   }
 
 
   useEffect(() => {
     if (isFocused) {
+      setCheck();
+      setSameAsBilling(0);
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
           setIsLogin(true)
@@ -553,7 +559,7 @@ function MyCart({ navigation, route }) {
                   <Text style={styles.priceItemText}>₹{subTotal}</Text>
                 </View>
                 <View style={styles.priceItem}>
-                  <Text style={styles.priceItemText}>Used Loyaltty Point</Text>
+                  <Text style={styles.priceItemText}>Used Loyalty Point</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={styles.priceItemText}>{loyalttyPoint}</Text>
                     <Image source={require('../../assets/Image/loyalty.png')} style={{ width: 30, height: 30, marginLeft: 5 }} />
@@ -608,11 +614,12 @@ function MyCart({ navigation, route }) {
               </View>
               <TouchableOpacity onPress={() => {
                 if (isLogin) {
-                  if (check != undefined) {
+                  if (check != undefined || sameAsBilling == 1 ) {
                     if (userBillingAddress.length > 0) {
                       navigation.navigate('Checkout', {
                         orderBillingAddressBookId: userBillingAddress[0].address_book_id,
-                        address_id_hidden: userShippingAddressList[check].address_book_id,
+                        address_id_hidden: check != undefined ? userShippingAddressList[check].address_book_id : "",
+                        same_as_billing: check != undefined ? 0 : sameAsBilling,
                         is_shop_now: shopNow,
                         orderNote: "",
                         shipping_rate: deliveryCharges,
@@ -622,7 +629,8 @@ function MyCart({ navigation, route }) {
                       setAddressError("Billing address not yet added!");
                     }
                   } else {
-                    setAddressError("No Shipping Address Selected!");
+                    // setAddressError("No Shipping Address Selected!");
+                    actionSheetRef.current?.setModalVisible()
                   }
                 } else {
                   navigation.navigate('Login');
@@ -669,7 +677,11 @@ function MyCart({ navigation, route }) {
               </TouchableOpacity>
 
             </View>
-            {userShippingAddressList.map((item, key) => (
+            
+            {
+              
+            userShippingAddressList.length != 0 ?
+            userShippingAddressList.map((item, key) => (
               <View style={styles.changeAddressSectionInner} key={key}>
                 <View>
                   <Text style={styles.nameTitle}>{item.entry_firstname} {item.entry_lastname}</Text>
@@ -683,7 +695,16 @@ function MyCart({ navigation, route }) {
                   setAddressError("");
                 }}><Fontisto name={check == key ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
               </View>
-            ))}
+            ))
+            :
+            <View style={styles.changeAddressSectionInner} >
+              <Text style={styles.nameTitle}>Same as Billing Address</Text>
+              <TouchableOpacity onPress={() => {
+                  sameAsBilling == 1 ? setSameAsBilling(0) : setSameAsBilling(1);
+                }}><Fontisto name={sameAsBilling == 1 ? "checkbox-active" : "checkbox-passive"} style={{ color: '#A20101', fontSize: 20 }} /></TouchableOpacity>
+            </View>
+            
+            }
 
 
           </View>

@@ -53,7 +53,7 @@ export default StyleSheet.create({
     textInputOuter:{
        
         backgroundColor:'#DBE2ED',
-        marginBottom:30,
+        marginTop:30,
         borderRadius:7,
         padding:5,
         flexDirection:'row',
@@ -62,7 +62,7 @@ export default StyleSheet.create({
     textInputOuterIos:{
        
         backgroundColor:'#DBE2ED',
-        marginBottom:30,
+        marginTop:30,
         borderRadius:7,
         padding:5,
         flexDirection:'row',
@@ -104,6 +104,24 @@ export default StyleSheet.create({
         color:'red',
         textAlign:'center',
         margin:10
-    }
+    },
+    bottomErrorMessage:{
+        fontSize:14,
+        fontFamily:'Poppins-Bold',
+        color:'#AB0000',
+        
+    },
+    socialLoginOuter:
+    {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    socialLoginText: {
+        fontFamily: 'Poppins-Medium',
+        color: '#620000',
+        fontSize: 14,
+    },
 
 });

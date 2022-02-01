@@ -22,7 +22,7 @@ function OtpScreen({ navigation, route }) {
       setIsLoading(true)
       const formData = new FormData();
 
-      formData.append('fullname', response.signUpData.fullName);
+      formData.append('fullname', response.signUpData.fullname);
       formData.append('phone', response.signUpData.phone);
       formData.append('email', response.signUpData.emailaddress);
       formData.append('password', response.signUpData.password);
@@ -66,7 +66,7 @@ function OtpScreen({ navigation, route }) {
   return (
     <>
       <View style={styles.backGround}>
-      {isLoading?<ActivityIndicator size="large" color="#AB0000" />:<></>}   
+        {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <ScrollView showsVerticalScrollIndicator={false}>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>OTP Verification</Text>
@@ -80,12 +80,11 @@ function OtpScreen({ navigation, route }) {
             <View style={styles.otpBoxOuter}>
               <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} />
             </View>
-
-
-            <TouchableOpacity style={styles.resendButton}>
-              <Text style={styles.resendButtonText}>Resend Otp</Text>
-            </TouchableOpacity>
-
+            {/*
+              <TouchableOpacity style={styles.resendButton}>
+                <Text style={styles.resendButtonText}>Resend Otp</Text>
+              </TouchableOpacity>
+            */}
 
             <TouchableOpacity style={styles.btnOuter} onPress={() => {
               checkOtp()

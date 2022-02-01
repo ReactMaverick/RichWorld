@@ -4,16 +4,27 @@ import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import OTPTextInput from 'react-native-otp-textinput';
 import { FORGET_PASSWORD_OTP_CHECK, RESEND_OTP } from '../../config/ApiConfig'
+import { useSelector,useDispatch } from "react-redux";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function OtpScreenForgetPass({ navigation, route }) {
+  const dispatch = useDispatch();
+
   const { response } = route.params;
   const [isResend, setIsResend] = useState(false);
   const [forgetPasswordOtp, setForgetPasswordOtp] = useState("");
   const [otpInput, setOtp] = useState("");
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  const setUserData = (item) =>
+  dispatch({  
+    type: "LOGINUSER",
+    payload: {
+      item
+    },
+  });
 
   const checkOtp = () => {
     if (otpInput == "") {
@@ -41,6 +52,8 @@ function OtpScreenForgetPass({ navigation, route }) {
               if (response.status == false) {
                 setErrorMessage(response.message);
               } else {
+                console.log('OtpScreenForgetPass',response.userDetails[0])
+                setUserData(response.userDetails[0])
                 AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
                   navigation.navigate('HomeScreen');
                 })
@@ -139,7 +152,9 @@ function OtpScreenForgetPass({ navigation, route }) {
             <Text style={styles.errorMessage}>{errorMsg}</Text>
 
             <View style={styles.otpBoxOuter}>
-              <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} />
+              <OTPTextInput textInputStyle={styles.otpBoxStyle} handleTextChange={(otpInput) => setOtp(otpInput)} 
+              //  ref={e => (console.log(e))}
+               />
             </View>
 
 
