@@ -415,7 +415,7 @@ function ProductDetails({ navigation, route }) {
 
             </View>
             <Text style={styles.descriptionText}>{productDetails.products_name} </Text>
-            {productAttributes.map((item, key) => (
+            {productDetails.productAttributes.map((item, key) => (
               <View style={styles.attribute} key={key}>
                 <Text style={styles.attributeLeft}>{item.option.name} :</Text>
                 <View style={styles.attributeRight}>
