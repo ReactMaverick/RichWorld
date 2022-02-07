@@ -331,7 +331,25 @@ export default StyleSheet.create({
     heartIcon:{
         fontSize:25,
         color: '#620000'
-    }
+    },
+    quantityOuter: {
+        flexDirection: 'row',
+        marginTop: 10
+    },
+    quantityInner: {
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quantityInnerBtn: {
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#A20101'
+    },
     
 
 });
