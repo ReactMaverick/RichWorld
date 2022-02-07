@@ -1,4 +1,4 @@
-package com.richworld;
+package com.amrithaa.richworld;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

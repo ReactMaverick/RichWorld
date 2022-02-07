@@ -1,4 +1,5 @@
 export const BASE_URL = 'https://demo.richworld.online/api/';
+export const GOOGLE_LOGINKEY = '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com';
 
 export const GET_HOME = BASE_URL + 'homePage';
 export const GET_ALL_CATEGORY = BASE_URL + 'allCategory?popular=';

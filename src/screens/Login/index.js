@@ -4,7 +4,7 @@ import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo'
-import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN } from '../../config/ApiConfig'
+import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN,GOOGLE_LOGINKEY } from '../../config/ApiConfig'
 import DeviceInfo from 'react-native-device-info';
 import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +19,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 
 
 GoogleSignin.configure({
-  webClientId: '521633579635-41t9q2kkjoj0q0opptpve1b89gcp04bv.apps.googleusercontent.com',
+  webClientId: GOOGLE_LOGINKEY,
 
 });
 

@@ -1,42 +1,49 @@
 {
   "project_info": {
-    "project_number": "521633579635",
-    "project_id": "sociallogin-3a276",
-    "storage_bucket": "sociallogin-3a276.appspot.com"
+    "project_number": "262237353427",
+    "project_id": "richworld-843da",
+    "storage_bucket": "richworld-843da.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:521633579635:android:3e776caeb8bfe1cf7ce006",
+        "mobilesdk_app_id": "1:262237353427:android:46f617db26951c92106b26",
         "android_client_info": {
-          "package_name": "com.richworld"
+          "package_name": "com.amrithaa.richworld"
         }
       },
       "oauth_client": [
         {
-          "client_id": "521633579635-apisf4b28kof5mbm0o6n2lv0e05fot14.apps.googleusercontent.com",
+          "client_id": "262237353427-gj0b80u7ia3h5aq6tb4qth08me8kgcps.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.richworld",
-            "certificate_hash": "ccb9d94bede93871e43c2cd5a6a4ddc72e8eb56d"
+            "package_name": "com.amrithaa.richworld",
+            "certificate_hash": "fcd37a74b839d295b51e4861df136cdf4a46c6db"
           }
         },
         {
-          "client_id": "521633579635-41t9q2kkjoj0q0opptpve1b89gcp04bv.apps.googleusercontent.com",
+          "client_id": "262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjpA0uieggCMspUqa-W30DvOEnObFlcCM"
+          "current_key": "AIzaSyCA8MQJoq4zfnB-FHiO_Sk8GkHDCm819r0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "521633579635-41t9q2kkjoj0q0opptpve1b89gcp04bv.apps.googleusercontent.com",
+              "client_id": "262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.amrithaa.richworld"
+              }
             }
           ]
         }

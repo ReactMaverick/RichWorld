@@ -147,6 +147,14 @@ function Stack1() {
 export default function App() {
 
 
+const androidPush = async () =>{
+  const fcmToken = await messaging().getToken();
+  if (fcmToken) {
+    console.log(fcmToken);
+    AsyncStorage.setItem('fcmToken', fcmToken)
+  }
+}
+
   const checkToken = async () => {
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
@@ -181,11 +189,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    const authorizationStatus = messaging().requestPermission();
-    if (authorizationStatus) {
-      console.log('Permission status:', authorizationStatus);
-      checkToken();
+    if(Platform.OS=="ios"){
+      const authorizationStatus = messaging().requestPermission();
+      if (authorizationStatus) {
+        console.log('Permission status:', authorizationStatus);
+        checkToken();
+      }
+    }else{
+      androidPush();
     }
+   
   }, []);
 
   return (
