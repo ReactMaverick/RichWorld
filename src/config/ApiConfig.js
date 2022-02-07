@@ -24,6 +24,7 @@ export const UPDATE_SHIPPING_ADDRESS = BASE_URL + 'updateMyAddress';
 export const DELETE_SHIPPING_ADDRESS = BASE_URL + 'deleteAddress?address_book_id=';
 export const UPDATE_ACCOUNT = BASE_URL + 'accountUpdate';
 export const MY_ORDERS = BASE_URL + 'myOrders';
+export const CANCLE_ORDER = BASE_URL + 'orderCancle';
 export const MY_PURCHASED = BASE_URL + 'myPurchased';
 export const SUBMIT_RATTINGS = BASE_URL + 'submitRaitings';
 export const RETURN_PRODUCT = BASE_URL + 'returnProcuct';

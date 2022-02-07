@@ -503,8 +503,10 @@ function ProductDetails({ navigation, route }) {
             />
           </View>
 
-          <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text>
-          {bulkPriceList.length > 0 ?
+          {/* <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text> */}
+          {
+          // bulkPriceList.length > 0 ?
+          false?
             <View style={{ margin: 10 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.bulkTitle}>Select</Text>
@@ -529,7 +531,8 @@ function ProductDetails({ navigation, route }) {
               ))}
             </View>
             :
-            <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
+            <></>
+            // <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
           }
 
 

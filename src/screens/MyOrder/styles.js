@@ -89,7 +89,20 @@ export default StyleSheet.create({
     trackOrderOuter:{
         borderTopColor: '#CCCCCC',
         borderTopWidth: 1,
-    }
+        paddingBottom:10
+    },
+    viewAllBtn:{
+        backgroundColor:'#AB0000',
+        padding:10,
+        margin:10,
+        borderRadius:5,
+        alignItems:'center'
+    },
+    viewAllBtnText:{
+        color: '#fff',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 12,
+    },
    
 
 
