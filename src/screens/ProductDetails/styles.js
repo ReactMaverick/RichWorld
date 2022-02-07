@@ -67,7 +67,8 @@ export default StyleSheet.create({
     },
     ratingText: {
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
+        alignItems: 'center'
     },
     ratingSection: {
         flex: 1,
@@ -239,7 +240,7 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Regular',
         color: '#404040',
         fontSize:13,
-        flex:1
+        // flex:1
     },
     attToCartBtn:{        
         height:55,

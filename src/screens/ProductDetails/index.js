@@ -6,6 +6,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DeviceInfo from 'react-native-device-info';
 import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -396,8 +397,8 @@ function ProductDetails({ navigation, route }) {
           <View style={styles.productDetails}>
             <View style={styles.ratingSection}>
               <View style={styles.ratingText}>
-                <Text style={styles.sellingPrice}>₹{productDetails.discounted_price}  </Text>
-                <Text style={styles.mrpPrice}>₹{productDetails.products_price} </Text>
+              <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{productDetails.discounted_price}  </Text>
+              <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{productDetails.products_price} </Text>
               </View>
               <View style={styles.ratingStar}>
                 <Rating
@@ -518,7 +519,12 @@ function ProductDetails({ navigation, route }) {
                   </View>
                   <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
                   <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
-                  <Text style={styles.bulkText}>₹ {item.bulk_selling_price}</Text>
+                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <FontAwesome name="inr" style={styles.bulkText} />
+                    <Text style={styles.bulkText}> {item.bulk_selling_price}</Text>
+                  </View>
+                  {/* <FontAwesome name="inr" style={styles.bulkText} />
+                  <Text style={styles.bulkText}> {item.bulk_selling_price}</Text> */}
                 </View>
               ))}
             </View>

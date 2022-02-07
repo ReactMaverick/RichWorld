@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>521633579635-n9mdjb9hlvbj797mu6inab6rbutoc74i.apps.googleusercontent.com</string>
+	<string>262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.521633579635-n9mdjb9hlvbj797mu6inab6rbutoc74i</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>521633579635-apisf4b28kof5mbm0o6n2lv0e05fot14.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDtMxeg_y1eii2bsgR__c3xU33rzCvCkF0</string>
+	<string>AIzaSyCmZExVc5KSqNM0ncioZzr71GViPIUtQ5I</string>
 	<key>GCM_SENDER_ID</key>
-	<string>521633579635</string>
+	<string>262237353427</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.richworld</string>
+	<string>com.amrithaa.richworld</string>
 	<key>PROJECT_ID</key>
-	<string>sociallogin-3a276</string>
+	<string>richworld-843da</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sociallogin-3a276.appspot.com</string>
+	<string>richworld-843da.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:521633579635:ios:85fd25ce559c71cb7ce006</string>
+	<string>1:262237353427:ios:4a9c90565ccf7be8106b26</string>
 </dict>
 </plist>

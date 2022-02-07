@@ -148,23 +148,43 @@ export default function App() {
 
 
   const checkToken = async () => {
-    if (Platform.OS == "android") {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        console.log(fcmToken);
-        AsyncStorage.setItem('fcmToken', fcmToken)
-      }
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+      AsyncStorage.setItem('fcmToken', fcmToken)
     }
+
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      // navigation.navigate(remoteMessage.data.type);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+        // setLoading(false);
+      });
+
+    // }
   }
 
   useEffect(() => {
-    if (Platform.OS == "android") {
+    const authorizationStatus = messaging().requestPermission();
+    if (authorizationStatus) {
+      console.log('Permission status:', authorizationStatus);
       checkToken();
-      const unsubscribe = messaging().onMessage(async remoteMessage => {
-        // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      });
-
-      return unsubscribe;
     }
   }, []);
 

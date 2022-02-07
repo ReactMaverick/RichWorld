@@ -36,7 +36,7 @@ export default StyleSheet.create({
         flex: 6,
         marginRight: 10,
         backgroundColor:'#fff',
-
+        alignItems: 'center'
     },
     productRight: {
         flex: 5,
@@ -71,7 +71,8 @@ export default StyleSheet.create({
     },
     priceBox: {
         flexDirection: 'row',
-        marginTop: 5
+        marginTop: 5,
+        alignItems: 'center'
     },
     sellingPrice: {
         color: '#2E2E2E',
