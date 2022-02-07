@@ -5,6 +5,7 @@ import Footer from "../../components/Footer";
 import Swiper from 'react-native-swiper'
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { GET_HOME,VIEW_CART } from '../../config/ApiConfig'
 import SplashScreen from 'react-native-splash-screen'
@@ -220,8 +221,8 @@ function ProductBox({ navigation, products }) {
           <Image style={styles.leftImage} source={{ uri: products[0].image_path }} />
           <Text style={styles.productTitle}>{products[0].products_model}</Text>
           <View style={styles.priceBox}>
-            <Text style={styles.sellingPrice}>₹{products[0].discounted_price}</Text>
-            <Text style={styles.mrpPrice}>₹{products[0].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[0].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[0].products_price}</Text>
           </View>
         </TouchableOpacity>
 
@@ -233,8 +234,8 @@ function ProductBox({ navigation, products }) {
             {/* <Image style={styles.rightImage} source={{ uri: products[1].image_path }} /> */}
             <Text style={styles.productTitle}>{products[1].products_model}</Text>
             <View style={styles.priceBox}>
-              <Text style={styles.sellingPrice}>₹{products[1].discounted_price}</Text>
-              <Text style={styles.mrpPrice}>₹{products[1].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[1].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[1].products_price}</Text>
             </View>
           </TouchableOpacity>
 
@@ -244,8 +245,8 @@ function ProductBox({ navigation, products }) {
             <ImageBackground style={styles.rightImage} source={{ uri: products[2].image_path }} resizeMode="cover"/>
             <Text style={styles.productTitle}>{products[2].products_model}</Text>
             <View style={styles.priceBox}>
-              <Text style={styles.sellingPrice}>₹{products[2].discounted_price}</Text>
-              <Text style={styles.mrpPrice}>₹{products[2].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[2].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[2].products_price}</Text>
             </View>
           </TouchableOpacity>
         </View>

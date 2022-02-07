@@ -32,7 +32,6 @@ export default StyleSheet.create({
     priceBox:{
         flexDirection:'row',
         marginTop:5,
-        
         justifyContent:'space-between'
     },
     sellingPrice:{

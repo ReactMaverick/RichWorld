@@ -6,6 +6,7 @@ import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DeviceInfo from 'react-native-device-info';
 import { VIEW_CART, UPDATE_CART_QUANTITY, DELETE_CART_ITEM, CHECK_PINCODE, APPLY_COUPON, ADD_MY_ADDRESS } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -565,7 +566,10 @@ function MyCart({ navigation, route }) {
                   <Image source={{ uri: item.image_path }} style={styles.userImage} />
                   <View style={styles.leftBox}>
                     <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
-                    <Text style={styles.leftText2}>₹{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.leftText2} /><Text style={styles.leftText2}>{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
+                    </View>
+                    
 
                     <View style={styles.quantityOuter}>
                       <TouchableOpacity onPress={() => {
@@ -656,7 +660,11 @@ function MyCart({ navigation, route }) {
                 <View style={styles.priceLine}></View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Sub Total</Text>
-                  <Text style={styles.priceItemText}>₹{subTotal}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <FontAwesome name="inr" style={styles.priceItemText} />
+                  <Text style={styles.priceItemText}>{subTotal}</Text>
+                  </View>
+                  
                 </View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Used Loyalty Point</Text>
@@ -668,11 +676,19 @@ function MyCart({ navigation, route }) {
                 </View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Total Tax</Text>
-                  <Text style={styles.priceItemText}>₹{totalTax}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <FontAwesome name="inr" style={styles.priceItemText} />
+                  <Text style={styles.priceItemText}>{totalTax}</Text>
+                  </View>
                 </View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Discount(Coupon)</Text>
-                  <Text style={[styles.priceItemText, { color: 'red' }]}>-₹{couponDiscount}</Text>
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <Text style={[styles.priceItemText, { color: 'red' }]}>-</Text>
+                  <FontAwesome name="inr" style={[styles.priceItemText, { color: 'red' }]} />
+                  <Text style={[styles.priceItemText, { color: 'red' }]}>{couponDiscount}</Text>
+                  </View>
                 </View>
 
                 <View style={styles.priceItem}>
@@ -683,7 +699,11 @@ function MyCart({ navigation, route }) {
 
                 <View style={styles.priceItem}>
                   <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
-                  <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>₹{totalPrice}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                  <FontAwesome name="inr" style={[styles.priceItemText, { color: '#000' }]} />
+                  <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>{totalPrice}</Text>
+                  </View>
+                  
                 </View>
               </View>
 
@@ -709,8 +729,9 @@ function MyCart({ navigation, route }) {
             }
 
             <View style={styles.outerBoxCheckout}>
-              <View>
-                <Text style={styles.priceAmount}>₹{totalPrice}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+              <FontAwesome name="inr" style={styles.priceAmount} />
+                <Text style={styles.priceAmount}>{totalPrice}</Text>
               </View>
               <TouchableOpacity onPress={() => {
                 if (isLogin) {

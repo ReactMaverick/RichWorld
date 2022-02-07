@@ -3,6 +3,7 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { VIEW_WISHLIST, ADD_WISHLIST, ADD_TO_CART, VIEW_CART } from '../../config/ApiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
@@ -171,7 +172,11 @@ function Wishlist({ navigation }) {
 
                 <View style={styles.leftBox}>
                   <Text style={styles.leftText1}>{item.products_name}	</Text>
-                  <Text style={styles.leftText2}>₹{item.discounted_price}</Text>
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.leftText2} />
+                    <Text style={styles.leftText2}>{item.discounted_price}</Text>
+                  </View>
                 </View>
               </View>
 
@@ -182,7 +187,7 @@ function Wishlist({ navigation }) {
                   <Text style={styles.btnTxt}>Remove</Text>
                 </TouchableOpacity>
                 {item.defaultStock > 0 ? (item.is_cart_present == 1) ?
-                  <View  style={[styles.btn, { backgroundColor: '#000000' }]}>
+                  <View style={[styles.btn, { backgroundColor: '#000000' }]}>
                     <Text style={styles.btnTxt}>Added</Text>
                   </View>
                   :

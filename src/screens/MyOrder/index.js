@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_ORDERS } from '../../config/ApiConfig';
 import { useIsFocused } from "@react-navigation/native";
@@ -135,7 +136,10 @@ function MyOrder({ navigation }) {
 
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Sub Total</Text>
-                    <Text style={styles.priceText}>₹{_calculateSubtotal(item.totalUsedLp, item.pricePerLp, item.order_price, item.coupon_amount, item.shipping_cost, item.total_tax)}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.priceText} />
+                    <Text style={styles.priceText}>{_calculateSubtotal(item.totalUsedLp, item.pricePerLp, item.order_price, item.coupon_amount, item.shipping_cost, item.total_tax)}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Used Loyalty Point</Text>
@@ -143,20 +147,32 @@ function MyOrder({ navigation }) {
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Total Tax</Text>
-                    <Text style={styles.priceText}>₹{item.total_tax}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.priceText} />
+                    <Text style={styles.priceText}>{item.total_tax}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Discount(Coupon)</Text>
-                    <Text style={styles.priceText}>₹{item.coupon_amount}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.priceText} />
+                    <Text style={styles.priceText}>{item.coupon_amount}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Delivery Charges</Text>
-                    <Text style={styles.priceText}>₹{item.shipping_cost}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.priceText} />
+                    <Text style={styles.priceText}>{item.shipping_cost}</Text>
+                    </View>
                   </View>
 
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText1}>Total</Text>
-                    <Text style={styles.priceText1}>₹{_calculateOrderTotal(item.totalUsedLp, item.pricePerLp, item.order_price)}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.priceText1} />
+                    <Text style={styles.priceText1}>{_calculateOrderTotal(item.totalUsedLp, item.pricePerLp, item.order_price)}</Text>
+                    </View>
                   </View>
                   <View style={styles.trackOrderOuter}>
                     <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>
