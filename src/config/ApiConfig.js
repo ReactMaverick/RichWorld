@@ -1,5 +1,9 @@
+import {Platform} from 'react-native'
 export const BASE_URL = 'https://demo.richworld.online/api/';
-export const GOOGLE_LOGINKEY = '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com';
+
+export const GOOGLE_LOGINKEY = Platform.OS == 'android' ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com' :
+'262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
+
 
 export const GET_HOME = BASE_URL + 'homePage';
 export const GET_ALL_CATEGORY = BASE_URL + 'allCategory?popular=';
