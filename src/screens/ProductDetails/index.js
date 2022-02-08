@@ -338,14 +338,14 @@ function ProductDetails({ navigation, route }) {
     return newQuantity;
   }
   const _priceUpdate = (newQuantity) => {
-    var ch =0;
-    productDetails.BulkPriceList.map((item)=>{
-      if( newQuantity >= item.minimum_quantity && newQuantity <= item.maximum_quantity){
+    var ch = 0;
+    productDetails.BulkPriceList.map((item) => {
+      if (newQuantity >= item.minimum_quantity && newQuantity <= item.maximum_quantity) {
         setProductPrice(item.bulk_selling_price)
-        ch =1
+        ch = 1
       }
     })
-    if(ch==0){
+    if (ch == 0) {
       setProductPrice(productDetails.discounted_price)
     }
   }
@@ -564,8 +564,8 @@ function ProductDetails({ navigation, route }) {
             />
           </View>
 
-          {/* <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text> */}
-          {/*
+          <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text>
+          {
             bulkPriceList.length > 0 ?
               <View style={{ margin: 10 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -576,9 +576,34 @@ function ProductDetails({ navigation, route }) {
                 </View>
                 {bulkPriceList.map((item, key) => (
                   <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between' }} key={key}>
-                    <View style={styles.bulkText}>
-                      <MaterialIcons style={{ fontSize: 16 }} name="radio-button-checked" />
-                    </View>
+                    <TouchableOpacity onPress={() => {
+                      if (item.minimum_quantity <= productDetails.defaultStock) {
+                        if (item.minimum_quantity <= productDetails.products_max_stock) {
+                          if (item.minimum_quantity >= productDetails.products_min_order) {
+                            setQuantity(item.minimum_quantity)
+                            _priceUpdate(item.minimum_quantity)
+                          }
+                        } else {
+                          showMessage({
+                            message: "You can not order more than " + item.minimum_quantity + " items!",
+                            type: "info",
+                            backgroundColor: "#808080",
+                          });
+                        }
+                      } else {
+                        showMessage({
+                          message: "This quantity is more than current stock!",
+                          type: "info",
+                          backgroundColor: "#808080",
+                        });
+                      }
+
+                    }} style={styles.bulkText}>
+                      <MaterialIcons style={{ fontSize: 16 }} name={
+                        quantity >= item.minimum_quantity && quantity <= item.maximum_quantity ?
+                          "radio-button-checked" : "radio-button-off"
+                      } />
+                    </TouchableOpacity>
                     <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
                     <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -590,7 +615,7 @@ function ProductDetails({ navigation, route }) {
               </View>
               :
               <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
-                */}
+          }
 
 
           <View style={styles.tabheader}>
