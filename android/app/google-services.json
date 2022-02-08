@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "262237353427-gj0b80u7ia3h5aq6tb4qth08me8kgcps.apps.googleusercontent.com",
+          "client_id": "262237353427-qe1edjemq9dc1hrgcfgi9frukco2079c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.amrithaa.richworld",
-            "certificate_hash": "fcd37a74b839d295b51e4861df136cdf4a46c6db"
+            "certificate_hash": "ccb9d94bede93871e43c2cd5a6a4ddc72e8eb56d"
           }
         },
         {

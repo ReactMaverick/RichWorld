@@ -147,13 +147,17 @@ function Stack1() {
 export default function App() {
 
 
-const androidPush = async () =>{
-  const fcmToken = await messaging().getToken();
-  if (fcmToken) {
-    console.log(fcmToken);
-    AsyncStorage.setItem('fcmToken', fcmToken)
+  const androidPush = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+      AsyncStorage.setItem('fcmToken', fcmToken)
+    }
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
   }
-}
 
   const checkToken = async () => {
     const fcmToken = await messaging().getToken();
@@ -189,16 +193,16 @@ const androidPush = async () =>{
   }
 
   useEffect(() => {
-    if(Platform.OS=="ios"){
+    if (Platform.OS == "ios") {
       const authorizationStatus = messaging().requestPermission();
       if (authorizationStatus) {
         console.log('Permission status:', authorizationStatus);
         checkToken();
       }
-    }else{
+    } else {
       androidPush();
     }
-   
+
   }, []);
 
   return (
