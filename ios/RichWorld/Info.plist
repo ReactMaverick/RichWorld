@@ -20,38 +20,17 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
-
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-  <key>CFBundleURLSchemes</key>
-  <array>
-    <string>fbAPP-ID</string>
-  </array>
-  </dict>
-</array>
-<key>FacebookAppID</key>
-<string>278707640967057</string>
-<key>FacebookClientToken</key>
-<string>28ddb47afa4669f8e4d196f069a854d7</string>
-<key>FacebookDisplayName</key>
-<string>RichWorld</string>
-
-
-<key>LSApplicationQueriesSchemes</key>
-<array>
-  <string>fbapi</string>
-  <string>fb-messenger-share-api</string>
-</array>
-
 	<key>CFBundleURLTypes</key>
-
-
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb278707640967057</string>
+			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -60,18 +39,21 @@
 			<array>
 				<string>com.googleusercontent.apps.262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o</string>
 			</array>
-
-
-			
 		</dict>
-
-
-		
 	</array>
-
-	
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>278707640967057</string>
+	<key>FacebookClientToken</key>
+	<string>28ddb47afa4669f8e4d196f069a854d7</string>
+	<key>FacebookDisplayName</key>
+	<string>RichWorld</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
