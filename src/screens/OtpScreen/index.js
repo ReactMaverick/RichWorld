@@ -68,6 +68,11 @@ function OtpScreen({ navigation, route }) {
       <View style={styles.backGround}>
         {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity onPress={() => {
+            navigation.goBack()
+          }} style={styles.backIconOuter} >
+            <AntDesign name="arrowleft" style={styles.backIcon} />
+          </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>OTP Verification</Text>
           </ImageBackground>

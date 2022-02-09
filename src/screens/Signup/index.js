@@ -9,14 +9,14 @@ import DeviceInfo from 'react-native-device-info';
 import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
-  
+
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -38,12 +38,12 @@ function Signup({ navigation }) {
   const [fcmToken, setFcmToken] = useState("");
 
   const setUserData = (item) =>
-  dispatch({  
-    type: "LOGINUSER",
-    payload: {
-      item
-    },
-  });
+    dispatch({
+      type: "LOGINUSER",
+      payload: {
+        item
+      },
+    });
   // const { validate, isFieldInError, getErrorsInField, getErrorMessages, isFormValid } =
   //   useValidation({
   //     state: { fullName, email, phoneNumber, password },
@@ -336,6 +336,11 @@ function Signup({ navigation }) {
       <View style={styles.backGround}>
         {isLoading ? <ActivityIndicator size="large" color="#AB0000" /> : <></>}
         <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableOpacity onPress={() => {
+            navigation.goBack()
+          }} style={styles.backIconOuter} >
+            <AntDesign name="arrowleft" style={styles.backIcon} />
+          </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>Create Account</Text>
           </ImageBackground>
