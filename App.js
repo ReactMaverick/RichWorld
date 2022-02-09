@@ -154,9 +154,7 @@ export default function App() {
       AsyncStorage.setItem('fcmToken', fcmToken)
     }
     // Register background handler
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+   
   }
 
   const checkToken = async () => {
