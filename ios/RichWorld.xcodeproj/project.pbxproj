@@ -58,7 +58,7 @@
 		88B811DCD2BE43E68988A090 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../src/assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		8E4CCE9B540E8D7D63C3487D /* Pods-RichWorld-RichWorldTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RichWorld-RichWorldTests.release.xcconfig"; path = "Target Support Files/Pods-RichWorld-RichWorldTests/Pods-RichWorld-RichWorldTests.release.xcconfig"; sourceTree = "<group>"; };
 		94E776AF24B6424EAF717BFA /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		9F3E1B3E27B279300002D3B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9F3E1B3E27B279300002D3B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "/Users/barun/Desktop/GIT/RichWorld/ios/GoogleService-Info.plist"; sourceTree = "<absolute>"; };
 		9F3E1B4D27B29EFD0002D3B8 /* RichWorld-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RichWorld-Bridging-Header.h"; sourceTree = "<group>"; };
 		9F95ADD127A90F3A009D40B3 /* RichWorld.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RichWorld.entitlements; path = RichWorld/RichWorld.entitlements; sourceTree = "<group>"; };
 		9FDA648A2779B56C00F2A66A /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
@@ -629,6 +629,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "RichWorld-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -657,6 +658,7 @@
 				PRODUCT_NAME = RichWorld;
 				SWIFT_OBJC_BRIDGING_HEADER = "RichWorld-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
