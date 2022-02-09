@@ -20,6 +20,27 @@ export default StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: "center",
     },
+    bankdetailsOuter:{
+        padding: 20,
+        backgroundColor: "#fff",
+        elevation: 5,
+        borderRadius: 5,
+        justifyContent: "flex-start",
+    },
+    viewAllBtn:{
+        flexDirection:'row',
+        backgroundColor:'#AB0000',
+        marginTop: 5,
+        padding:10,
+        borderRadius:5,
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+    viewAllBtnText:{
+        color: '#fff',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 12,
+    },
     checkoutTextInner:{
         fontFamily: "Poppins-Regular",
         fontSize: 14,
