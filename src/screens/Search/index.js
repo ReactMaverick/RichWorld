@@ -6,6 +6,8 @@ import styles from "./styles";
 import { SEARCH_SUGGESSION } from '../../config/ApiConfig'
 import Voice from '@react-native-community/voice';
 import ActionSheet from "react-native-actions-sheet";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 const actionSheetRef = createRef();
 
 function Search({ navigation, route }) {
@@ -15,6 +17,8 @@ function Search({ navigation, route }) {
   const [products, setProducts] = useState([])
   const [tagvalue, setTagvalue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const insets = useSafeAreaInsets();
+  // console.log("insets",insets.top);
   useEffect(() => {
     _search_suggession(text)
     Voice.onSpeechStart = onSpeechStartHandler;
@@ -64,7 +68,6 @@ function Search({ navigation, route }) {
   }
   const onSpeechStartHandler = (e) => {
     console.log("start handler==>>>", e)
-    // actionSheetRef.current?.setModalVisible();
   }
   const onSpeechEndHandler = (e) => {
     console.log("stop handler", e)
@@ -73,14 +76,15 @@ function Search({ navigation, route }) {
 
   const onSpeechResultsHandler = (e) => {
     let text = e.value[0]
+    console.log("speech result handler", text)
+    actionSheetRef.current?.setModalVisible();
     setResult(text)
     _search_suggession(text)
-    console.log("speech result handler", e)
-    actionSheetRef.current?.setModalVisible();
+    stopRecording()
+    // navigation.navigate('Search', { text: text })
+    // console.log("speech result handler", e)
   }
-
   const startRecording = async () => {
-    // setLoading(true)
     try {
       actionSheetRef.current?.setModalVisible();
       await Voice.start('en-Us')
@@ -88,7 +92,6 @@ function Search({ navigation, route }) {
       console.log("error raised", error)
     }
   }
-
   const stopRecording = async () => {
     try {
       await Voice.stop()
@@ -100,8 +103,13 @@ function Search({ navigation, route }) {
   return (
     <>
 
-      <View style={styles.searchSection}>
+      <View style={[styles.searchSection, {paddingTop: Platform.OS=="android"?3:insets.top+10}]}>
+        {Platform.OS=="android" ?
         <AntDesign name="search1" style={styles.searchIcon} />
+        :
+        <AntDesign name="arrowleft" style={styles.searchIcon} />
+        }
+        
         <TextInput
           style={styles.searchSectionText}
           autoFocus={true}
@@ -110,6 +118,7 @@ function Search({ navigation, route }) {
           onChangeText={(result) => _search_suggession(result)}
         />
         <TouchableOpacity style={styles.searchBoxAudio}
+        
           onPress={() => {
             startRecording()
           }}

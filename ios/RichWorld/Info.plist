@@ -117,5 +117,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Require microphone to get the voice</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>To do product search using voice</string>
 </dict>
 </plist>

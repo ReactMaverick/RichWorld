@@ -53,6 +53,9 @@ function MyCart({ navigation, route }) {
   const [entryPhone, setEntryPhone] = useState('')
   const [entryEmail, setEntryEmail] = useState('')
   const [entryFirstname, setEntryFirstname] = useState('')
+
+
+
   // console.log('sameAsBilling',sameAsBilling);
 
   const couponData = useSelector((state) => state.couponReducer);
@@ -332,6 +335,30 @@ function MyCart({ navigation, route }) {
         setIsLoading(false)
       });
   }
+  const showAlert = (customers_basket_id) => {
+    Alert.alert(
+      "Are you sure you want to delete this item?",
+      "",
+      [{
+        text: "Confurm",
+        onPress: () => _deleteCartItem(customers_basket_id),
+        style: "cancel",
+      },
+        {
+          text: "Cancel",
+          // onPress: () => Alert.alert("Cancel Pressed"),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        // onDismiss: () =>
+        //   Alert.alert(
+        //     "This alert was dismissed by tapping outside of the alert dialog."
+        //   ),
+      }
+    );
+  }
 
   const _deleteCartItem = (customers_basket_id) => {
 
@@ -567,9 +594,9 @@ function MyCart({ navigation, route }) {
                   <View style={styles.leftBox}>
                     <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <FontAwesome name="inr" style={styles.leftText2} /><Text style={styles.leftText2}>{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
+                      <FontAwesome name="inr" style={styles.leftText2} /><Text style={styles.leftText2}>{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
                     </View>
-                    
+
 
                     <View style={styles.quantityOuter}>
                       <TouchableOpacity onPress={() => {
@@ -585,7 +612,8 @@ function MyCart({ navigation, route }) {
                       </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={() => {
-                      _deleteCartItem(item.customers_basket_id);
+                      showAlert(item.customers_basket_id)
+                      // _deleteCartItem(item.customers_basket_id);
                     }} >
                       <AntDesign name="delete" style={styles.deleteIcon} />
                     </TouchableOpacity>
@@ -661,10 +689,10 @@ function MyCart({ navigation, route }) {
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Sub Total</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                  <FontAwesome name="inr" style={styles.priceItemText} />
-                  <Text style={styles.priceItemText}>{subTotal}</Text>
+                    <FontAwesome name="inr" style={styles.priceItemText} />
+                    <Text style={styles.priceItemText}>{subTotal}</Text>
                   </View>
-                  
+
                 </View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Used Loyalty Point</Text>
@@ -677,17 +705,17 @@ function MyCart({ navigation, route }) {
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Total Tax</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                  <FontAwesome name="inr" style={styles.priceItemText} />
-                  <Text style={styles.priceItemText}>{totalTax}</Text>
+                    <FontAwesome name="inr" style={styles.priceItemText} />
+                    <Text style={styles.priceItemText}>{totalTax}</Text>
                   </View>
                 </View>
                 <View style={styles.priceItem}>
                   <Text style={styles.priceItemText}>Discount(Coupon)</Text>
 
                   <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                  <Text style={[styles.priceItemText, { color: 'red' }]}>-</Text>
-                  <FontAwesome name="inr" style={[styles.priceItemText, { color: 'red' }]} />
-                  <Text style={[styles.priceItemText, { color: 'red' }]}>{couponDiscount}</Text>
+                    <Text style={[styles.priceItemText, { color: 'red' }]}>-</Text>
+                    <FontAwesome name="inr" style={[styles.priceItemText, { color: 'red' }]} />
+                    <Text style={[styles.priceItemText, { color: 'red' }]}>{couponDiscount}</Text>
                   </View>
                 </View>
 
@@ -700,10 +728,10 @@ function MyCart({ navigation, route }) {
                 <View style={styles.priceItem}>
                   <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>Total</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                  <FontAwesome name="inr" style={[styles.priceItemText, { color: '#000' }]} />
-                  <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>{totalPrice}</Text>
+                    <FontAwesome name="inr" style={[styles.priceItemText, { color: '#000' }]} />
+                    <Text style={[styles.priceItemText, { color: '#000', fontFamily: 'Poppins-Bold' }]}>{totalPrice}</Text>
                   </View>
-                  
+
                 </View>
               </View>
 
@@ -730,7 +758,7 @@ function MyCart({ navigation, route }) {
 
             <View style={styles.outerBoxCheckout}>
               <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <FontAwesome name="inr" style={styles.priceAmount} />
+                <FontAwesome name="inr" style={styles.priceAmount} />
                 <Text style={styles.priceAmount}>{totalPrice}</Text>
               </View>
               <TouchableOpacity onPress={() => {
@@ -937,6 +965,8 @@ function MyCart({ navigation, route }) {
 
           </View>
         </ActionSheet>
+
+
       </>
     )
   }

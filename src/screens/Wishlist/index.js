@@ -69,7 +69,30 @@ function Wishlist({ navigation }) {
 
       });
   }
-
+  const showAlert = (products_id, products_attributes_prices_id) => {
+    Alert.alert(
+      "Are you sure you want to delete this item?",
+      "",
+      [{
+        text: "Confurm",
+        onPress: () => _removeFromWishlist(products_id, products_attributes_prices_id),
+        style: "cancel",
+      },
+        {
+          text: "Cancel",
+          // onPress: () => Alert.alert("Cancel Pressed"),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+        // onDismiss: () =>
+        //   Alert.alert(
+        //     "This alert was dismissed by tapping outside of the alert dialog."
+        //   ),
+      }
+    );
+  }
   const _removeFromWishlist = (products_id, products_attributes_prices_id) => {
     setIsLoading(true)
     const formData = new FormData();
@@ -182,7 +205,8 @@ function Wishlist({ navigation }) {
 
               <View style={styles.outerBtn}>
                 <TouchableOpacity onPress={() => {
-                  _removeFromWishlist(item.products_id, item.products_attributes_prices_id)
+                  showAlert(item.products_id, item.products_attributes_prices_id)
+                  // _removeFromWishlist(item.products_id, item.products_attributes_prices_id)
                 }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
                   <Text style={styles.btnTxt}>Remove</Text>
                 </TouchableOpacity>
