@@ -133,6 +133,18 @@ export default StyleSheet.create({
         color:'red',
         textAlign:'center',
         margin:10
+    },
+    backIconOuter: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        margin:10,
+    },
+    backIcon:{
+        fontSize:25,
+        color: '#620000'
     }
 
 });

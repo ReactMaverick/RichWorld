@@ -311,7 +311,10 @@ function ProductList({ navigation, route }) {
                     }} style={styles.productBox} key={key}>
 
                       <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
-
+                        <View style={styles.cartIconOuter}>
+                        <View style={styles.cartIconBox}>
+                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                        </View>
                         {isLogin ? <TouchableOpacity onPress={() => {
                           console.log("long press");
                           _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
@@ -324,6 +327,8 @@ function ProductList({ navigation, route }) {
                             }
                           </>
                         </TouchableOpacity> : <></>}
+                        </View>
+                        
 
                       </ImageBackground>
                       <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
@@ -339,9 +344,6 @@ function ProductList({ navigation, route }) {
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                         <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
                         <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
-                        </View>
-                        <View style={styles.cartIconBox}>
-                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
                         </View>
 
                       </View>
