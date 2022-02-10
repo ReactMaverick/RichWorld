@@ -28,6 +28,8 @@ function ResetPassword({ navigation, route }) {
     
     if (newPassword == "") {
       setErrorMessage("Please enter New Password");
+    } else if (newPassword.length < 8 ) {
+      setErrorMessage("Password must be 8 character long");
     } else if (confirmPassword == "") {
       setErrorMessage("Please enter Confirm Password");
     } else {

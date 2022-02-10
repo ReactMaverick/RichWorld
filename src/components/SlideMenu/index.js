@@ -11,8 +11,6 @@ import { DrawerActions } from '@react-navigation/native';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
-
-import auth from '@react-native-firebase/auth';
 import { useSelector, useDispatch } from "react-redux";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';

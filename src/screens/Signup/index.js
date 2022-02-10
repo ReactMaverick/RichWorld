@@ -74,6 +74,8 @@ function Signup({ navigation }) {
       setErrorMessage("Please enter valid phone number");
     } else if (password == "") {
       setErrorMessage("Please enter phone password");
+    } else if (password.length < 8) {
+      setErrorMessage("Password must be 8 character long");
     } else {
       setIsLoading(true)
       const formData = new FormData();
