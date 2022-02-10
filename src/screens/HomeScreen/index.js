@@ -5,12 +5,14 @@ import Footer from "../../components/Footer";
 import Swiper from 'react-native-swiper'
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { GET_HOME,VIEW_CART } from '../../config/ApiConfig'
 import SplashScreen from 'react-native-splash-screen'
 import DeviceInfo from 'react-native-device-info';
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -219,8 +221,8 @@ function ProductBox({ navigation, products }) {
           <Image style={styles.leftImage} source={{ uri: products[0].image_path }} />
           <Text style={styles.productTitle}>{products[0].products_model}</Text>
           <View style={styles.priceBox}>
-            <Text style={styles.sellingPrice}>₹{products[0].discounted_price}</Text>
-            <Text style={styles.mrpPrice}>₹{products[0].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[0].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[0].products_price}</Text>
           </View>
         </TouchableOpacity>
 
@@ -228,22 +230,23 @@ function ProductBox({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductDetails', { products_id: products[1].products_id, products_attributes_prices_id: products[1].products_attributes_prices_id })
           }} style={[styles.productInner, { marginBottom: 10 }]}>
-            <Image style={styles.rightImage} source={{ uri: products[1].image_path }} />
+            <ImageBackground style={styles.rightImage} source={{ uri: products[1].image_path }} resizeMode="cover"/>
+            {/* <Image style={styles.rightImage} source={{ uri: products[1].image_path }} /> */}
             <Text style={styles.productTitle}>{products[1].products_model}</Text>
             <View style={styles.priceBox}>
-              <Text style={styles.sellingPrice}>₹{products[1].discounted_price}</Text>
-              <Text style={styles.mrpPrice}>₹{products[1].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[1].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[1].products_price}</Text>
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductDetails', { products_id: products[2].products_id, products_attributes_prices_id: products[2].products_attributes_prices_id })
           }} style={styles.productInner}>
-            <Image style={styles.rightImage} source={{ uri: products[2].image_path }} />
+            <ImageBackground style={styles.rightImage} source={{ uri: products[2].image_path }} resizeMode="cover"/>
             <Text style={styles.productTitle}>{products[2].products_model}</Text>
             <View style={styles.priceBox}>
-              <Text style={styles.sellingPrice}>₹{products[2].discounted_price}</Text>
-              <Text style={styles.mrpPrice}>₹{products[2].products_price}</Text>
+            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[2].discounted_price}</Text>
+            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[2].products_price}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -281,7 +284,7 @@ function Brands({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductList', { title1: products[1].brands_name, title2: "", filterParam: { 'brands_id': products[1].brands_id } })
           }} style={[styles.productInner, { marginBottom: 10 }]}>
-            <Image style={styles.rightImage} source={{ uri: products[1].brands_image_path }} />
+            <ImageBackground style={styles.rightImage} source={{ uri: products[1].brands_image_path }} resizeMode="cover" />
             <Text style={styles.productTitle}>{products[1].brands_name}</Text>
 
           </TouchableOpacity>
@@ -289,7 +292,7 @@ function Brands({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductList', { title1: products[2].brands_name, title2: "", filterParam: { 'brands_id': products[2].brands_id } })
           }} style={styles.productInner}>
-            <Image style={styles.rightImage} source={{ uri: products[2].brands_image_path }} />
+            <ImageBackground style={styles.rightImage} source={{ uri: products[2].brands_image_path }} resizeMode="cover" />
             <Text style={styles.productTitle}>{products[2].brands_name}</Text>
 
           </TouchableOpacity>

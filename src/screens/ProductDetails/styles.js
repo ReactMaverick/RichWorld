@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { color } from 'react-native-reanimated';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default StyleSheet.create({
 
@@ -31,11 +32,11 @@ export default StyleSheet.create({
         margin: 10,
         flexDirection: 'row',
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'flex-start'
     },
     productZoomImage: {
-        width: '70%',
-        height: 300,
+        width: wp("65%"),
+        height: hp("35%"),
         marginRight: 5
     },
     imageThumbSection: {
@@ -66,7 +67,8 @@ export default StyleSheet.create({
     },
     ratingText: {
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
+        alignItems: 'center'
     },
     ratingSection: {
         flex: 1,
@@ -238,7 +240,7 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Regular',
         color: '#404040',
         fontSize:13,
-        flex:1
+        // flex:1
     },
     attToCartBtn:{        
         height:55,
@@ -329,7 +331,25 @@ export default StyleSheet.create({
     heartIcon:{
         fontSize:25,
         color: '#620000'
-    }
+    },
+    quantityOuter: {
+        flexDirection: 'row',
+        marginTop: 10
+    },
+    quantityInner: {
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    quantityInnerBtn: {
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#A20101'
+    },
     
 
 });

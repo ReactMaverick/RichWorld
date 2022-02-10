@@ -14,7 +14,7 @@ export default StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         paddingLeft: 5,
-        paddingTop: Platform.OS=="android"?3:10,
+        // paddingTop: Platform.OS=="android"?3:10,
         paddingBottom: Platform.OS=="android"?3:10,
         flexDirection: 'row',
         justifyContent:'flex-start',

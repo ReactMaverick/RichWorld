@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default StyleSheet.create({
 
@@ -26,7 +27,6 @@ export default StyleSheet.create({
         marginLeft:5
     },
     outerProductBox: {
-        height: 300,
         flex: 1,
 
         margin: 10,
@@ -36,18 +36,19 @@ export default StyleSheet.create({
         flex: 6,
         marginRight: 10,
         backgroundColor:'#fff',
-
+        alignItems: 'center'
     },
     productRight: {
-        flex: 5
+        flex: 5,
     },
     leftImage: {
         height: 220,
         width: '100%'
     },
     rightImage: {
-        height: 80,
-        width: '100%'
+        width: wp("30%"),
+        height: hp("15%"),
+        alignSelf: 'center'
     },
 
     leftImageCategory: {
@@ -55,8 +56,9 @@ export default StyleSheet.create({
         width: '100%'
     },
     rightImageCategory: {
-        height: 115,
-        width: '100%'
+        width: wp("30%"),
+        height: hp("15%"),
+        alignSelf: 'center'
     },
     productInner:{
         backgroundColor:'#fff'
@@ -69,7 +71,8 @@ export default StyleSheet.create({
     },
     priceBox: {
         flexDirection: 'row',
-        marginTop: 5
+        marginTop: 5,
+        alignItems: 'center'
     },
     sellingPrice: {
         color: '#2E2E2E',

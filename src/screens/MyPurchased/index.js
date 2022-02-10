@@ -6,6 +6,7 @@ import styles from "./styles";
 import Modal from "react-native-modal";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import ImagePicker from 'react-native-image-crop-picker';
 import { Rating } from 'react-native-ratings';
 
@@ -309,14 +310,20 @@ function MyPurchased({ navigation }) {
                 <Image source={{ uri: basePath + "/" + item.image }} style={styles.userImage} />
                 <View style={styles.leftBox}>
                   <Text style={styles.leftText1}>{stringFormat(item.products_name)}</Text>
-                  <Text style={styles.leftText2}>₹{item.final_price}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                    <FontAwesome name="inr" style={styles.leftText2} />
+                    <Text style={styles.leftText2}>{item.final_price}</Text>
+                  </View>
                   <Text style={styles.leftText2}>Order ID : {item.orders_id}</Text>
                   <Text style={styles.leftText2}>Delivery Date : {
                     dateFormat(new Date(..._getParsedDate(item.delivery_date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
                   }</Text>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.leftText2}>Subtotal:</Text>
-                    <Text style={styles.leftText1}>₹{item.final_price}	</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.leftText1} />
+                      <Text style={styles.leftText1}>{item.final_price}	</Text>
+                    </View>
                   </View>
 
                 </View>
@@ -450,9 +457,9 @@ function MyPurchased({ navigation }) {
                 numberOfLines={4}
                 value={reviewsText}
                 onChangeText={(reviewsText) => setReviewsText(reviewsText)}
-                // onFocus={() => {
-                //   setAddErrorMessage('')
-                // }}
+              // onFocus={() => {
+              //   setAddErrorMessage('')
+              // }}
               />
             </View>
 

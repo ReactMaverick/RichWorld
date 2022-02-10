@@ -4,8 +4,9 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MY_ORDERS } from '../../config/ApiConfig';
+import { MY_ORDERS, CANCLE_ORDER } from '../../config/ApiConfig';
 import { useIsFocused } from "@react-navigation/native";
 import dateFormat, { masks } from "dateformat";
 function MyOrder({ navigation }) {
@@ -47,7 +48,36 @@ function MyOrder({ navigation }) {
         setIsLoading(false)
       });
   }
+  
+  const _cancleOrder = async (orders_id) => {
+    setIsLoading(true)
+    const formData = new FormData();
+    formData.append('user_id', userData.id);
+    formData.append('orders_id', orders_id);
+    fetch(CANCLE_ORDER, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => {
 
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          console.log("_cancleOrder",response);
+          _getOrders(userData.id);
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
+  
   const stringFormat = (str) => {
     if (str.length > 50) {
       return str.substring(0, 50) + '...';
@@ -60,7 +90,7 @@ function MyOrder({ navigation }) {
     date = String(date).split(' ');
     var days = String(date[0]).split('-');
     var hours = String(date[1]).split(':');
-    return [parseInt(days[0]), parseInt(days[1])-1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
+    return [parseInt(days[0]), parseInt(days[1]) - 1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
   const _calculateSubtotal = (totalUsedLp, pricePerLp, order_price, coupon_amount, shipping_cost, total_tax) => {
     var order_show_LP = parseFloat(totalUsedLp);
@@ -91,7 +121,7 @@ function MyOrder({ navigation }) {
         }
       })
     }
-  }, [navigation,isFocused]);
+  }, [navigation, isFocused]);
   if (isLoading) {
     return (
       <>
@@ -114,8 +144,9 @@ function MyOrder({ navigation }) {
               setTab(key)
             }} style={styles.card} key={key}>
               <View style={styles.headerBox}>
-                <Text style={styles.headerText}>Purchase Date {
-                dateFormat(new Date(..._getParsedDate(item.date_purchased)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                  <Text>Order Id: {item.orders_id}</Text>
+                <Text style={styles.headerText}> {
+                  dateFormat(new Date(..._getParsedDate(item.date_purchased)).toString(), "mmm dS, yyyy, h:MM:ss TT")
                 }</Text>
                 <AntDesign name="down" style={styles.downIcon} />
               </View>
@@ -135,7 +166,10 @@ function MyOrder({ navigation }) {
 
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Sub Total</Text>
-                    <Text style={styles.priceText}>₹{_calculateSubtotal(item.totalUsedLp, item.pricePerLp, item.order_price, item.coupon_amount, item.shipping_cost, item.total_tax)}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.priceText} />
+                      <Text style={styles.priceText}>{_calculateSubtotal(item.totalUsedLp, item.pricePerLp, item.order_price, item.coupon_amount, item.shipping_cost, item.total_tax)}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Used Loyalty Point</Text>
@@ -143,20 +177,32 @@ function MyOrder({ navigation }) {
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Total Tax</Text>
-                    <Text style={styles.priceText}>₹{item.total_tax}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.priceText} />
+                      <Text style={styles.priceText}>{item.total_tax}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Discount(Coupon)</Text>
-                    <Text style={styles.priceText}>₹{item.coupon_amount}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.priceText} />
+                      <Text style={styles.priceText}>{item.coupon_amount}</Text>
+                    </View>
                   </View>
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText}>Delivery Charges</Text>
-                    <Text style={styles.priceText}>₹{item.shipping_cost}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.priceText} />
+                      <Text style={styles.priceText}>{item.shipping_cost}</Text>
+                    </View>
                   </View>
 
                   <View style={styles.priceOuter}>
                     <Text style={styles.priceText1}>Total</Text>
-                    <Text style={styles.priceText1}>₹{_calculateOrderTotal(item.totalUsedLp, item.pricePerLp, item.order_price)}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                      <FontAwesome name="inr" style={styles.priceText1} />
+                      <Text style={styles.priceText1}>{_calculateOrderTotal(item.totalUsedLp, item.pricePerLp, item.order_price)}</Text>
+                    </View>
                   </View>
                   <View style={styles.trackOrderOuter}>
                     <Text style={[styles.priceText1, { marginLeft: 10, fontSize: 15 }]}>Track Order</Text>
@@ -165,14 +211,19 @@ function MyOrder({ navigation }) {
                       <View style={styles.priceOuter} key={key3}>
                         <Text style={styles.priceText}>{item3.orders_status_name}</Text>
                         <Text style={styles.priceText}>{
-                        dateFormat(new Date(..._getParsedDate(item3.date_added)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+                          dateFormat(new Date(..._getParsedDate(item3.date_added)).toString(), "mmm dS, yyyy, h:MM:ss TT")
                         }</Text>
                       </View>
                     ))}
 
                   </View>
-
-
+                  {item.statusess[0].cancellable == 1 &&
+                    <TouchableOpacity style={styles.viewAllBtn} onPress={()=>{
+                      _cancleOrder(item.orders_id)
+                    }}>
+                      <Text style={styles.viewAllBtnText}>Cancel</Text>
+                    </TouchableOpacity>
+                  }
 
                 </View>
                 : <></>}

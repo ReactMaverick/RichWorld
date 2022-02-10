@@ -32,7 +32,6 @@ export default StyleSheet.create({
     priceBox:{
         flexDirection:'row',
         marginTop:5,
-        
         justifyContent:'space-between'
     },
     sellingPrice:{
@@ -47,13 +46,18 @@ export default StyleSheet.create({
         fontSize:12,
         textDecorationLine:'line-through'
     },
+    cartIconOuter:{
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center'
+    },
     cartIcon:{
         fontSize:20,
         color:'#fff'
     },
     cartIconBox:{
-        alignSelf:'flex-end',
-        marginRight:10,
+        alignSelf:'flex-start',
+        margin:10,
         backgroundColor: '#620000',
         width:36,
         height:36,

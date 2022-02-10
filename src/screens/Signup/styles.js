@@ -90,7 +90,7 @@ export default StyleSheet.create({
     inputicon:{
         fontSize:20,
         color:'#AB0000',
-        lineHeight: 0,
+        // lineHeight: 0,
         marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{
@@ -110,6 +110,29 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Bold',
         color:'#AB0000',
         
+    },
+    socialLoginOuter:
+    {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    socialLoginText: {
+        fontFamily: 'Poppins-Medium',
+        color: '#620000',
+        fontSize: 14,
+    },
+    backIconOuter: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        margin:10,
+    },
+    backIcon:{
+        fontSize:25,
+        color: '#620000'
     }
-
 });

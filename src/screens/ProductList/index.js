@@ -7,6 +7,7 @@ import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
@@ -310,7 +311,10 @@ function ProductList({ navigation, route }) {
                     }} style={styles.productBox} key={key}>
 
                       <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
-
+                        <View style={styles.cartIconOuter}>
+                        <View style={styles.cartIconBox}>
+                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                        </View>
                         {isLogin ? <TouchableOpacity onPress={() => {
                           console.log("long press");
                           _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
@@ -323,6 +327,8 @@ function ProductList({ navigation, route }) {
                             }
                           </>
                         </TouchableOpacity> : <></>}
+                        </View>
+                        
 
                       </ImageBackground>
                       <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
@@ -335,12 +341,9 @@ function ProductList({ navigation, route }) {
                         style={{ alignSelf: 'flex-start', marginLeft: 5 }}
                       />
                       <View style={styles.priceBox}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.sellingPrice}>₹{item.discounted_price}</Text>
-                          <Text style={styles.mrpPrice}>₹{item.products_price}</Text>
-                        </View>
-                        <View style={styles.cartIconBox}>
-                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
+                        <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
                         </View>
 
                       </View>
@@ -374,9 +377,9 @@ function ProductList({ navigation, route }) {
 
             setFilterModalVisible(!modalVisible);
           }}
-          style={{marginVertical:Platform.OS=="android"?0:45,}}
+          style={{marginVertical:Platform.OS=="android"?0:45}}
         >
-          <View style={{ flex: 1, backgroundColor: '#fff' }}>
+          <View style={{ flex: 1, backgroundColor: '#fff',paddingTop:Platform.OS=="android"?0:30 }}>
             <View style={styles.filterAreaMain}>
 
               <View style={styles.filterArea}>
@@ -421,10 +424,13 @@ function ProductList({ navigation, route }) {
                     <Feather name="chevron-down" style={styles.dropdownIcon} />
 
                   </View>
-                  <Text style={[styles.rangeText, { textAlign: 'center' }]}>₹{maxPriceFilter}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center',justifyContent: 'center' }}>
+                      <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{maxPriceFilter}</Text>
+                      </View>
+                      {/* <FontAwesome name="inr" style={styles.rangeText} /><Text style={[styles.rangeText, { textAlign: 'center' }]}>${maxPriceFilter}</Text> */}
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                    <Text style={styles.rangeText}>₹{minPrice}</Text>
+                  <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{minPrice}</Text>
 
                     <Slider
                       maximumValue={maxPrice}
@@ -439,7 +445,8 @@ function ProductList({ navigation, route }) {
                       thumbTintColor="#1B5E20"
                       style={{ width: Dimensions.get('window').width - 100, height: 40 }}
                     />
-                    <Text style={styles.rangeText}>₹{maxPrice}</Text>
+                    
+                    <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{maxPrice}</Text>
                   </View>
 
                 </View>

@@ -62,7 +62,7 @@ function Blog({ navigation }) {
           <Text style={styles.CategoryText2}>Blog</Text>
         </View>
         <ScrollView >
-          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
 
             {
               blogs.length > 0 ?

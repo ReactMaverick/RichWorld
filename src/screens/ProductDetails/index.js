@@ -6,11 +6,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import HTMLView from 'react-native-htmlview';
 import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DeviceInfo from 'react-native-device-info';
 import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 function ProductDetails({ navigation, route }) {
   const dispatch = useDispatch();
@@ -31,6 +33,8 @@ function ProductDetails({ navigation, route }) {
   const [activeAttributeIds, setActiveAttributeIds] = useState("");
   const [pincode, setpincode] = useState("");
   const [pincodeMessage, setPincodeMessage] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [productPrice, setProductPrice] = useState("");
 
 
 
@@ -57,6 +61,8 @@ function ProductDetails({ navigation, route }) {
           setActiveAttributeIds(response.detail.product_data[0].prod_attributeids);
           // console.log(response.detail.product_data[0].prod_attributeids)
           setProductAttributes(response.detail.product_data[0].attributes);
+          setQuantity(response.detail.product_data[0].products_min_order);
+          setProductPrice(response.detail.product_data[0].discounted_price);
           if (response.detail.product_data[0].BulkPriceList != undefined) {
             setBulkPriceList(response.detail.product_data[0].BulkPriceList);
           }
@@ -278,7 +284,7 @@ function ProductDetails({ navigation, route }) {
   }
 
   const _addToWishlist = (products_id, products_attributes_prices_id, key) => {
-    
+
     setIsLoading(true)
     const formData = new FormData();
     formData.append('customers_id', userData.id);
@@ -313,7 +319,36 @@ function ProductDetails({ navigation, route }) {
         setIsLoading(false)
       });
   }
-
+  const _minusQuantity = async (products_min_order) => {
+    var newQuantity = quantity;
+    if (quantity > products_min_order) {
+      newQuantity = quantity - 1;
+      setQuantity(newQuantity)
+    }
+    return newQuantity;
+  }
+  const _plusQuantity = async (products_max_stock, defaultStock) => {
+    var newQuantity = quantity;
+    if (quantity < products_max_stock) {
+      if (quantity < defaultStock) {
+        newQuantity = quantity + 1;
+        setQuantity(newQuantity)
+      }
+    }
+    return newQuantity;
+  }
+  const _priceUpdate = (newQuantity) => {
+    var ch = 0;
+    productDetails.BulkPriceList.map((item) => {
+      if (newQuantity >= item.minimum_quantity && newQuantity <= item.maximum_quantity) {
+        setProductPrice(item.bulk_selling_price)
+        ch = 1
+      }
+    })
+    if (ch == 0) {
+      setProductPrice(productDetails.discounted_price)
+    }
+  }
   useEffect(() => {
     setProductsAttributesPricesId(products_attributes_prices_id)
     AsyncStorage.getItem('userData').then((userData) => {
@@ -395,8 +430,8 @@ function ProductDetails({ navigation, route }) {
           <View style={styles.productDetails}>
             <View style={styles.ratingSection}>
               <View style={styles.ratingText}>
-                <Text style={styles.sellingPrice}>₹{productDetails.discounted_price}  </Text>
-                <Text style={styles.mrpPrice}>₹{productDetails.products_price} </Text>
+                <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{productPrice}  </Text>
+                <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{productDetails.products_price} </Text>
               </View>
               <View style={styles.ratingStar}>
                 <Rating
@@ -413,6 +448,34 @@ function ProductDetails({ navigation, route }) {
 
             </View>
             <Text style={styles.descriptionText}>{productDetails.products_name} </Text>
+
+            <View style={styles.attribute}>
+              <Text style={styles.attributeLeft}>Quantity :</Text>
+              <View style={styles.attributeRight}>
+                <View style={styles.quantityOuter}>
+                  <TouchableOpacity style={styles.quantityInnerBtn} onPress={() => {
+                    _minusQuantity(productDetails.products_min_order).then((newQuantity) => {
+                      // console.log('quantity',newQuantity);
+                      _priceUpdate(newQuantity)
+                    })
+
+                  }} >
+                    <AntDesign name="minus" style={{ color: '#A20101', fontSize: 20 }} />
+                  </TouchableOpacity>
+                  <View style={styles.quantityInner}><Text>{quantity}</Text></View>
+                  <TouchableOpacity style={styles.quantityInnerBtn} onPress={() => {
+                    _plusQuantity(productDetails.products_max_stock, productDetails.defaultStock).then((newQuantity) => {
+                      // console.log('quantity',newQuantity);
+                      _priceUpdate(newQuantity)
+                    })
+
+                  }} >
+                    <AntDesign name="plus" style={{ color: '#A20101', fontSize: 20 }} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
             {productAttributes.map((item, key) => (
               <View style={styles.attribute} key={key}>
                 <Text style={styles.attributeLeft}>{item.option.name} :</Text>
@@ -502,27 +565,56 @@ function ProductDetails({ navigation, route }) {
           </View>
 
           <Text style={styles.pincodeCheckTitle}>Bulk Quantity Discounts!! :</Text>
-          {bulkPriceList.length > 0 ?
-            <View style={{ margin: 10 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={styles.bulkTitle}>Select</Text>
-                <Text style={styles.bulkTitle}>Quantity</Text>
-                <Text style={styles.bulkTitle}>Discount</Text>
-                <Text style={styles.bulkTitle}>Price per prices</Text>
-              </View>
-              {bulkPriceList.map((item, key) => (
-                <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between' }} key={key}>
-                  <View style={styles.bulkText}>
-                    <MaterialIcons style={{ fontSize: 16 }} name="radio-button-checked" />
-                  </View>
-                  <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
-                  <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
-                  <Text style={styles.bulkText}>₹ {item.bulk_selling_price}</Text>
+          {
+            bulkPriceList.length > 0 ?
+              <View style={{ margin: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={styles.bulkTitle}>Select</Text>
+                  <Text style={styles.bulkTitle}>Quantity</Text>
+                  <Text style={styles.bulkTitle}>Discount</Text>
+                  <Text style={styles.bulkTitle}>Price per prices</Text>
                 </View>
-              ))}
-            </View>
-            :
-            <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
+                {bulkPriceList.map((item, key) => (
+                  <View style={{ flexDirection: 'row', marginTop: 5, justifyContent: 'space-between' }} key={key}>
+                    <TouchableOpacity onPress={() => {
+                      if (item.minimum_quantity <= productDetails.defaultStock) {
+                        if (item.minimum_quantity <= productDetails.products_max_stock) {
+                          if (item.minimum_quantity >= productDetails.products_min_order) {
+                            setQuantity(item.minimum_quantity)
+                            _priceUpdate(item.minimum_quantity)
+                          }
+                        } else {
+                          showMessage({
+                            message: "You can not order more than " + item.minimum_quantity + " items!",
+                            type: "info",
+                            backgroundColor: "#808080",
+                          });
+                        }
+                      } else {
+                        showMessage({
+                          message: "This quantity is more than current stock!",
+                          type: "info",
+                          backgroundColor: "#808080",
+                        });
+                      }
+
+                    }} style={styles.bulkText}>
+                      <MaterialIcons style={{ fontSize: 16 }} name={
+                        quantity >= item.minimum_quantity && quantity <= item.maximum_quantity ?
+                          "radio-button-checked" : "radio-button-off"
+                      } />
+                    </TouchableOpacity>
+                    <Text style={styles.bulkText}>{item.minimum_quantity}-{item.maximum_quantity}</Text>
+                    <Text style={styles.bulkText}>{item.discount_rate.toFixed(2)}%</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <FontAwesome name="inr" style={styles.bulkText} />
+                      <Text style={styles.bulkText}> {item.bulk_selling_price}</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
+              :
+              <View style={{ margin: 10 }}><Text style={styles.bulkText}>No Bulk Quantity Discounts Available</Text></View>
           }
 
 
@@ -592,7 +684,7 @@ function ProductDetails({ navigation, route }) {
             <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Added</Text></View>
             :
             <TouchableOpacity onPress={() => {
-              _addToCart(1)
+              _addToCart(quantity)
             }} style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Add to cart</Text></TouchableOpacity>
             :
             <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Out Of Stock</Text></View>

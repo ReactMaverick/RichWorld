@@ -78,9 +78,10 @@ export default StyleSheet.create({
         color:'#fff'
     },
     inputicon:{
-        fontSize:20,
-        color:'#AB0000',
-        marginTop:-5
+        fontSize: 20,
+        color: '#AB0000',
+       // lineHeight: 0,
+        marginRight: Platform.OS=="android"?0:5,
     },
     btnIcon:{
         color:'#fff',
@@ -133,6 +134,18 @@ export default StyleSheet.create({
         color:'red',
         textAlign:'center',
         margin:10
+    },
+    backIconOuter: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        margin:10,
+    },
+    backIcon:{
+        fontSize:25,
+        color: '#620000'
     }
 
 });

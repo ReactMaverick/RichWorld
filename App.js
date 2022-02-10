@@ -40,6 +40,7 @@ import Thankyou from "./src/screens/Thankyou";
 import Rewards from "./src/screens/Rewards";
 import OtpScreen from "./src/screens/OtpScreen";
 import OtpScreenForgetPass from "./src/screens/OtpScreenForgetPass";
+import ResetPassword from "./src/screens/ResetPassword";
 import Category from './src/screens/Category';
 import Brands from './src/screens/Brands';
 
@@ -127,6 +128,7 @@ function Stack1() {
       <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} options={{ headerShown: false }} />
       <Stack.Screen name="OtpScreenForgetPass" component={OtpScreenForgetPass} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
       <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
       <Stack.Screen name="Thankyou" component={Thankyou} options={{ headerShown: false }} />
       {/* <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
@@ -145,25 +147,60 @@ function Stack1() {
 export default function App() {
 
 
-  const checkToken = async () => {
-    if (Platform.OS == "android") {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        console.log(fcmToken);
-        AsyncStorage.setItem('fcmToken', fcmToken)
-      }
+  const androidPush = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+      AsyncStorage.setItem('fcmToken', fcmToken)
     }
+    // Register background handler
+   
+  }
+
+  const checkToken = async () => {
+    const fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      console.log(fcmToken);
+      AsyncStorage.setItem('fcmToken', fcmToken)
+    }
+
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+      // navigation.navigate(remoteMessage.data.type);
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+          setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+        }
+        // setLoading(false);
+      });
+
+    // }
   }
 
   useEffect(() => {
-    if (Platform.OS == "android") {
-      checkToken();
-      const unsubscribe = messaging().onMessage(async remoteMessage => {
-        // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-      });
-
-      return unsubscribe;
+    if (Platform.OS == "ios") {
+      const authorizationStatus = messaging().requestPermission();
+      if (authorizationStatus) {
+        console.log('Permission status:', authorizationStatus);
+        checkToken();
+      }
+    } else {
+      androidPush();
     }
+
   }, []);
 
   return (

@@ -1,4 +1,9 @@
-export const BASE_URL = 'https://demo.richworld.online/api/';
+import {Platform} from 'react-native'
+export const BASE_URL = 'https://www.richworld.online/api/';
+
+export const GOOGLE_LOGINKEY = Platform.OS == 'android' ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com' :
+'262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
+
 
 export const GET_HOME = BASE_URL + 'homePage';
 export const GET_ALL_CATEGORY = BASE_URL + 'allCategory?popular=';
@@ -24,6 +29,7 @@ export const UPDATE_SHIPPING_ADDRESS = BASE_URL + 'updateMyAddress';
 export const DELETE_SHIPPING_ADDRESS = BASE_URL + 'deleteAddress?address_book_id=';
 export const UPDATE_ACCOUNT = BASE_URL + 'accountUpdate';
 export const MY_ORDERS = BASE_URL + 'myOrders';
+export const CANCLE_ORDER = BASE_URL + 'orderCancle';
 export const MY_PURCHASED = BASE_URL + 'myPurchased';
 export const SUBMIT_RATTINGS = BASE_URL + 'submitRaitings';
 export const RETURN_PRODUCT = BASE_URL + 'returnProcuct';
@@ -38,6 +44,7 @@ export const GET_ATTRIBUTE_PRICE_ID = BASE_URL + 'getAttributePriceId';
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
 export const FORGET_PASSWORD_OTP_CHECK = BASE_URL + 'passwordOtpCheck';
 export const RESEND_OTP = BASE_URL + 'resendOtp';
+export const UPDATE_NEW_PASSWORD = BASE_URL + 'updateNewPassword';
 export const SEARCH_SUGGESSION = BASE_URL + 'searchSuggession?searchChar=';
 export const POST_SOCIAL_LOGIN = BASE_URL + 'socialLogin';
 export const POST_SOCIAL_OTP = BASE_URL + 'socialOtp';
