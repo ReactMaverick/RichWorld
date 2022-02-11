@@ -4,8 +4,9 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h> // <- Add This Import
-#import <React/RCTLinkingManager.h> // <- Add This Import
+
+#import <React/RCTLinkingManager.h>
+
 
 
 
@@ -16,6 +17,10 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <React/RCTLinkingManager.h>
+
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -55,10 +60,13 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   
+  
   [FIRApp configure];
-  [[FBSDKApplicationDelegate sharedInstance] application:application
-                         didFinishLaunchingWithOptions:launchOptions];
+
+  
+  
   [self.window makeKeyAndVisible];
+  
   return YES;
 }
 

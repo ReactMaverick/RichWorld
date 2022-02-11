@@ -13,9 +13,12 @@ import { useSelector, useDispatch } from "react-redux";
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
+
+  const insets = useSafeAreaInsets();
 
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
@@ -340,7 +343,7 @@ function Signup({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
-          }} style={styles.backIconOuter} >
+          }} style={[styles.backIconOuter,{paddingTop: insets.top+10}]} >
             <AntDesign name="arrowleft" style={styles.backIcon} />
           </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >

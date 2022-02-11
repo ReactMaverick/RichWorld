@@ -4,19 +4,21 @@ import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo'
-import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN,GOOGLE_LOGINKEY } from '../../config/ApiConfig'
+import { POST_SIGNIN, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN,GOOGLE_LOGINKEY,FBAppId } from '../../config/ApiConfig'
 import DeviceInfo from 'react-native-device-info';
 import OTPTextInput from 'react-native-otp-textinput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSelector, useDispatch } from "react-redux";
 
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { LoginManager, AccessToken, Settings } from 'react-native-fbsdk-next';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
+Settings.setAppID(FBAppId);
 
+Settings.initializeSDK();
 
 GoogleSignin.configure({
   webClientId: GOOGLE_LOGINKEY,
@@ -27,6 +29,8 @@ GoogleSignin.configure({
 function Login({ navigation }) {
 
   const dispatch = useDispatch();
+
+  const insets = useSafeAreaInsets();
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -348,7 +352,7 @@ function Login({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={()=>{
             navigation.goBack()
-          }} style={styles.backIconOuter} >
+          }} style={[styles.backIconOuter,{paddingTop: insets.top+10}]} >
           <AntDesign name="arrowleft" style={styles.backIcon} />
           </TouchableOpacity>
         

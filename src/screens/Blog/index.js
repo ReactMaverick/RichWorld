@@ -28,6 +28,7 @@ function Blog({ navigation }) {
       .then(([status, response]) => {
         if (status == 200) {
           setBlogs(response.blogs.news_data);
+          
           setBasePath(response.base_path)
         } else {
           console.log(status, response);
@@ -62,34 +63,29 @@ function Blog({ navigation }) {
           <Text style={styles.CategoryText2}>Blog</Text>
         </View>
         <ScrollView >
-          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginHorizontal:10  }}>
 
             {
               blogs.length > 0 ?
                 blogs.map((item, key) => (
+
                   <ProductBox
-                  key={key}
+                    key={key}
                     navigation={navigation}
-                    id={item.news_id}
-                    name={item.news_name}
-                    description={item.news_description}
                     date={item.created_at}
-                    image={basePath + "/" + item.image_path} />
+                    item={item}
+                    image={basePath + "/" + item.image_path}
+
+                  />
+
+
                 ))
                 :
                 <></>}
 
-            {/* <View style={styles.loadMorebtn}><Text style={styles.loadMoreTxt}>Load More</Text></View> */}
-
 
           </View>
-          {/* <Text style={[styles.CategoryText2,{marginLeft:10}]}>Recent Posts</Text>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginLeft: 10}}>
-      <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-          <ProductBox navigation={navigation} />
-      </ScrollView> */}
+
         </ScrollView>
 
         <Footer navigation={navigation} />
@@ -118,23 +114,27 @@ const _getParsedDate = (date) => {
 }
 
 
-function ProductBox({ navigation, id, name, description, date, image }) {
+function ProductBox({ navigation, item, image, date }) {
   return (
-    <TouchableOpacity  onPress={() => {
-      navigation.navigate('BlogDetails', { id: id });
+    <TouchableOpacity onPress={() => {
+      navigation.navigate('BlogDetails', { id: item.news_id });
     }} style={styles.productBox}  >
       <Image style={styles.productImage} source={{ uri: image }} />
       {/* <View style={{ flexDirection: 'row' }}>
         <Text style={styles.productTitle}>{name} |</Text>
         <Text style={[styles.productTitle, { color: '#818181' }]}>{date}</Text>
       </View> */}
-      <Text style={styles.productTitle}>{name}</Text>
-      <Text style={[styles.productTitle, { color: '#818181' }]}>{
-        // date
-        dateFormat(new Date(..._getParsedDate(date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
-      }</Text>
+      <View style={{padding:10}}>
+      <Text style={styles.productTitle}>{item.categories_name}</Text>
+        <Text style={[styles.productTitle, { color: '#818181', fontSize: 11 }]}>{
+        
+          dateFormat(new Date(..._getParsedDate(date)).toString(), "mmm dS, yyyy, h:MM:ss TT")
+        }</Text>
 
-      <Text style={styles.productTitle}>{stringFormat(description)}</Text>
+        <Text style={styles.productTitle}>{item.news_name}</Text>
+      </View>
+        
+    
 
     </TouchableOpacity>
   )

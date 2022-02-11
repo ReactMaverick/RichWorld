@@ -3,11 +3,11 @@ import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, I
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { FORGET_PASSWORD } from '../../config/ApiConfig';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ForgetPassword({ navigation }) {
 
-
+  const insets = useSafeAreaInsets();
   const [email_phone, setEmailPhone] = useState('')
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -64,7 +64,7 @@ function ForgetPassword({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
-          }} style={styles.backIconOuter} >
+          }} style={[styles.backIconOuter,{paddingTop: insets.top+10}]} >
             <AntDesign name="arrowleft" style={styles.backIcon} />
           </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >

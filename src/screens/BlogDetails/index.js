@@ -48,6 +48,7 @@ function BlogDetails({ navigation, route }) {
     var hours = String(date[1]).split(':');
     return [parseInt(days[0]), parseInt(days[1]) - 1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
+ 
 
   useEffect(() => {
     if (isFocused) {
@@ -70,18 +71,18 @@ function BlogDetails({ navigation, route }) {
         <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
         <Text style={styles.CategoryText2}>Blog</Text>
-          <TouchableOpacity onPress={() => {
+          {/* <TouchableOpacity onPress={() => {
             navigation.goBack();
           }}>
             <AntDesign name="leftcircleo" style={styles.titleIcon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <View style={styles.card}>
 
             <Image style={styles.productImage} source={{ uri: basePath + "/" + blogDetails.image }} />
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
-              <Text style={styles.productTitle}>{blogDetails.news_name} |</Text>
+              <Text style={styles.productTitle}>{blogDetails.categories_name} |</Text>
               <Text style={[styles.productTitle, { color: '#818181' }]}>{
                 // blogDetails.created_at
                 dateFormat(new Date(..._getParsedDate(blogDetails.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")

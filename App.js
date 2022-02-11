@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from "./src/components/SlideMenu/index";
 import SafeAreaViewDecider from 'react-native-smart-statusbar'
 import messaging from '@react-native-firebase/messaging';
+import SplashScreen from 'react-native-splash-screen'
 
 
 import HomeScreen from './src/screens/HomeScreen'
@@ -200,6 +201,8 @@ export default function App() {
     } else {
       androidPush();
     }
+
+    SplashScreen.hide();
 
   }, []);
 
