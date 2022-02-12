@@ -275,7 +275,7 @@ function Brands({ navigation, products }) {
         <TouchableOpacity onPress={() => {
           navigation.navigate('ProductList', { title1: products[0].brands_name, title2: "", filterParam: { 'brands_id': products[0].brands_id } })
         }} style={styles.productLeft}>
-          <Image style={styles.leftImage} source={{ uri: products[0].brands_image_path }} />
+          <Image style={styles.brandLeftImage} source={{ uri: products[0].brands_image_path }} />
           <Text style={styles.productTitle}>{products[0].brands_name}</Text>
 
         </TouchableOpacity>
@@ -284,7 +284,7 @@ function Brands({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductList', { title1: products[1].brands_name, title2: "", filterParam: { 'brands_id': products[1].brands_id } })
           }} style={[styles.productInner, { marginBottom: 10 }]}>
-            <ImageBackground style={styles.rightImage} source={{ uri: products[1].brands_image_path }} resizeMode="cover" />
+            <ImageBackground style={styles.brandRightImage} source={{ uri: products[1].brands_image_path }} resizeMode="cover" />
             <Text style={styles.productTitle}>{products[1].brands_name}</Text>
 
           </TouchableOpacity>
@@ -292,7 +292,7 @@ function Brands({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductList', { title1: products[2].brands_name, title2: "", filterParam: { 'brands_id': products[2].brands_id } })
           }} style={styles.productInner}>
-            <ImageBackground style={styles.rightImage} source={{ uri: products[2].brands_image_path }} resizeMode="cover" />
+            <ImageBackground style={styles.brandRightImage} source={{ uri: products[2].brands_image_path }} resizeMode="cover" />
             <Text style={styles.productTitle}>{products[2].brands_name}</Text>
 
           </TouchableOpacity>
