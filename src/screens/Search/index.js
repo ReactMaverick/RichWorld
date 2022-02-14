@@ -103,13 +103,17 @@ function Search({ navigation, route }) {
   return (
     <>
 
-      <View style={[styles.searchSection, {paddingTop: Platform.OS=="android"?3:insets.top+10}]}>
-        {Platform.OS=="android" ?
-        <AntDesign name="search1" style={styles.searchIcon} />
-        :
-        <AntDesign name="arrowleft" style={styles.searchIcon} />
+      <View style={[styles.searchSection, { paddingTop: Platform.OS == "android" ? 3 : insets.top + 10 }]}>
+        {Platform.OS == "android" ?
+          <AntDesign name="search1" style={styles.searchIcon} />
+          :
+          <TouchableOpacity onPress={()=>{
+            navigation.goBack()
+          }}>
+            <AntDesign name="arrowleft" style={styles.searchIcon} />
+          </TouchableOpacity>
         }
-        
+
         <TextInput
           style={styles.searchSectionText}
           autoFocus={true}
@@ -118,7 +122,7 @@ function Search({ navigation, route }) {
           onChangeText={(result) => _search_suggession(result)}
         />
         <TouchableOpacity style={styles.searchBoxAudio}
-        
+
           onPress={() => {
             startRecording()
           }}

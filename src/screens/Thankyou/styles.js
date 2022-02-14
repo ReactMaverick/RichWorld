@@ -31,6 +31,11 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Light',
         fontSize:16,
         color:'#AB0000',
+    },
+    thankyouText2:{
+        fontFamily:'Poppins-Regular',
+        fontSize:16,
+        color:'#AB0000',
     }
 
 });

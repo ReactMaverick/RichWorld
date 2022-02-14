@@ -54,9 +54,7 @@ function OtpScreenForgetPass({ navigation, route }) {
               } else {
                 console.log('OtpScreenForgetPass', response.userDetails[0])
                 setUserData(response.userDetails[0])
-                AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
-                  navigation.navigate('ResetPassword', { user_id: response.userDetails[0].id });
-                })
+                navigation.navigate('ResetPassword', { user_id: response.userDetails[0].id });
               }
             } else {
               console.log(status, response);

@@ -18,7 +18,7 @@ function Wishlist({ navigation }) {
   const [basePath, setBasePath] = useState("");
 
   const _getWishList = async (user_id) => {
-
+    setIsLoading(true)
     fetch(VIEW_WISHLIST + user_id, {
       method: "get",
     })
@@ -78,11 +78,11 @@ function Wishlist({ navigation }) {
         onPress: () => _removeFromWishlist(products_id, products_attributes_prices_id),
         style: "cancel",
       },
-        {
-          text: "Cancel",
-          // onPress: () => Alert.alert("Cancel Pressed"),
-          style: "cancel",
-        },
+      {
+        text: "Cancel",
+        // onPress: () => Alert.alert("Cancel Pressed"),
+        style: "cancel",
+      },
       ],
       {
         cancelable: true,
@@ -117,7 +117,7 @@ function Wishlist({ navigation }) {
     })
       .catch((error) => console.log("error", error))
       .finally(() => {
-        setIsLoading(false)
+        // setIsLoading(false)
       });
   }
   const _addToCart = (products_id, attributes_ids, quantity) => {
@@ -188,48 +188,54 @@ function Wishlist({ navigation }) {
           <Text style={styles.CategoryText2}>My Wishlist</Text>
         </View>
         <ScrollView style={{ flex: 1 }}>
-          {Products.map((item, key) => (
-            <View style={styles.outerBox} key={key}>
-              <View style={{ flexDirection: 'row' }}>
-                <Image source={{ uri: basePath + "/" + item.image_path }} style={styles.userImage} />
+          {
+            Products.length == 0 ?
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={styles.sellingPrice}>No Products Found! </Text>
+              </View>
 
-                <View style={styles.leftBox}>
-                  <Text style={styles.leftText1}>{item.products_name}	</Text>
+              : Products.map((item, key) => (
+                <View style={styles.outerBox} key={key}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Image source={{ uri: basePath + "/" + item.image_path }} style={styles.userImage} />
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <FontAwesome name="inr" style={styles.leftText2} />
-                    <Text style={styles.leftText2}>{item.discounted_price}</Text>
+                    <View style={styles.leftBox}>
+                      <Text style={styles.leftText1}>{item.products_name}	</Text>
+
+                      <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <FontAwesome name="inr" style={styles.leftText2} />
+                        <Text style={styles.leftText2}>{item.discounted_price}</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View style={styles.outerBtn}>
+                    <TouchableOpacity onPress={() => {
+                      showAlert(item.products_id, item.products_attributes_prices_id)
+                      // _removeFromWishlist(item.products_id, item.products_attributes_prices_id)
+                    }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
+                      <Text style={styles.btnTxt}>Remove</Text>
+                    </TouchableOpacity>
+                    {item.defaultStock > 0 ? (item.is_cart_present == 1) ?
+                      <View style={[styles.btn, { backgroundColor: '#000000' }]}>
+                        <Text style={styles.btnTxt}>Added</Text>
+                      </View>
+                      :
+                      <TouchableOpacity onPress={() => {
+                        _addToCart(item.products_id, item.attributes_ids, 1)
+                      }} style={[styles.btn, { backgroundColor: '#000000' }]}>
+                        <Text style={styles.btnTxt}>Add to cart</Text>
+                      </TouchableOpacity>
+
+                      :
+                      <View style={[styles.btn, { backgroundColor: '#000000' }]}>
+                        <Text style={styles.btnTxt}>Out Of Stock</Text>
+                      </View>
+                    }
+
                   </View>
                 </View>
-              </View>
-
-              <View style={styles.outerBtn}>
-                <TouchableOpacity onPress={() => {
-                  showAlert(item.products_id, item.products_attributes_prices_id)
-                  // _removeFromWishlist(item.products_id, item.products_attributes_prices_id)
-                }} style={[styles.btn, { backgroundColor: '#A20101' }]}>
-                  <Text style={styles.btnTxt}>Remove</Text>
-                </TouchableOpacity>
-                {item.defaultStock > 0 ? (item.is_cart_present == 1) ?
-                  <View style={[styles.btn, { backgroundColor: '#000000' }]}>
-                    <Text style={styles.btnTxt}>Added</Text>
-                  </View>
-                  :
-                  <TouchableOpacity onPress={() => {
-                    _addToCart(item.products_id, item.attributes_ids, 1)
-                  }} style={[styles.btn, { backgroundColor: '#000000' }]}>
-                    <Text style={styles.btnTxt}>Add to cart</Text>
-                  </TouchableOpacity>
-
-                  :
-                  <View style={[styles.btn, { backgroundColor: '#000000' }]}>
-                    <Text style={styles.btnTxt}>Out Of Stock</Text>
-                  </View>
-                }
-
-              </View>
-            </View>
-          ))}
+              ))}
 
         </ScrollView>
         <Footer navigation={navigation} />

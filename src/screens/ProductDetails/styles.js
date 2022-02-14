@@ -45,7 +45,8 @@ export default StyleSheet.create({
     },
     productThumb: {
         height: 100,
-        marginBottom: 5
+        marginBottom: 5,
+        
     },
     productTitle: {
         color: '#620000',
@@ -103,7 +104,9 @@ export default StyleSheet.create({
     },
     attributeRight:{
         flex:1,
-        flexDirection:'row'
+        flexDirection:'row',
+        flexWrap: 'wrap'
+        
     },
     attributeLeft:{
         flex:1,
@@ -274,8 +277,9 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     tabContent1:{
-        margin:10,
-        padding:10
+        flex:1,
+        // margin:10,
+        // padding:10
     },
     tabContent2:{
         margin:10,

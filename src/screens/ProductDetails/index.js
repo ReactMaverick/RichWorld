@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, ImageBackground } from 'react-native';
 import Header from "../../components/Header";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -8,11 +8,12 @@ import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART, PRODUCT_DES_URL } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { WebView } from 'react-native-webview';
 
 function ProductDetails({ navigation, route }) {
   const dispatch = useDispatch();
@@ -191,7 +192,6 @@ function ProductDetails({ navigation, route }) {
       });
   }
 
-
   const _changeActiveAttributeIds = (old_products_attributes_id, new_products_attributes_id) => {
     var attributes_ids = activeAttributeIds.replace(old_products_attributes_id, new_products_attributes_id);
     // console.log("old_products_attributes_id", old_products_attributes_id)
@@ -349,6 +349,7 @@ function ProductDetails({ navigation, route }) {
       setProductPrice(productDetails.discounted_price)
     }
   }
+  
   useEffect(() => {
     setProductsAttributesPricesId(products_attributes_prices_id)
     AsyncStorage.getItem('userData').then((userData) => {
@@ -410,7 +411,8 @@ function ProductDetails({ navigation, route }) {
                       <TouchableOpacity key={key} onPress={() => {
                         setHighListedImage(item.image_path)
                       }}>
-                        <Image source={{ uri: item.image_path }} style={styles.productThumb} />
+                        <ImageBackground style={styles.productThumb} source={{ uri: item.image_path }} resizeMode="contain"/>
+                        {/* <Image source={{ uri: item.image_path }} style={styles.productThumb} /> */}
                       </TouchableOpacity>
 
                     ))}
@@ -629,11 +631,9 @@ function ProductDetails({ navigation, route }) {
 
           {tab == 1 ?
             <View style={styles.tabContent1}>
+              <WebView source={{ uri: PRODUCT_DES_URL + productDetails.products_id }} style={{width:wp('100%'),height:hp('100%')}}/>
+              {/* <HTMLView value={htmlContent} renderNode={renderNode} /> */}
 
-              <HTMLView
-                value={productDetails.products_description}
-                stylesheet={styles}
-              />
             </View>
             :
             <View style={styles.tabContent2}>

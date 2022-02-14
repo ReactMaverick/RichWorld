@@ -9,6 +9,8 @@ import SlideMenu from "./src/components/SlideMenu/index";
 import SafeAreaViewDecider from 'react-native-smart-statusbar'
 import messaging from '@react-native-firebase/messaging';
 import SplashScreen from 'react-native-splash-screen'
+import DeviceInfo from 'react-native-device-info';
+import { PLAY_STORE } from './src/config/ApiConfig';
 
 
 import HomeScreen from './src/screens/HomeScreen'
@@ -51,10 +53,31 @@ import { Provider } from "react-redux";
 
 const store = configureStore();
 
-
-
 import { useSelector, useDispatch } from "react-redux";
 
+const _getPlayStore = (appVersion) => {
+  
+  fetch(PLAY_STORE, {
+    method: "get",
+  })
+    .then((response) => {
+      const statusCode = response.status;
+      const data = response.json();
+      return Promise.all([statusCode, data]);
+    })
+    .then(([status, response]) => {
+      if (status == 200) {
+        return response.app_version;
+        // setAppVersion(response.app_version)
+      } else {
+        console.log(status, response);
+      }
+    })
+    .catch((error) => console.log("error", error))
+    .finally(() => {
+      
+    });
+}
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
@@ -192,6 +215,9 @@ export default function App() {
   }
 
   useEffect(() => {
+    
+    
+    console.log("App Vrsn Chk:",_getPlayStore(DeviceInfo.getVersion()));
     if (Platform.OS == "ios") {
       const authorizationStatus = messaging().requestPermission();
       if (authorizationStatus) {
