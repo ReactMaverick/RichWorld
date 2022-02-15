@@ -60,6 +60,20 @@ export default StyleSheet.create({
         fontSize: 16,
         marginLeft: 5
     },
+    titleSection: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingRight: 10,
+        // backgroundColor: '#fff'
+    },
+    shareIcon: {
+        color: '#620000',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 18,
+        marginRight: 10
+    },
     mrpPrice: {
         color: '#888888',
         fontFamily: 'Poppins-Regular',

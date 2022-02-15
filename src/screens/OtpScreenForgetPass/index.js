@@ -124,6 +124,7 @@ function OtpScreenForgetPass({ navigation, route }) {
             setErrorMessage(response.message);
           } else {
             setIsResend(true);
+            setOtp("")
             setForgetPasswordOtp(response.forget_password_otp);
           }
         } else {
@@ -152,7 +153,7 @@ function OtpScreenForgetPass({ navigation, route }) {
             <Text style={styles.loginText}>OTP Verification</Text>
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
-            <Text style={styles.signupText1}>We have sent and OTP to your : {forgetPasswordOtp}</Text>
+            <Text style={styles.commentText}>Enter the OTP sent to your mobile number / email </Text>
 
             <Text style={styles.errorMessage}>{errorMsg}</Text>
 

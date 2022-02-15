@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import { UPDATE_NEW_PASSWORD } from '../../config/ApiConfig';
 import { useSelector,useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 function ResetPassword({ navigation, route }) {
@@ -48,7 +49,12 @@ function ResetPassword({ navigation, route }) {
           if (response.status == false) {
             setErrorMessage(response.message);
           } else {
-            console.log('UPDATE_NEW_PASSWORD',response.userDetails[0])
+            // console.log('UPDATE_NEW_PASSWORD',response.userDetails[0])
+            showMessage({
+              message: "You have successfully reset your password",
+              type: "info",
+              backgroundColor: "#808080",
+            });
             setUserData(response.userDetails[0])
             AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
               navigation.navigate('HomeScreen');

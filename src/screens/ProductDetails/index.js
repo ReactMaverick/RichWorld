@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, ImageBackground } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, ActivityIndicator, ImageBackground, Share } from 'react-native';
 import Header from "../../components/Header";
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -8,7 +8,7 @@ import { Rating } from 'react-native-ratings';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import DeviceInfo from 'react-native-device-info';
-import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART, PRODUCT_DES_URL } from '../../config/ApiConfig'
+import { GET_PRODUCT_DETAILS, ADD_TO_CART, ADD_WISHLIST, GET_ATTRIBUTE_PRICE_ID, CHECK_PINCODE, NOTIFY_PRODUCT, VIEW_CART, PRODUCT_DES_URL, PRODUCTS_URL } from '../../config/ApiConfig'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
@@ -36,6 +36,8 @@ function ProductDetails({ navigation, route }) {
   const [pincodeMessage, setPincodeMessage] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [productPrice, setProductPrice] = useState("");
+  const [productUrl, setProductUrl] = useState("");
+
 
 
 
@@ -56,14 +58,30 @@ function ProductDetails({ navigation, route }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          // console.log(status, response.detail.product_data[0]['images']);
+          console.log('details', response.detail.product_data[0]);
           setProductImage(response.detail.product_data[0]['images']);
           setProductDetails(response.detail.product_data[0]);
+          var productUrl = PRODUCTS_URL+productDetails.products_slug;
+          var attributes = response.detail.product_data[0].attributes;
+          if(attributes.length > 0){
+            productUrl += '?';
+            for (let i = 0; i < attributes.length; i++) {
+              if( attributes.length != i+1 ){
+                productUrl = productUrl + attributes[i].option.product_option_slug + "=" + attributes[i].values1[0].value + "&";
+              }else{
+                productUrl = productUrl + attributes[i].option.product_option_slug + "=" + attributes[i].values1[0].value;
+              }
+            }
+          }
+          setProductUrl(productUrl)
+          // console.log('productUrl',productUrl);
+          // console.log('prod_attributeids',response.detail.product_data[0].attributes[0]);
           setActiveAttributeIds(response.detail.product_data[0].prod_attributeids);
           // console.log(response.detail.product_data[0].prod_attributeids)
-          setProductAttributes(response.detail.product_data[0].attributes);
+          setProductAttributes(attributes);
           setQuantity(response.detail.product_data[0].products_min_order);
           setProductPrice(response.detail.product_data[0].discounted_price);
+         
           if (response.detail.product_data[0].BulkPriceList != undefined) {
             setBulkPriceList(response.detail.product_data[0].BulkPriceList);
           }
@@ -349,7 +367,28 @@ function ProductDetails({ navigation, route }) {
       setProductPrice(productDetails.discounted_price)
     }
   }
-  
+  const _shareProduct = async () => {
+    
+    try {
+        const result = await Share.share({
+          title: 'https://www.richworld.online/',
+          message: productDetails.products_model,
+          url: productUrl
+        });
+      
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
   useEffect(() => {
     setProductsAttributesPricesId(products_attributes_prices_id)
     AsyncStorage.getItem('userData').then((userData) => {
@@ -411,7 +450,7 @@ function ProductDetails({ navigation, route }) {
                       <TouchableOpacity key={key} onPress={() => {
                         setHighListedImage(item.image_path)
                       }}>
-                        <ImageBackground style={styles.productThumb} source={{ uri: item.image_path }} resizeMode="contain"/>
+                        <ImageBackground style={styles.productThumb} source={{ uri: item.image_path }} resizeMode="contain" />
                         {/* <Image source={{ uri: item.image_path }} style={styles.productThumb} /> */}
                       </TouchableOpacity>
 
@@ -428,7 +467,14 @@ function ProductDetails({ navigation, route }) {
               </ScrollView>
             </View>
           </View>
-          <Text style={styles.productTitle}>{productDetails.products_model}</Text>
+          <View style={styles.titleSection}>
+            <Text style={styles.productTitle}>{productDetails.products_model}</Text>
+            <TouchableOpacity onPress={() => {
+              _shareProduct()
+            }}>
+              <FontAwesome name="share-square-o" style={styles.shareIcon} />
+            </TouchableOpacity>
+          </View>
           <View style={styles.productDetails}>
             <View style={styles.ratingSection}>
               <View style={styles.ratingText}>
@@ -631,7 +677,7 @@ function ProductDetails({ navigation, route }) {
 
           {tab == 1 ?
             <View style={styles.tabContent1}>
-              <WebView source={{ uri: PRODUCT_DES_URL + productDetails.products_id }} style={{width:wp('100%'),height:hp('100%')}}/>
+              <WebView source={{ uri: PRODUCT_DES_URL + productDetails.products_id }} style={{ width: wp('100%'), height: hp('100%') }} />
               {/* <HTMLView value={htmlContent} renderNode={renderNode} /> */}
 
             </View>

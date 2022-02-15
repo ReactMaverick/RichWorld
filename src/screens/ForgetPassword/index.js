@@ -15,7 +15,7 @@ function ForgetPassword({ navigation }) {
 
 
   const _getOTP = async () => {
-
+    setIsLoading(true)
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if ((reg.test(email_phone) === false) && email_phone.length != 10) {
       setErrorMessage("Please Enter Valid Email/Phone");
@@ -71,6 +71,7 @@ function ForgetPassword({ navigation }) {
             <Text style={styles.loginText}>Forget Password</Text>
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
+            <Text style={styles.commentText}>We will send you an OTP on this mobile number / email</Text>
             <Text style={styles.errorMessage}>{errorMsg}</Text>
             <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
@@ -90,7 +91,7 @@ function ForgetPassword({ navigation }) {
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _getOTP()
           }}>
-            <Text style={styles.btnMessage}>Send OTP</Text>
+            <Text style={styles.btnMessage}>GET OTP</Text>
           </TouchableOpacity>
         </ScrollView>
 
