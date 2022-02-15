@@ -133,7 +133,8 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:1,
-        borderColor:'#620000'
+        borderColor:'#620000',
+        marginBottom:5,
     },
     attrimgActive:{
         height:40,
@@ -141,7 +142,8 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:3,
-        borderColor:'#620000'
+        borderColor:'#620000',
+        marginBottom:5,
     },
     attrbox:{
         // width:30,
@@ -151,13 +153,15 @@ export default StyleSheet.create({
         borderWidth:1,
         marginLeft:10,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginBottom:5,
 
     },
     attrboxActive:{
         // width:30,
         paddingHorizontal:10,
         paddingVertical:5,
+        marginBottom:5,
         backgroundColor:'#620000',
         borderWidth:1,
         marginLeft:10,
