@@ -49,22 +49,7 @@ function Signup({ navigation }) {
         item
       },
     });
-  // const { validate, isFieldInError, getErrorsInField, getErrorMessages, isFormValid } =
-  //   useValidation({
-  //     state: { fullName, email, phoneNumber, password },
-  //   });
-
-  // const checkFields = () => {
-  //   validate({
-  //     fullName: { minlength: 3, maxlength: 7, required: true },
-  //     email: { email: true, required: true },
-  //     phoneNumber: { numbers: true, minlength: 10, maxlength: 10, required: true },
-  //     password: { required: true },
-  //   });
-  //   if(isFormValid()){
-  //     checkSignup()
-  //   }
-  // }
+    
   const checkSignup = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (fullName == "") {

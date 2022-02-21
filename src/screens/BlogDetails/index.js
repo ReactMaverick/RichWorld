@@ -71,11 +71,6 @@ function BlogDetails({ navigation, route }) {
         <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
         <Text style={styles.CategoryText2}>Blog</Text>
-          {/* <TouchableOpacity onPress={() => {
-            navigation.goBack();
-          }}>
-            <AntDesign name="leftcircleo" style={styles.titleIcon} />
-          </TouchableOpacity> */}
         </View>
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           <View style={styles.card}>
@@ -84,7 +79,6 @@ function BlogDetails({ navigation, route }) {
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <Text style={styles.productTitle}>{blogDetails.categories_name} |</Text>
               <Text style={[styles.productTitle, { color: '#818181' }]}>{
-                // blogDetails.created_at
                 dateFormat(new Date(..._getParsedDate(blogDetails.created_at)).toString(), "mmm dS, yyyy, h:MM:ss TT")
               }</Text>
             </View>
@@ -96,57 +90,9 @@ function BlogDetails({ navigation, route }) {
             />
             <Text style={[styles.productTitle, { fontSize: 15 }]}>{blogDetails.categories_name}</Text>
             <View style={styles.nextPrevOuter}>
-              {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <AntDesign name="left" style={styles.nexticon} />
-              <Text style={styles.nextText}>Prev Post</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.nextText}>Next Post</Text>
-              <AntDesign name="right" style={styles.nexticon} />
-            </View> */}
-
             </View>
           </View>
 
-          {/* <Text style={[styles.CategoryText2, { marginLeft: 10 }]}>COMMENTS : 02</Text>
-
-        <CommentDetails />
-        <CommentDetails />
-        <CommentDetails />
-
-        <View style={styles.card}>
-          <Text style={[styles.CategoryText2, { alignSelf:'center',fontSize:16}]}>POST A COMMENT</Text>
-        <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Name'}
-              style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
-            />
-          </View>
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Email'}
-              style={[styles.textInput]}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
-            />
-          </View>
-        
-
-          <View style={styles.textInputOuter}>
-            <TextInput
-              placeholder={'Your Message'}
-              style={[styles.textInput, { height: 100 }]}
-              multiline={true}
-            // onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}           
-            />
-          </View>
-
-          <TouchableOpacity style={styles.btnOuter}>
-            <Text style={styles.btnMessage}>POST COMMENT</Text>
-          </TouchableOpacity>
-        </View> */}
         </ScrollView>
         <Footer navigation={navigation} />
       </>
@@ -155,20 +101,6 @@ function BlogDetails({ navigation, route }) {
 
 }
 
-
-
-
-function CommentDetails({ navigation }) {
-  return (
-    <View style={styles.outerBox}>
-      <Text style={styles.text1}>Anthony Stephens</Text>
-      <Text style={styles.text1}>October 14, 2020</Text>
-      <Text style={styles.text2}>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-        sed do eiusmod tempor incididunt ut labore et dolor
-        magna aliqua. Ut enim ad minim veniam,</Text>
-    </View>
-  )
-}
 
 
 export default BlogDetails;

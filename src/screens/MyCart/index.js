@@ -340,7 +340,7 @@ function MyCart({ navigation, route }) {
       "Are you sure you want to delete this item?",
       "",
       [{
-        text: "Confurm",
+        text: "Confirm",
         onPress: () => _deleteCartItem(customers_basket_id),
         style: "cancel",
       },
@@ -622,16 +622,6 @@ function MyCart({ navigation, route }) {
                   </View>
                 </View>
 
-
-                {/* <View style={styles.outerBtn}>
-        <TouchableOpacity style={[styles.btn, { backgroundColor: '#A20101' }]}>
-          <Text style={styles.btnTxt}>Remove</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.btn, { backgroundColor: '#000000' }]}>
-          <Text style={styles.btnTxt}>Move to Wishlist</Text>
-        </TouchableOpacity>
-      </View> */}
               </View>
             ))}
 

@@ -218,7 +218,6 @@ export default function App() {
           <FlashMessage position="bottom" floating={true} duration={2000} />
         </NavigationContainer>
       </Provider>
-
     );
   } else {
 

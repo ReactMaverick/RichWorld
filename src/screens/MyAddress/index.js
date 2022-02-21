@@ -581,12 +581,12 @@ function MyAddress({ navigation }) {
             _deleteShippingAddress()
             actionSheetRef.current?.hide();
           }} style={[styles.outerBtn, { marginTop: 10 }]}>
-            <Text style={styles.btnText}>Conferm</Text>
+            <Text style={styles.btnText}>Confirm</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
             actionSheetRef.current?.hide();
           }} style={[styles.outerBtn, { backgroundColor: '#808080' }]}>
-            <Text style={styles.btnText}>Cancle</Text>
+            <Text style={styles.btnText}>Cancel</Text>
           </TouchableOpacity>
         </ActionSheet>
       </>

@@ -543,39 +543,6 @@ function ProductDetails({ navigation, route }) {
               </View>
             ))}
 
-
-            {/* <View style={styles.attribute}>
-            <Text style={styles.attributeLeft}>Color :</Text>
-            <View style={styles.attributeRight}>
-              <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
-              <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
-              <Image source={require('../../assets/Image/Product1.png')} style={styles.attrimg} />
-            </View>
-
-          </View>
-
-          <View style={styles.attribute}>
-            <Text style={styles.attributeLeft}>Sizes :</Text>
-            <View style={styles.attributeRight}>
-              <View style={styles.attrbox}><Text style={styles.attrboxTxt}>XS</Text></View>
-              <View style={styles.attrbox}><Text style={styles.attrboxTxt}>S</Text></View>
-              <View style={styles.attrbox}><Text style={styles.attrboxTxt}>L</Text></View>
-              <View style={styles.attrbox}><Text style={styles.attrboxTxt}>M</Text></View>
-            </View>
-
-          </View>
-
-
-          <View style={styles.attribute}>
-            <Text style={styles.attributeLeft}>Quantity :</Text>
-            <View style={styles.attributeRight}>
-              <View style={styles.quantityPlusBox}><Text style={styles.attrboxTxt}>-</Text></View>
-              <View style={styles.quantityTextBox}><Text style={styles.attrboxTxt}>1</Text></View>
-              <View style={styles.quantityMinusBox}><Text style={styles.attrboxTxt}>+</Text></View>
-
-            </View>
-
-          </View> */}
           </View>
           <Text style={styles.pincodeCheckTitle}>Delivery Pincode Availability :</Text>
           {pincodeMessage.length > 0 ?

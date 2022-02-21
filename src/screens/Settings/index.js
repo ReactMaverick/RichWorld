@@ -155,7 +155,7 @@ function Settings({ navigation }) {
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _uploadAccount();
           }}>
-            <Text style={styles.btnMessage}>Save Chnages</Text>
+            <Text style={styles.btnMessage}>Save Changes</Text>
           </TouchableOpacity>
         </View>
 
