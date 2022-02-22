@@ -42,7 +42,7 @@ function ProductDetails({ navigation, route }) {
 
 
 
-  const _productDetails = async (customers_id, deviceId, products_id, products_attributes_prices_id) => {
+  const _productDetails =  (customers_id, deviceId, products_id, products_attributes_prices_id) => {
     // console.log("products_id: ", products_id);
     // console.log("products_attributes_prices_id: ", products_attributes_prices_id);
     setIsLoading(true)
@@ -58,7 +58,7 @@ function ProductDetails({ navigation, route }) {
       .then(([status, response]) => {
 
         if (status == 200) {
-          console.log('details', response.detail.product_data[0]);
+          // console.log('details', response.detail.product_data[0]);
           setProductImage(response.detail.product_data[0]['images']);
           setProductDetails(response.detail.product_data[0]);
           var productUrl = PRODUCTS_URL+productDetails.products_slug;
@@ -131,7 +131,7 @@ function ProductDetails({ navigation, route }) {
       });
   }
   const _addToCart = (quantity) => {
-    // setIsLoading(true)
+    setIsLoading(true)
     const formData = new FormData();
     var customers_id = "";
     var session_id = "";

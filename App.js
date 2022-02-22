@@ -81,7 +81,7 @@ function MyDrawer() {
       <Drawer.Screen name="TermsCondition" component={TermsCondition} options={{ headerShown: false }} />
       <Drawer.Screen name="PrivecyPolicy" component={PrivecyPolicy} options={{ headerShown: false }} />
       <Drawer.Screen name="Faq" component={Faq} options={{ headerShown: false }} />
-      {/* <Drawer.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} /> */}
+       <Drawer.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} /> 
       <Drawer.Screen name="Account" component={Account} options={{ headerShown: false }} />
       <Drawer.Screen name="MyOrder" component={MyOrder} options={{ headerShown: false }} />
       <Drawer.Screen name="MyAddress" component={MyAddress} options={{ headerShown: false }} />

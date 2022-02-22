@@ -18,6 +18,9 @@ import { useSelector, useDispatch } from "react-redux";
 import ActionSheet from "react-native-actions-sheet";
 import { useIsFocused } from "@react-navigation/native";
 const actionSheetRef = createRef();
+
+
+
 function MyCart({ navigation, route }) {
   const { shopNow } = route.params;
   const dispatch = useDispatch();
@@ -149,8 +152,8 @@ function MyCart({ navigation, route }) {
     });
 
 
-  const _getCartList = async (customers_id, session_id, couponDiscountPercent = null) => {
-    setIsLoading(true)
+  const _getCartList = (customers_id, session_id, couponDiscountPercent = null) => {
+  //  setIsLoading(true)
     let VIEW_CART_URL = VIEW_CART + 'customers_id=' + customers_id + '&session_id=' + session_id + '&shopNow=';
     if (shopNow == 1) {
       VIEW_CART_URL = VIEW_CART_URL + 1;
@@ -297,7 +300,7 @@ function MyCart({ navigation, route }) {
   //   navigation.navigate('HomeScreen');
   // })
   const _updateCartQuantity = (customers_basket_id, products_id, customers_basket_quantity, AttributeIds) => {
-
+    setIsLoading(true)
     const formData = new FormData();
     formData.append('customers_basket_id', customers_basket_id);
     formData.append('products_id', products_id);
@@ -361,7 +364,7 @@ function MyCart({ navigation, route }) {
   }
 
   const _deleteCartItem = (customers_basket_id) => {
-
+    setIsLoading(true)
     fetch(DELETE_CART_ITEM + customers_basket_id, {
       method: "DELETE",
     })
@@ -519,6 +522,7 @@ function MyCart({ navigation, route }) {
 
   useEffect(() => {
     if (isFocused) {
+      setIsLoading(true)
       setCheck();
       setSameAsBilling(0);
       AsyncStorage.getItem('userData').then((userData) => {
