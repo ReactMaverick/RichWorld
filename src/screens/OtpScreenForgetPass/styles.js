@@ -37,6 +37,12 @@ export default StyleSheet.create({
         fontSize:22,
 
     },
+    commentText: {
+        fontFamily:'Poppins-Medium',
+        color:'#620000',
+        fontSize:14,
+        textAlign: 'center'
+    },
     footerText:{
         fontFamily:'Poppins-Bold',
         color:'#620000',
@@ -91,11 +97,11 @@ export default StyleSheet.create({
     },
     otpBoxOuter:{
         width:Dimensions.get('window').width-150,
-        alignSelf:'center'
+        alignSelf:'center',
        },
        otpBoxStyle:{ 
            height: 55, 
-           width: 55, 
+           width: '20%', 
         //    borderWidth: 1,  
            borderRadius: 5,
            marginTop:30,

@@ -72,9 +72,11 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Voice search</string>
+	<string>Require microphone to get the voice</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>to get Profile Picture</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>To do product search using voice</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -117,10 +119,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Require microphone to get the voice</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>To do product search using voice</string>
 </dict>
 </plist>

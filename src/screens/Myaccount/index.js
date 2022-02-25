@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { View, ScrollView, Share, Image, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, ScrollView, Share, Image, Text, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
@@ -10,7 +10,7 @@ import ActionSheet from "react-native-actions-sheet";
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
-import { UPDATE_ACCOUNT } from '../../config/ApiConfig';
+import { UPDATE_ACCOUNT, PLAY_STORE } from '../../config/ApiConfig';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 const actionSheetRef = createRef();
@@ -29,7 +29,29 @@ function Myaccount({ navigation }) {
     });
     AsyncStorage.setItem('fcmToken', fcmToken);
   }
-
+  const _getPlayStore = async () => {
+    setIsLoading(true)
+    fetch(PLAY_STORE, {
+      method: "get",
+    })
+      .then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          setGooglePlaystore(response.google_playstore);
+          setApplePlaystore(response.apple_playstore);
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
 
   const loginData = useSelector(
     (state) => state.authReducer
@@ -42,10 +64,13 @@ function Myaccount({ navigation }) {
   const [userData, setUserData] = useState({});
   const [isLogin, setIsLogin] = useState(false);
   const [fcmToken, setFcmToken] = useState("");
+  const [googlePlaystore, setGooglePlaystore] = useState("");
+  const [applePlaystore, setApplePlaystore] = useState("");
 
   let actionSheet;
 
   useEffect(() => {
+    _getPlayStore();
     AsyncStorage.getItem('fcmToken').then((fcmToken) => {
       setFcmToken(fcmToken);
     })
@@ -108,11 +133,20 @@ function Myaccount({ navigation }) {
 
   const onShare = async () => {
     try {
-      const result = await Share.share({
-        title: 'App link',
-        message: 'Please install this app and stay safe , AppLink :https://play.google.com/store/apps/details?id=com.xert.attukari',
-        url: 'https://play.google.com/store/apps/details?id=com.xert.attukari'
-      });
+      if(Platform.OS=="android"){
+        const result = await Share.share({
+          title: 'App link',
+          message: 'Please install this app and stay safe , AppLink :'+googlePlaystore,
+          url: googlePlaystore
+        });
+      }else{
+        const result = await Share.share({
+          title: 'App link',
+          message: 'Please install this app and stay safe , AppLink :'+applePlaystore,
+          url: applePlaystore
+        });
+      }
+      
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -123,7 +157,7 @@ function Myaccount({ navigation }) {
         // dismissed
       }
     } catch (error) {
-      alert(error.message);
+      console.log(error.message);
     }
   };
   const socialSignOut = async () =>{

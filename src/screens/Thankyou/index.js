@@ -1,10 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Linking } from 'react-native';
 import ThankyouIcon from '../../assets/Image/Thankyou'
 import styles from "./styles";
-function Thankyou({ navigation }) {
-  
+
+import { CONTACT_US } from '../../config/ApiConfig'
+
+function Thankyou({ navigation, route }) {
+  const { orders_data } = route.params;
+  const [isLoading, setIsLoading] = useState(true);
+  const [contactUs, setContactUs] = useState({});
+
+  const _getContactUs = async () => {
+    setIsLoading(true)
+    fetch(CONTACT_US, {
+      method: "get",
+    })
+      .then((response) => {
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        if (status == 200) {
+          // console.log(JSON.stringify(response.contactDetails, null, " "));
+          setContactUs(response.contactDetails);
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  }
   useEffect(() => {
+    _getContactUs()
   }, [navigation]);
 
   return (
@@ -19,8 +49,14 @@ function Thankyou({ navigation }) {
 
               <ThankyouIcon width={80} height={80} color="#AB0000" />
                    <Text style={styles.thankyouText}>Thank you</Text>
-                   <Text style={styles.thankyouText1}>Thankyou your order is confirmed</Text>
-                   
+                   <Text style={styles.thankyouText1}>Your order number is - <Text style={styles.thankyouText2}>{ orders_data.orders_id }</Text></Text>
+
+                   <Text style={styles.thankyouText1}>It will be delivered soon!</Text>
+
+                   <Text style={styles.thankyouText1}>Email us at <Text style={styles.thankyouText2} onPress={()=>{
+                  Linking.openURL(`mailto:${contactUs.contact_us_email}`);
+                }}>{contactUs.contact_us_email}</Text></Text> 
+                <Text style={styles.thankyouText1}>with any questions or suggession.</Text>
                 </View>
             </View>
 

@@ -46,8 +46,10 @@ function ProductList({ navigation, route }) {
 
   let actionSheet;
 
-  const _getProductList = async (filterParam, androidId, user_id) => {
-    setIsLoading(true)
+  const _getProductList = async (filterParam, androidId, user_id, callFrom="") => {
+    if(callFrom != "clearAll"){
+      setIsLoading(true)
+    }
     const formData = new FormData();
 
 
@@ -82,8 +84,9 @@ function ProductList({ navigation, route }) {
             setMaxPriceFilter(parseInt(response.max_price))
           }
 
-
-          setFilterModalVisible(false)
+          if(callFrom != "clearAll"){
+            setFilterModalVisible(false)
+          }
         } else {
           console.log(status, response);
         }
@@ -134,9 +137,9 @@ function ProductList({ navigation, route }) {
     setFilterApplyed(false)
     let tempFilterParam = filterParam;
     if (isLogin) {
-      _getProductList(tempFilterParam, "", userData.id);
+      _getProductList(tempFilterParam, "", userData.id,"clearAll");
     } else {
-      _getProductList(tempFilterParam, androidId, "");
+      _getProductList(tempFilterParam, androidId, "","clearAll");
     }
 
   }
@@ -172,6 +175,12 @@ function ProductList({ navigation, route }) {
       return str;
     }
   }
+  // const discountPercentage = (products_price, pro_discount_rate) => {
+  //   console.log(products_price, pro_discount_rate);
+  //   var mProDiscount = ( products_price * pro_discount_rate )/100;
+  //   return mProDiscount;
+  // }
+
   const _addToWishlist = (products_id, products_attributes_prices_id, key) => {
     setIsLoading(true)
     const formData = new FormData();
@@ -312,23 +321,27 @@ function ProductList({ navigation, route }) {
 
                       <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
                         <View style={styles.cartIconOuter}>
-                        <View style={styles.cartIconBox}>
-                          <AntDesign name="shoppingcart" style={styles.cartIcon} />
-                        </View>
-                        {isLogin ? <TouchableOpacity onPress={() => {
-                          console.log("long press");
-                          _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
-                        }}>
-                          <>
-                            {item.isLiked != 0 ?
-                              <AntDesign name="heart" style={styles.heartIcon} />
-                              :
-                              <AntDesign name="hearto" style={styles.heartIcon} />
+                          <View style={styles.cartIconBoxSqure}>
+                            {/* <AntDesign name="shoppingcart" style={styles.cartIcon} /> */}
+                            {item.pro_discount_rate != 0 &&
+                              <Text style={styles.discountText}>{Math.round(item.pro_discount_rate)} %</Text>
                             }
-                          </>
-                        </TouchableOpacity> : <></>}
+
+                          </View>
+                          {isLogin ? <TouchableOpacity onPress={() => {
+                            console.log("long press");
+                            _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
+                          }}>
+                            <>
+                              {item.isLiked != 0 ?
+                                <AntDesign name="heart" style={styles.heartIcon} />
+                                :
+                                <AntDesign name="hearto" style={styles.heartIcon} />
+                              }
+                            </>
+                          </TouchableOpacity> : <></>}
                         </View>
-                        
+
 
                       </ImageBackground>
                       <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
@@ -342,8 +355,8 @@ function ProductList({ navigation, route }) {
                       />
                       <View style={styles.priceBox}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                        <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
-                        <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
+                          <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
+                          <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
                         </View>
 
                       </View>
@@ -377,16 +390,16 @@ function ProductList({ navigation, route }) {
 
             setFilterModalVisible(!modalVisible);
           }}
-          style={{marginVertical:Platform.OS=="android"?0:45}}
+          style={{ marginVertical: Platform.OS == "android" ? 0 : 45 }}
         >
-          <View style={{ flex: 1, backgroundColor: '#fff',paddingTop:Platform.OS=="android"?0:30 }}>
+          <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: Platform.OS == "android" ? 0 : 30 }}>
             <View style={styles.filterAreaMain}>
 
               <View style={styles.filterArea}>
                 <Text style={styles.filterAreaText}>FILTER</Text>
                 <TouchableOpacity onPress={() => {
                   _clearFilters();
-                  setFilterModalVisible(!modalVisible)
+                  // setFilterModalVisible(!modalVisible)
                 }}>
                   <Text style={styles.filterClearText}>Clear All</Text>
                 </TouchableOpacity>
@@ -424,13 +437,13 @@ function ProductList({ navigation, route }) {
                     <Feather name="chevron-down" style={styles.dropdownIcon} />
 
                   </View>
-                  <View style={{ flexDirection: 'row', alignItems: 'center',justifyContent: 'center' }}>
-                      <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{maxPriceFilter}</Text>
-                      </View>
-                      {/* <FontAwesome name="inr" style={styles.rangeText} /><Text style={[styles.rangeText, { textAlign: 'center' }]}>${maxPriceFilter}</Text> */}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{maxPriceFilter}</Text>
+                  </View>
+                  {/* <FontAwesome name="inr" style={styles.rangeText} /><Text style={[styles.rangeText, { textAlign: 'center' }]}>${maxPriceFilter}</Text> */}
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
 
-                  <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{minPrice}</Text>
+                    <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{minPrice}</Text>
 
                     <Slider
                       maximumValue={maxPrice}
@@ -445,7 +458,7 @@ function ProductList({ navigation, route }) {
                       thumbTintColor="#1B5E20"
                       style={{ width: Dimensions.get('window').width - 100, height: 40 }}
                     />
-                    
+
                     <FontAwesome name="inr" style={styles.rangeText} /><Text style={styles.rangeText}>{maxPrice}</Text>
                   </View>
 

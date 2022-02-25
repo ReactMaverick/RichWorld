@@ -142,7 +142,7 @@ function SlideMenu({ navigation }) {
                 navigation.navigate('PrivecyPolicy');
             }} style={styles.menuItem}>
                 <View style={{ width: 35 }}><FontAwesome5 name="lock" style={styles.menuIcon} /></View>
-                <Text style={styles.menuText}>Privecy & Policy</Text>
+                <Text style={styles.menuText}>Privacy & Policy</Text>
             </TouchableOpacity>
 
 

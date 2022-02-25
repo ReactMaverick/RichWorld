@@ -37,6 +37,12 @@ export default StyleSheet.create({
         fontSize:22,
 
     },
+    commentText: {
+        fontFamily:'Poppins-Medium',
+        color:'#620000',
+        fontSize:14,
+        textAlign: 'center'
+    },
     footerText:{
         fontFamily:'Poppins-Bold',
         color:'#620000',

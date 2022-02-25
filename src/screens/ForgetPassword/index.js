@@ -3,11 +3,11 @@ import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, I
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { FORGET_PASSWORD } from '../../config/ApiConfig';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ForgetPassword({ navigation }) {
 
-
+  const insets = useSafeAreaInsets();
   const [email_phone, setEmailPhone] = useState('')
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -15,7 +15,7 @@ function ForgetPassword({ navigation }) {
 
 
   const _getOTP = async () => {
-
+    setIsLoading(true)
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if ((reg.test(email_phone) === false) && email_phone.length != 10) {
       setErrorMessage("Please Enter Valid Email/Phone");
@@ -64,13 +64,14 @@ function ForgetPassword({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
-          }} style={styles.backIconOuter} >
+          }} style={[styles.backIconOuter,{paddingTop: insets.top+10}]} >
             <AntDesign name="arrowleft" style={styles.backIcon} />
           </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
             <Text style={styles.loginText}>Forget Password</Text>
           </ImageBackground>
           <View style={{ flex: 1, padding: 10, marginTop: 20 }}>
+            <Text style={styles.commentText}>We will send you an OTP on this mobile number / email</Text>
             <Text style={styles.errorMessage}>{errorMsg}</Text>
             <View style={(Platform.OS == "android") ? styles.textInputOuter : styles.textInputOuterIos}>
               <AntDesign name="mail" style={styles.inputicon} />
@@ -90,7 +91,7 @@ function ForgetPassword({ navigation }) {
           <TouchableOpacity style={styles.btnOuter} onPress={() => {
             _getOTP()
           }}>
-            <Text style={styles.btnMessage}>Send OTP</Text>
+            <Text style={styles.btnMessage}>GET OTP</Text>
           </TouchableOpacity>
         </ScrollView>
 

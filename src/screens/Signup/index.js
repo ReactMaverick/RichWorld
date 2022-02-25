@@ -3,6 +3,7 @@ import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, A
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Entypo from 'react-native-vector-icons/Entypo'
 import { POST_SIGNUP, POST_SOCIAL_LOGIN, POST_SOCIAL_OTP, POST_PROCESS_SOCIAL_LOGIN } from '../../config/ApiConfig'
 // import { useValidation } from 'react-native-form-validator';
 import DeviceInfo from 'react-native-device-info';
@@ -13,14 +14,18 @@ import { useSelector, useDispatch } from "react-redux";
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
+
+  const insets = useSafeAreaInsets();
 
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
+  const [passwordEye, setPasswordEye] = useState(true);
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -44,22 +49,7 @@ function Signup({ navigation }) {
         item
       },
     });
-  // const { validate, isFieldInError, getErrorsInField, getErrorMessages, isFormValid } =
-  //   useValidation({
-  //     state: { fullName, email, phoneNumber, password },
-  //   });
-
-  // const checkFields = () => {
-  //   validate({
-  //     fullName: { minlength: 3, maxlength: 7, required: true },
-  //     email: { email: true, required: true },
-  //     phoneNumber: { numbers: true, minlength: 10, maxlength: 10, required: true },
-  //     password: { required: true },
-  //   });
-  //   if(isFormValid()){
-  //     checkSignup()
-  //   }
-  // }
+    
   const checkSignup = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (fullName == "") {
@@ -340,7 +330,7 @@ function Signup({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
-          }} style={styles.backIconOuter} >
+          }} style={[styles.backIconOuter,{paddingTop: insets.top+10}]} >
             <AntDesign name="arrowleft" style={styles.backIcon} />
           </TouchableOpacity>
           <ImageBackground source={require('../../assets/Image/loginBackground.png')} style={styles.pagenameBackGround} >
@@ -405,12 +395,19 @@ function Signup({ navigation }) {
               <TextInput
                 placeholder={'Password'}
                 style={[styles.textInput]}
+                secureTextEntry={passwordEye}
                 onChangeText={(password) => setPassword(password)}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
               />
+              <TouchableOpacity onPress={() => {
+                setPasswordEye(!passwordEye); 
+              }}>
+                <Entypo name={passwordEye ? 'eye-with-line' : 'eye'} style={[styles.inputicon]} />
+              </TouchableOpacity>
             </View>
+            
             {/* {isFieldInError('password') &&
              <Text style={styles.bottomErrorMessage}>{getErrorsInField('password')[0]}</Text>} */}
 

@@ -21,10 +21,10 @@ export default StyleSheet.create({
 
 
     productBox: {
-        width: Dimensions.get('window').width / 2 - 20,
-        height: Dimensions.get('window').width / 2 + 130,
+        width: Dimensions.get('window').width / 2 - 15,
+       // height: Dimensions.get('window').width / 2 ,
         backgroundColor: '#fff',
-        margin: 10,
+       marginBottom:10,
         borderRadius: 5,
         shadowColor: '#000',
         shadowOffset: { width: 1, height: 1 },
@@ -34,16 +34,16 @@ export default StyleSheet.create({
 
     },
     productImage: {
-        width: Dimensions.get('window').width / 2 - 20,
-        height: '60%',
+        width: Dimensions.get('window').width / 2 - 15,
+        height: Dimensions.get('window').width / 2 -30 ,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5
     },
     productTitle: {
         fontSize: 13,
         fontFamily: 'Poppins-Medium',
-        marginLeft: 5,
-        marginTop: 5
+        
+       
     },
     loadMorebtn: {
         backgroundColor: '#AB0000',

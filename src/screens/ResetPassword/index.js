@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { View, ImageBackground, Text, TouchableOpacity, TextInput, ScrollView, Image, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo'
 import { UPDATE_NEW_PASSWORD } from '../../config/ApiConfig';
 import { useSelector,useDispatch } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 function ResetPassword({ navigation, route }) {
@@ -13,6 +15,7 @@ function ResetPassword({ navigation, route }) {
   // console.log(user_id)
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordEye, setPasswordEye] = useState(true);
   const [errorMsg, setErrorMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -46,7 +49,12 @@ function ResetPassword({ navigation, route }) {
           if (response.status == false) {
             setErrorMessage(response.message);
           } else {
-            console.log('UPDATE_NEW_PASSWORD',response.userDetails[0])
+            // console.log('UPDATE_NEW_PASSWORD',response.userDetails[0])
+            showMessage({
+              message: "You have successfully reset your password",
+              type: "info",
+              backgroundColor: "#808080",
+            });
             setUserData(response.userDetails[0])
             AsyncStorage.setItem('userData', JSON.stringify(response.userDetails[0])).then(() => {
               navigation.navigate('HomeScreen');
@@ -85,12 +93,17 @@ function ResetPassword({ navigation, route }) {
                 placeholder={'New Password'}
                 style={[styles.textInput]}
                 value = {newPassword}
-                secureTextEntry={true}
+                secureTextEntry={passwordEye}
                 onChangeText={(newPassword) => setNewPassword(newPassword)}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
               />
+              <TouchableOpacity onPress={() => {
+                setPasswordEye(!passwordEye); 
+              }}>
+                <Entypo name={passwordEye ? 'eye-with-line' : 'eye'} style={[styles.inputicon]} />
+              </TouchableOpacity>
             </View>
 
             <View style={(Platform.OS=="android")?styles.textInputOuter:styles.textInputOuterIos}>
@@ -99,12 +112,17 @@ function ResetPassword({ navigation, route }) {
                 placeholder={'Confirm Password'}
                 style={[styles.textInput]}
                 value = {confirmPassword}
-                secureTextEntry={true}
+                secureTextEntry={passwordEye}
                 onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
                 onFocus={() => {
                   setErrorMessage('')
                 }}
               />
+              <TouchableOpacity onPress={() => {
+                setPasswordEye(!passwordEye); 
+              }}>
+                <Entypo name={passwordEye ? 'eye-with-line' : 'eye'} style={[styles.inputicon]} />
+              </TouchableOpacity>
             </View>
           </View>
 

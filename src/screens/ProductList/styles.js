@@ -34,6 +34,12 @@ export default StyleSheet.create({
         marginTop:5,
         justifyContent:'space-between'
     },
+    discountText:{
+        color:'#fff',
+        fontFamily:'Poppins-Regular',
+        fontSize:16,
+        paddingHorizontal:5
+    },
     sellingPrice:{
         color:'#2E2E2E',
         fontFamily:'Poppins-Regular',
@@ -62,6 +68,16 @@ export default StyleSheet.create({
         width:36,
         height:36,
         borderRadius:18,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    cartIconBoxSqure:{
+        alignSelf:'flex-start',
+        margin:10,
+        backgroundColor: '#620000',
+        // width:36,
+        height:36,
+        // borderRadius:18,
         justifyContent:'center',
         alignItems:'center'
     },

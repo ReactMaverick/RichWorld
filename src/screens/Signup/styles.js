@@ -47,7 +47,7 @@ export default StyleSheet.create({
         color:'#000',
         fontFamily:'Poppins-Regular',
         fontSize:12,
-        width:'100%'
+        width: '85%'
       
     },
     textInputOuter:{
@@ -60,7 +60,6 @@ export default StyleSheet.create({
         alignItems:'center',
     },
     textInputOuterIos:{
-       
         backgroundColor:'#DBE2ED',
         marginTop:30,
         borderRadius:7,

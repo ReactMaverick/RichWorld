@@ -19,17 +19,6 @@ function Faq({ navigation }) {
       setOpenBox(key)
     }
   };
-  const SECTIONS = [
-    {
-      title: 'Registration',
-      content: 'When you place an order, we collect and sometimes store basic information such as your name, email and delivery address(es), a contact telephone number and your user name and password. We may also receive and store certain information automatically from your computer, such as your IP address, browser type and other computer and connection information, the time that you logged on',
-    },
-    {
-      title: 'Payment',
-      content: 'Lorem ipsum...',
-    },
-  ];
-
   const _getFaqs = async () => {
     setIsLoading(true)
     fetch(FAQ, {

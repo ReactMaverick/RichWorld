@@ -105,8 +105,8 @@ function Checkout({ navigation, route }) {
                         });
                     }
                     setCheck(0);
-                    console.log(status, response);
-                    navigation.navigate('Thankyou');
+                    console.log('place order', response.result.orders_data[0]);
+                    navigation.navigate('Thankyou', {orders_data: response.result.orders_data[0]});
                 } else {
                     console.log(status, response);
                 }

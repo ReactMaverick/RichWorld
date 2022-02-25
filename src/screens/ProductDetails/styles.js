@@ -45,7 +45,8 @@ export default StyleSheet.create({
     },
     productThumb: {
         height: 100,
-        marginBottom: 5
+        marginBottom: 5,
+        
     },
     productTitle: {
         color: '#620000',
@@ -58,6 +59,20 @@ export default StyleSheet.create({
         fontFamily: 'Poppins-Regular',
         fontSize: 16,
         marginLeft: 5
+    },
+    titleSection: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingRight: 10,
+        // backgroundColor: '#fff'
+    },
+    shareIcon: {
+        color: '#620000',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 18,
+        marginRight: 10
     },
     mrpPrice: {
         color: '#888888',
@@ -103,7 +118,9 @@ export default StyleSheet.create({
     },
     attributeRight:{
         flex:1,
-        flexDirection:'row'
+        flexDirection:'row',
+        flexWrap: 'wrap'
+        
     },
     attributeLeft:{
         flex:1,
@@ -116,7 +133,8 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:1,
-        borderColor:'#620000'
+        borderColor:'#620000',
+        marginBottom:5,
     },
     attrimgActive:{
         height:40,
@@ -124,7 +142,8 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:3,
-        borderColor:'#620000'
+        borderColor:'#620000',
+        marginBottom:5,
     },
     attrbox:{
         // width:30,
@@ -134,13 +153,15 @@ export default StyleSheet.create({
         borderWidth:1,
         marginLeft:10,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        marginBottom:5,
 
     },
     attrboxActive:{
         // width:30,
         paddingHorizontal:10,
         paddingVertical:5,
+        marginBottom:5,
         backgroundColor:'#620000',
         borderWidth:1,
         marginLeft:10,
@@ -274,8 +295,9 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     tabContent1:{
-        margin:10,
-        padding:10
+        flex:1,
+        // margin:10,
+        // padding:10
     },
     tabContent2:{
         margin:10,

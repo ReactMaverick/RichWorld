@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, Modal, Dimensions, ImageBackground } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -81,7 +81,8 @@ function Brands({ navigation, route }) {
                 <TouchableOpacity key={item.brands_id} onPress={() => {
                   navigation.navigate('ProductList',{ title1: item.brands_name, title2: "", filterParam: { 'brands_id': item.brands_id }})
                 }} style={styles.productBox}>
-                  <Image style={styles.productImage} source={{ uri: item.brands_image_path }} />
+                  {/* <Image style={styles.productImage} source={{ uri: item.brands_image_path }} /> */}
+                  <ImageBackground style={styles.productImage} source={{ uri: item.brands_image_path }} resizeMode="contain"/>
                   <Text style={styles.productTitle}>{item.brands_name}</Text>
                 </TouchableOpacity>
               ))}

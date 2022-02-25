@@ -36,19 +36,34 @@ export default StyleSheet.create({
         flex: 6,
         marginRight: 10,
         backgroundColor:'#fff',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent:'center'
     },
     productRight: {
         flex: 5,
     },
     leftImage: {
-        height: 220,
-        width: '100%'
+        // height: wp("27%"),
+        // width: wp("45%")
+        width: '100%',
+        height: undefined,
+        aspectRatio: 1,
+    },
+    brandLeftImage: {
+        height: wp("27%"),
+        width: wp("45%")
+       
     },
     rightImage: {
         width: wp("30%"),
-        height: hp("15%"),
+        height: hp("10%"),
         alignSelf: 'center'
+    },
+    brandRightImage: {
+        width: '100%',
+        height: wp("22%"),
+   
+       alignSelf:'center'
     },
 
     leftImageCategory: {

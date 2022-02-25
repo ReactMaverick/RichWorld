@@ -1,8 +1,12 @@
 import {Platform} from 'react-native'
 export const BASE_URL = 'https://www.richworld.online/api/';
+export const PRODUCT_DES_URL = 'https://www.richworld.online/productDescription/';
+export const PRODUCTS_URL = 'https://www.richworld.online/product-detail/';
 
 export const GOOGLE_LOGINKEY = Platform.OS == 'android' ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com' :
 '262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
+
+export const FBAppId = '278707640967057';
 
 
 export const GET_HOME = BASE_URL + 'homePage';
@@ -56,6 +60,7 @@ export const APPLY_COUPON = BASE_URL + 'apply_coupon';
 export const NOTIFY_PRODUCT = BASE_URL + 'notifyProduct';
 export const BLOGS = BASE_URL + 'getBlogs';
 export const BLOG_DETAILS = BASE_URL + 'getBlogDetails?blog_id=';
+export const PLAY_STORE = BASE_URL + 'playstore';
 
 
 

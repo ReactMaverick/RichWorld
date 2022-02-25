@@ -153,17 +153,6 @@ function ContactInfo({ navigation }) {
               }}
               automaticallyAdjustContentInsets={false}
             />
-
-            {/* <View style={[styles.itemOuter, { borderBottomColor: '#CCCCCC', borderBottomWidth: 1, paddingBottom: 10 }]}>
-            <View style={styles.itemLeft}>
-              <Entypo name="stopwatch" style={styles.itemIcon} />
-            </View>
-            <View style={styles.itemRight}>
-              <Text style={styles.text1}>Openning Hour</Text>
-              <Text style={styles.text2}>Monday - Friday. 9:00am - 5:00pm</Text>
-            </View>
-          </View> */}
-
             <Text style={styles.formTitle}>Get In Touch</Text>
             <View style={styles.textInputOuter}>
               <TextInput
