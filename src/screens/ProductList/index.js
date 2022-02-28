@@ -46,7 +46,7 @@ function ProductList({ navigation, route }) {
 
   let actionSheet;
 
-  const _getProductList = async (filterParam, androidId, user_id, callFrom="") => {
+  const _getProductList =  (filterParam, androidId, user_id, callFrom="") => {
     if(callFrom != "clearAll"){
       setIsLoading(true)
     }
@@ -219,6 +219,7 @@ function ProductList({ navigation, route }) {
 
 
   useEffect(() => {
+    setIsLoading(true)
     // console.log("useeffect");
     setSelectedCategory("");
     setSelectedBrands("");

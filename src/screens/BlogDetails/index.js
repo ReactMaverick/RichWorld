@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator,Share } from 'react-native';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import { BLOG_DETAILS } from '../../config/ApiConfig';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { BLOG_DETAILS,BLOG_URL } from '../../config/ApiConfig';
 import dateFormat, { masks } from "dateformat";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -15,6 +15,7 @@ function BlogDetails({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(true);
   const [blogDetails, setBlogDetails] = useState({});
   const [basePath, setBasePath] = useState("");
+  const [blogUrl, setBlogUrl] = useState("");
 
   const _getBlogDetails = async () => {
     setIsLoading(true)
@@ -28,9 +29,12 @@ function BlogDetails({ navigation, route }) {
       })
       .then(([status, response]) => {
         if (status == 200) {
-          // console.log("blogDetails",response.blogDetails);
+           console.log("blogDetails",response.blogDetails);
           setBlogDetails(response.blogDetails[0]);
           setBasePath(response.base_path)
+          var url = BLOG_URL+response.blogDetails[0].news_id;
+          console.log(url);
+          setBlogUrl(url)
         } else {
           console.log(status, response);
         }
@@ -48,7 +52,28 @@ function BlogDetails({ navigation, route }) {
     var hours = String(date[1]).split(':');
     return [parseInt(days[0]), parseInt(days[1]) - 1, parseInt(days[2]), parseInt(hours[0]), parseInt(hours[1]), parseInt(hours[2])];
   }
- 
+  const _shareBlog = async () => {
+    
+    try {
+        const result = await Share.share({
+          title: blogDetails.categories_name,
+          message: blogUrl,
+          url: blogUrl
+        });
+      
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   useEffect(() => {
     if (isFocused) {
@@ -83,6 +108,12 @@ function BlogDetails({ navigation, route }) {
               }</Text>
             </View>
             <Text style={[styles.productTitle, { fontSize: 14 }]}>{blogDetails.news_name}</Text>
+
+            <TouchableOpacity onPress={() => {
+              _shareBlog()
+            }}>
+              <FontAwesome name="share-square-o" style={styles.shareIcon} />
+            </TouchableOpacity>
 
             <HTMLView
               value={blogDetails.news_description}

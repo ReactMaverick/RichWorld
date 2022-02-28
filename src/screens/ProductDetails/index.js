@@ -372,7 +372,7 @@ function ProductDetails({ navigation, route }) {
     try {
         const result = await Share.share({
           title: 'https://www.richworld.online/',
-          message: productDetails.products_model,
+          message: productUrl,
           url: productUrl
         });
       

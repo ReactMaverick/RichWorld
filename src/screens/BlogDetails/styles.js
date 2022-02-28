@@ -102,4 +102,10 @@ export default StyleSheet.create({
         color: '#620000',
         marginLeft:5
     },
+    shareIcon: {
+        color: '#620000',
+        fontFamily: 'Poppins-Bold',
+        fontSize: 18,
+        marginRight: 10
+    },
 });

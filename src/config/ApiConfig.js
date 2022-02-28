@@ -2,6 +2,8 @@ import {Platform} from 'react-native'
 export const BASE_URL = 'https://www.richworld.online/api/';
 export const PRODUCT_DES_URL = 'https://www.richworld.online/productDescription/';
 export const PRODUCTS_URL = 'https://www.richworld.online/product-detail/';
+export const BLOG_URL = 'https://www.richworld.online/blogDetails/';
+
 
 export const GOOGLE_LOGINKEY = Platform.OS == 'android' ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com' :
 '262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
