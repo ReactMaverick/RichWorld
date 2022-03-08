@@ -212,7 +212,7 @@ export default function App() {
   if (Platform.OS == "ios") {
     return (
       <Provider store={store}>
-        <SafeAreaViewDecider statusBarHiddenForNotch={true} backgroundColor="#620000" />
+        <SafeAreaViewDecider statusBarHiddenForNotch={false} backgroundColor="#620000" />
         <NavigationContainer>
           <Stack1 />
           <FlashMessage position="bottom" floating={true} duration={2000} />
