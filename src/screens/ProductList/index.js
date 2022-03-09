@@ -17,6 +17,7 @@ import { POST_PRODUCT, ADD_WISHLIST, GET_ALL_CATEGORY } from '../../config/ApiCo
 import DeviceInfo from 'react-native-device-info';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const actionSheetRef = createRef();
 function ProductList({ navigation, route }) {
@@ -46,8 +47,8 @@ function ProductList({ navigation, route }) {
 
   let actionSheet;
 
-  const _getProductList =  (filterParam, androidId, user_id, callFrom="") => {
-    if(callFrom != "clearAll"){
+  const _getProductList = (filterParam, androidId, user_id, callFrom = "") => {
+    if (callFrom != "clearAll") {
       setIsLoading(true)
     }
     const formData = new FormData();
@@ -84,7 +85,7 @@ function ProductList({ navigation, route }) {
             setMaxPriceFilter(parseInt(response.max_price))
           }
 
-          if(callFrom != "clearAll"){
+          if (callFrom != "clearAll") {
             setFilterModalVisible(false)
           }
         } else {
@@ -137,9 +138,9 @@ function ProductList({ navigation, route }) {
     setFilterApplyed(false)
     let tempFilterParam = filterParam;
     if (isLogin) {
-      _getProductList(tempFilterParam, "", userData.id,"clearAll");
+      _getProductList(tempFilterParam, "", userData.id, "clearAll");
     } else {
-      _getProductList(tempFilterParam, androidId, "","clearAll");
+      _getProductList(tempFilterParam, androidId, "", "clearAll");
     }
 
   }
@@ -319,49 +320,49 @@ function ProductList({ navigation, route }) {
                     <TouchableOpacity onPress={() => {
                       navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
                     }} style={styles.productBox} key={key}>
-
-                      <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
-                        <View style={styles.cartIconOuter}>
-                          <View style={styles.cartIconBoxSqure}>
-                            {/* <AntDesign name="shoppingcart" style={styles.cartIcon} /> */}
-                            {item.pro_discount_rate != 0 &&
-                              <Text style={styles.discountText}>{Math.round(item.pro_discount_rate)} %</Text>
-                            }
-
-                          </View>
-                          {isLogin ? <TouchableOpacity onPress={() => {
-                            console.log("long press");
-                            _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
-                          }}>
-                            <>
-                              {item.isLiked != 0 ?
-                                <AntDesign name="heart" style={styles.heartIcon} />
-                                :
-                                <AntDesign name="hearto" style={styles.heartIcon} />
+                      <View style={styles.productBoxInner}>
+                        <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
+                          <View style={styles.cartIconOuter}>
+                            <View style={styles.cartIconBoxSqure}>
+                              {/* <AntDesign name="shoppingcart" style={styles.cartIcon} /> */}
+                              {item.pro_discount_rate != 0 &&
+                                <Text style={styles.discountText}>{Math.round(item.pro_discount_rate)} %</Text>
                               }
-                            </>
-                          </TouchableOpacity> : <></>}
+
+                            </View>
+                            {isLogin ? <TouchableOpacity onPress={() => {
+                              console.log("long press");
+                              _addToWishlist(item.products_id, item.products_attributes_prices_id, key)
+                            }}>
+                              <>
+                                {item.isLiked != 0 ?
+                                  <AntDesign name="heart" style={styles.heartIcon} />
+                                  :
+                                  <AntDesign name="hearto" style={styles.heartIcon} />
+                                }
+                              </>
+                            </TouchableOpacity> : <></>}
+                          </View>
+
+
+                        </ImageBackground>
+                        <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
+                        <Rating
+                          startingValue={item.avg_review == null ? 0 : item.avg_review}
+                          ratingCount={5}
+                          showRating={false}
+                          imageSize={20}
+                          readonly={true}
+                          style={{ alignSelf: 'flex-start', marginLeft: 5 }}
+                        />
+                        <View style={styles.priceBox}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
+                            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
+                          </View>
+
                         </View>
-
-
-                      </ImageBackground>
-                      <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
-                      <Rating
-                        startingValue={item.avg_review == null ? 0 : item.avg_review}
-                        ratingCount={5}
-                        showRating={false}
-                        imageSize={20}
-                        readonly={true}
-                        style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-                      />
-                      <View style={styles.priceBox}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                          <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
-                          <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
-                        </View>
-
                       </View>
-
                     </TouchableOpacity>
                   ))
                   :

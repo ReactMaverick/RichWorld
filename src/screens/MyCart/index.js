@@ -596,7 +596,12 @@ function MyCart({ navigation, route }) {
                 <View style={{ flexDirection: 'row' }}>
                   <Image source={{ uri: item.image_path }} style={styles.userImage} />
                   <View style={styles.leftBox}>
+                    <TouchableOpacity onPress={() => {
+                      navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
+                    }} >
                     <Text style={styles.leftText1}>{stringFormat(item.products_name)}	</Text>
+                    </TouchableOpacity>
+                    
                     <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                       <FontAwesome name="inr" style={styles.leftText2} /><Text style={styles.leftText2}>{_discountCalculation(item.final_price, item.prodDiscountRate)}</Text>
                     </View>
