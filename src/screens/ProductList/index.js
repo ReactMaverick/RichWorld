@@ -147,7 +147,7 @@ function ProductList({ navigation, route }) {
   }
 
   const _getAllCategory = async () => {
-    setIsLoading(true)
+    // setIsLoading(true)
 
     fetch(GET_ALL_CATEGORY + 0, {
       method: "GET",
@@ -167,7 +167,7 @@ function ProductList({ navigation, route }) {
       })
       .catch((error) => console.log("error", error))
       .finally(() => {
-        setIsLoading(false)
+        // setIsLoading(false)
       });
   }
   const stringFormat = (str) => {
@@ -228,22 +228,26 @@ function ProductList({ navigation, route }) {
     setSelectedClassification("");
     setSelectedOptions("");
     setFilterApplyed(false)
-    AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {
-        setIsLogin(true)
-        setUserData(JSON.parse(userData))
-        var userDetails = JSON.parse(userData)
-        _getProductList(filterParam, "", userDetails.id);
-        _getAllCategory();
-      } else {
-        setIsLogin(false)
-        DeviceInfo.getAndroidId().then((androidId) => {
-          setAndroidId(androidId);
-          _getProductList(filterParam, androidId, "");
+    let t = setTimeout(() => {
+      AsyncStorage.getItem('userData').then((userData) => {
+        if (userData != null) {
+          setIsLogin(true)
+          setUserData(JSON.parse(userData))
+          var userDetails = JSON.parse(userData)
+          _getProductList(filterParam, "", userDetails.id);
           _getAllCategory();
-        });
-      }
-    })
+        } else {
+          setIsLogin(false)
+          DeviceInfo.getAndroidId().then((androidId) => {
+            setAndroidId(androidId);
+            _getProductList(filterParam, androidId, "");
+            _getAllCategory();
+          });
+        }
+      })
+    }, 2000)
+
+    return () => clearTimeout(t);
   }, [navigation, route]);
 
   if (isLoading) {
