@@ -3,15 +3,29 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
-import { FAQ } from '../../config/ApiConfig';
+import { FAQ, FAQ_URL } from '../../config/ApiConfig';
 import AccordionComponent from "../../components/AccordionComponent";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import HTMLView from 'react-native-htmlview';
+import { WebView } from 'react-native-webview';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 function Faq({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [faqList, setFaqList] = useState([]);
   const [openBox, setOpenBox] = useState(null);
+
+  const [webViewHeight, setWebViewHeight] = useState(null);
+  const onMessage = (event) => {
+    setWebViewHeight(Number(event.nativeEvent.data));
+  }
+  const injectedJavaScript = `
+  window.ReactNativeWebView.postMessage(
+    Math.max(document.body.offsetHeight, document.body.scrollHeight)
+  );
+`
+
+
   const _changeOpenBox = (key) => {
     if (openBox == key) {
       setOpenBox(null)
@@ -63,28 +77,31 @@ function Faq({ navigation }) {
         <View style={styles.filterBar}>
           <Text style={styles.CategoryText2}>Faq</Text>
         </View>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+          {faqList.map((item, key) => (
+            <View style={styles.outerBox} key={key}>
+              <TouchableOpacity onPress={() => { _changeOpenBox(key) }} style={styles.boxheader}>
+                <Text style={styles.boxheaderTxt}>{item.faq_title}</Text>
+                <AntDesign name={openBox == key ? "up" : "down"} style={styles.boxIcon} />
+              </TouchableOpacity>
+              {openBox == key ?
+                <ScrollView contentContainerStyle={{
+                  flexGrow: 1,
+                  height: webViewHeight
+                }}>
+                  <WebView
+                    source={{ uri: FAQ_URL + item.faq_id }}
+                    scrollEnabled={false}
+                    onMessage={onMessage}
+                    injectedJavaScript={injectedJavaScript}
+                  />
+                </ScrollView>
+                : <></>}
 
-          <View>
-            {faqList.map((item, key) => (
-              <View style={styles.outerBox} key={key}>
-                <TouchableOpacity onPress={() => { _changeOpenBox(key) }} style={styles.boxheader}>
-                  <Text style={styles.boxheaderTxt}>{item.faq_title}</Text>
-                  <AntDesign name={openBox == key ? "up" : "down"} style={styles.boxIcon} />
-                </TouchableOpacity>
-                {openBox == key ?
-                  <Text style={styles.BoxDescription}><HTMLView
-                    value={item.faq_desc}
-                    stylesheet={styles.contentText}
-                  /></Text>
-                  : <></>}
+            </View>
+          ))}
 
-              </View>
-            ))}
-
-            {/* <AccordionComponent item={faqList}  /> */}
-          </View>
-
+          {/* <AccordionComponent item={faqList}  /> */}
         </ScrollView>
         <Footer navigation={navigation} />
       </>
