@@ -38,7 +38,15 @@ function ProductDetails({ navigation, route }) {
   const [productPrice, setProductPrice] = useState("");
   const [productUrl, setProductUrl] = useState("");
 
-
+  const [webViewHeight, setWebViewHeight] = useState(null);
+  const onMessage = (event) => {
+    setWebViewHeight(Number(event.nativeEvent.data));
+  }
+  const injectedJavaScript = `
+  window.ReactNativeWebView.postMessage(
+    Math.max(document.body.offsetHeight, document.body.scrollHeight)
+  );
+`
 
 
 
@@ -61,7 +69,7 @@ function ProductDetails({ navigation, route }) {
           // console.log('details', response.detail.product_data[0]);
           setProductImage(response.detail.product_data[0]['images']);
           setProductDetails(response.detail.product_data[0]);
-          var productUrl = PRODUCTS_URL+productDetails.products_slug;
+          var productUrl = PRODUCTS_URL + response.detail.product_data[0].products_slug;
           var attributes = response.detail.product_data[0].attributes;
           if(attributes.length > 0){
             productUrl += '?';
@@ -74,7 +82,7 @@ function ProductDetails({ navigation, route }) {
             }
           }
           setProductUrl(productUrl)
-          // console.log('productUrl',productUrl);
+          
           // console.log('prod_attributeids',response.detail.product_data[0].attributes[0]);
           setActiveAttributeIds(response.detail.product_data[0].prod_attributeids);
           // console.log(response.detail.product_data[0].prod_attributeids)
@@ -368,7 +376,7 @@ function ProductDetails({ navigation, route }) {
     }
   }
   const _shareProduct = async () => {
-    
+    console.log('productUrl',productUrl);
     try {
         const result = await Share.share({
           title: 'https://www.richworld.online/',
@@ -644,9 +652,19 @@ function ProductDetails({ navigation, route }) {
 
           {tab == 1 ?
             <View style={styles.tabContent1}>
-              <WebView source={{ uri: PRODUCT_DES_URL + productDetails.products_id }} style={{ width: wp('100%'), height: hp('100%') }} />
-              {/* <HTMLView value={htmlContent} renderNode={renderNode} /> */}
-
+              {/* <WebView source={{ uri: PRODUCT_DES_URL + productDetails.products_id }} style={{ width: wp('100%'), height: hp('100%') }} /> */}
+              
+              <ScrollView contentContainerStyle={{
+                  flexGrow: 1,
+                  height: webViewHeight
+                }}>
+                  <WebView
+                    source={{ uri: PRODUCT_DES_URL + productDetails.products_id }}
+                    scrollEnabled={false}
+                    onMessage={onMessage}
+                    injectedJavaScript={injectedJavaScript}
+                  />
+                </ScrollView>
             </View>
             :
             <View style={styles.tabContent2}>

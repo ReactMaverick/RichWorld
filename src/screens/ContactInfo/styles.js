@@ -55,6 +55,11 @@ export default StyleSheet.create({
         fontFamily:'Poppins-Regular',
         fontSize:14
     },
+    text3:{
+        color:'#818181',
+        fontFamily:'Poppins-Bold',
+        fontSize:14
+    },
     formTitle:{
         color:'#620000',
         fontFamily:'Poppins-Bold',

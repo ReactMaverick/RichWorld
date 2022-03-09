@@ -19,6 +19,7 @@ import Settings from './src/screens/Settings'
 import Wishlist from './src/screens/Wishlist'
 import MyCart from './src/screens/MyCart'
 import Myaccount from './src/screens/Myaccount'
+import OtpVerification from './src/screens/OtpVerification'
 import ProductList from './src/screens/ProductList'
 import Introduction from './src/screens/Introduction'
 import ContactInfo from './src/screens/ContactInfo'
@@ -74,6 +75,7 @@ function MyDrawer() {
       <Drawer.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
       <Drawer.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
       <Drawer.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
+      <Drawer.Screen name="OtpVerification" component={OtpVerification} options={{ headerShown: false }} />
       <Drawer.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Drawer.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
       <Drawer.Screen name="ContactInfo" component={ContactInfo} options={{ headerShown: false }} />

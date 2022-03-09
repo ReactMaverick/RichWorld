@@ -51,6 +51,7 @@ function ProductList({ navigation, route }) {
     if (callFrom != "clearAll") {
       setIsLoading(true)
     }
+    setIsLoading(true)
     const formData = new FormData();
 
 

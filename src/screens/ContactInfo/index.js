@@ -110,11 +110,8 @@ function ContactInfo({ navigation }) {
               </View>
               <View style={styles.itemRight}>
                 <Text style={styles.text1}>Our Address</Text>
-                {/* <Text style={styles.text2}>77 seventh Street, USA.</Text> */}
-                <HTMLView
-                  value={contactUs.contact_us_address}
-                  stylesheet={styles}
-                />
+                <Text style={styles.text3}>{contactUs.contact_us_title}</Text>
+                <Text style={styles.text2}>{contactUs.contact_us_address}</Text>
               </View>
             </View>
 

@@ -33,7 +33,13 @@ export default StyleSheet.create({
         fontSize:12,
         width:'100%',
         paddingVertical: 5
-      
+    },
+    textInputEdit:{
+        color:'#000',
+        fontFamily:'Poppins-Regular',
+        fontSize:12,
+        width:'90%',
+        paddingVertical: 5
     },
     textInputOuter:{
         flex:1,
@@ -80,7 +86,13 @@ export default StyleSheet.create({
         color:'#620000',
         alignSelf:'center',
         fontFamily:'Poppins-Bold',
-    }
-
+    },
+    inputIcon:{
+        fontSize: 20,
+        color: '#AB0000',
+       // lineHeight: 0,
+        marginRight: Platform.OS=="android"?0:5,
+        paddingVertical: 5
+    },
 
 });
