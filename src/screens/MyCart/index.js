@@ -385,7 +385,8 @@ function MyCart({ navigation, route }) {
               backgroundColor: "#808080",
             });
             if (isLogin) {
-              _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
+              _deleteCoupon()
+           //   _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
             } else {
               _getCartList("", android_id, null);
             }
@@ -414,12 +415,15 @@ function MyCart({ navigation, route }) {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) - 1;
     if (customers_basket_quantity >= cartList[key].min_order) {
       _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+      _deleteCoupon() //added by barun
     }
+    
   }
   const _plusQuantity = (key, customers_basket_id, products_id, AttributeIds) => {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) + 1;
     if (customers_basket_quantity <= cartList[key].max_order) {
       _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
+      _deleteCoupon() //added by barun
     }
   }
   const _discountCalculation = (final_price, prodDiscountRate) => {

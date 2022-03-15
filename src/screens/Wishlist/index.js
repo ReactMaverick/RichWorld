@@ -74,7 +74,7 @@ function Wishlist({ navigation }) {
       "Are you sure you want to delete this item?",
       "",
       [{
-        text: "Confurm",
+        text: "Confirm",
         onPress: () => _removeFromWishlist(products_id, products_attributes_prices_id),
         style: "cancel",
       },

@@ -76,7 +76,7 @@ function MyDrawer() {
       <Drawer.Screen name="MyCart" component={MyCart} options={{ headerShown: false }} />
       <Drawer.Screen name="Myaccount" component={Myaccount} options={{ headerShown: false }} />
       <Drawer.Screen name="OtpVerification" component={OtpVerification} options={{ headerShown: false }} />
-      <Drawer.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
+      {/* <Drawer.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} /> */}
       <Drawer.Screen name="Introduction" component={Introduction} options={{ headerShown: false }} />
       <Drawer.Screen name="ContactInfo" component={ContactInfo} options={{ headerShown: false }} />
       <Drawer.Screen name="Testimonials" component={Testimonials} options={{ headerShown: false }} />
@@ -106,7 +106,7 @@ function Stack1() {
   return (
     <Stack.Navigator  >
       <Stack.Screen name="Home" component={MyDrawer} options={{ headerShown: false }} />
-
+      <Stack.Screen name="ProductList" component={ProductList} options={{ headerShown: false }} />
       <Stack.Screen name="ProductDetails" component={ProductDetails} options={{ headerShown: false }} />
       <Stack.Screen name="BlogDetails" component={BlogDetails} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />

@@ -43,7 +43,7 @@ function Brands({ navigation, route }) {
 
   return (
     <>
-      <Header navigation={navigation} />
+      <Header navigation={navigation} backArrow={true} />
 
       <View style={styles.filterBar}>
         <View style={styles.filterTextBox}>

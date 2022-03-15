@@ -262,7 +262,7 @@ function ProductList({ navigation, route }) {
   } else {
     return (
       <>
-        <Header navigation={navigation} />
+       <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
             {filterApplyed ?

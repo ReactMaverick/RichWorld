@@ -146,8 +146,37 @@ function Checkout({ navigation, route }) {
                         <View><Text style={styles.checkoutTextHead}>Choose Payment Method</Text></View>
                         {Object.keys(cod).length != 0 &&
                             <TouchableOpacity onPress={() => {
-                                setCheck(1);
-                                _placeOrder("cash_on_delivery", "");
+
+
+
+                                Alert.alert(
+                                    "Are you sure you want to do Cash on delivery?",
+                                    "",
+                                    [{
+                                      text: "Confirm",
+                                      onPress: () =>{
+                                        setCheck(1);
+                                        _placeOrder("cash_on_delivery", "");
+                                      },
+                                      style: "cancel",
+                                    },
+                                      {
+                                        text: "Cancel",
+                                        // onPress: () => Alert.alert("Cancel Pressed"),
+                                        style: "cancel",
+                                      },
+                                    ],
+                                    {
+                                      cancelable: true,
+                                      // onDismiss: () =>
+                                      //   Alert.alert(
+                                      //     "This alert was dismissed by tapping outside of the alert dialog."
+                                      //   ),
+                                    }
+                                  );
+
+
+                               
                             }} style={styles.checkoutInner}>
                                 <Fontisto name={check == 1 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
                                 <Text style={styles.checkoutTextInner}>Cash on delivery</Text>
@@ -157,8 +186,33 @@ function Checkout({ navigation, route }) {
                         {Object.keys(bankdetail).length != 0 &&
                             <>
                                 <TouchableOpacity onPress={() => {
-                                    setCheck(2);
-                                    // navigation.navigate('Thankyou');
+                                  
+
+                                Alert.alert(
+                                    "Are you sure you want to do Direct Bank Transfer?",
+                                    "",
+                                    [{
+                                      text: "Confirm",
+                                      onPress: () =>{
+                                        setCheck(2);
+                                      },
+                                      style: "cancel",
+                                    },
+                                      {
+                                        text: "Cancel",
+                                        // onPress: () => Alert.alert("Cancel Pressed"),
+                                        style: "cancel",
+                                      },
+                                    ],
+                                    {
+                                      cancelable: true,
+                                      // onDismiss: () =>
+                                      //   Alert.alert(
+                                      //     "This alert was dismissed by tapping outside of the alert dialog."
+                                      //   ),
+                                    }
+                                  );
+
                                 }} style={styles.checkoutInner}>
                                     <Fontisto name={check == 2 ? "checkbox-active" : "checkbox-passive"} style={styles.paymentIcon} />
                                     <Text style={styles.checkoutTextInner}>Direct Bank Transfer</Text>
