@@ -184,11 +184,6 @@ function MyCart({ navigation, route }) {
           if (sameAsBilling == 1 && response.userShippingAddressList.length == 1) {
             _checkAddress(0, response.userShippingAddressList)
           }
-
-
-
-
-
           _calculateAmounts(response.cart, response.shipping_detail, couponDiscountPercent)
 
         } else {
@@ -203,6 +198,7 @@ function MyCart({ navigation, route }) {
 
   // _calculateAmounts
   const _calculateAmounts = async (cart, shipping_detail, couponDiscountPercent) => {
+    
     var finalCuponDiscount = 0;
     var totalTax = 0;
     var userLoyaltyPoint = 0;
@@ -214,7 +210,7 @@ function MyCart({ navigation, route }) {
     if (couponDiscountPercent != null) {
       coupon_discount_percent = couponDiscountPercent;
     }
-    // console.log(coupon_discount_percent)
+    console.log(couponDiscountPercent)
     if (isLogin) {
       if (userData.userLoyaltyPoint > loyaltyPointDetails.max_point_per_order) {
         userLoyaltyPoint = loyaltyPointDetails.max_point_per_order;
@@ -250,8 +246,9 @@ function MyCart({ navigation, route }) {
         var cuponDiscount = 0;
       }
       var afterDiscTaxableAmount = beforeDiscTaxableAmount - cuponDiscount;
-
+      
       finalCuponDiscount = finalCuponDiscount + cuponDiscount;
+      console.log("finalCuponDiscount", finalCuponDiscount)
       afterDiscTaxableAmountTotal = afterDiscTaxableAmountTotal + afterDiscTaxableAmount;
 
       if (item.proTaxType != '' && item.taxRate != '') {
@@ -321,9 +318,11 @@ function MyCart({ navigation, route }) {
           // console.log(JSON.stringify(response, null, " "));
           if (response.status) {
             if (isLogin) {
-              _getCartList(userData.id,
-                "",
-                couponData != null ? couponData.item.coupon_discount_percent : null);
+              if(couponData != null){
+                _applyCoupon()
+              }else{
+                _getCartList(userData.id, "", null);
+              }
             } else {
               _getCartList("", android_id, null);
             }
@@ -415,7 +414,8 @@ function MyCart({ navigation, route }) {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) - 1;
     if (customers_basket_quantity >= cartList[key].min_order) {
       _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
-      _deleteCoupon() //added by barun
+      // _deleteCoupon() //added by barun
+      _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
     }
     
   }
@@ -423,7 +423,8 @@ function MyCart({ navigation, route }) {
     var customers_basket_quantity = parseInt(cartList[key].customers_basket_quantity) + 1;
     if (customers_basket_quantity <= cartList[key].max_order) {
       _updateCartQuantity(customers_basket_id, products_id, customers_basket_quantity, AttributeIds)
-      _deleteCoupon() //added by barun
+      // _deleteCoupon() //added by barun
+      _getCartList(userData.id, "", couponData != null ? couponData.item.coupon_discount_percent : null);
     }
   }
   const _discountCalculation = (final_price, prodDiscountRate) => {
@@ -470,7 +471,13 @@ function MyCart({ navigation, route }) {
       const formData = new FormData();
       formData.append('customers_id', userData.id);
       formData.append('shopNow', shopNow);
-      formData.append('coupon_code', couponCode);
+      if(couponCode != ""){
+        formData.append('coupon_code', couponCode);
+      }else{
+        if(couponData != null){
+          formData.append('coupon_code', couponData.item.coupon[0].code);
+        }
+      }
       formData.append('coupons', "");
       formData.append('coupon_discount_percent', "");
       formData.append('coupon_discount', "");
@@ -494,7 +501,7 @@ function MyCart({ navigation, route }) {
               _getCartList(userData.id, "", response.couponDetails.coupon_discount_percent);
             } else {
               showMessage({
-                message: response.message,
+                message: response.massage,
                 type: "info",
                 backgroundColor: "#808080",
               });
@@ -930,7 +937,7 @@ function MyCart({ navigation, route }) {
           <View style={styles.changeAddressSection}>
 
             {pincodeError.length > 0 ?
-              <View style={{ margin: 10 }}><Text style={styles.nameSubTitle, { color: 'red' }}>{pincodeError}</Text></View>
+              <View style={{ margin: 10 }}><Text style={[styles.nameSubTitle, { color: 'red' }]}>{pincodeError}</Text></View>
               :
               <></>
             }
