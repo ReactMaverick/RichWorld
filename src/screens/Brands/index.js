@@ -25,7 +25,7 @@ function Brands({ navigation, route }) {
       .then(([status, response]) => {
         if (status == 200) {
           //  console.log(status, response);
-         setBrands(response.brands);
+          setBrands(response.brands);
         } else {
           console.log(status, response);
         }
@@ -57,33 +57,35 @@ function Brands({ navigation, route }) {
         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
 
           {isLoading ?
-          <>          
-            <SkeletonPlaceholder>
-              <View style={styles.productBox}>
-              </View>
-            </SkeletonPlaceholder>
-            <SkeletonPlaceholder>
-              <View style={styles.productBox}>
-              </View>
-            </SkeletonPlaceholder>
-            <SkeletonPlaceholder>
-              <View style={styles.productBox}>
-              </View>
-            </SkeletonPlaceholder>
-            <SkeletonPlaceholder>
-              <View style={styles.productBox}>
-              </View>
-            </SkeletonPlaceholder>
+            <>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
+              <SkeletonPlaceholder>
+                <View style={styles.productBox}>
+                </View>
+              </SkeletonPlaceholder>
             </>
             :
             <>
               {allBrands.map((item) => (
                 <TouchableOpacity key={item.brands_id} onPress={() => {
-                  navigation.navigate('ProductList',{ title1: item.brands_name, title2: "", filterParam: { 'brands_id': item.brands_id }})
+                  navigation.navigate('ProductList', { title1: item.brands_name, title2: "", filterParam: { 'brands_id': item.brands_id } })
                 }} style={styles.productBox}>
-                  {/* <Image style={styles.productImage} source={{ uri: item.brands_image_path }} /> */}
-                  <ImageBackground style={styles.productImage} source={{ uri: item.brands_image_path }} resizeMode="contain"/>
-                  <Text style={styles.productTitle}>{item.brands_name}</Text>
+                  <View style={styles.productBoxInner}>
+                    {/* <Image style={styles.productImage} source={{ uri: item.brands_image_path }} /> */}
+                    <ImageBackground style={styles.productImage} source={{ uri: item.brands_image_path }} resizeMode="contain" />
+                    <Text style={styles.productTitle}>{item.brands_name}</Text>
+                  </View>
                 </TouchableOpacity>
               ))}
             </>
