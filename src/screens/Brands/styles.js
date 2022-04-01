@@ -5,23 +5,31 @@ export default StyleSheet.create({
 
 
     productBox :{
-        width:Dimensions.get('window').width/2-20,
-        height:Dimensions.get('window').width/2,
+        width:Dimensions.get('window').width/2,
+        height:undefined,
+      
+        justifyContent:'center',
+         alignItems:'center',
+         marginVertical:5
+    
+    },
+    productBoxInner:{
         backgroundColor:'#fff',
-        margin:10,
+        width:Dimensions.get('window').width/2-10,
+        height:undefined,
         borderRadius:5,
         shadowColor: '#000',
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.4,
         shadowRadius: 3,
-        elevation: 5,    
-    
+        elevation: 5, 
     },
     productImage:{
         width:Dimensions.get('window').width/2-20,
-        height:'80%',
+        height:Dimensions.get('window').width/3,  
         borderTopLeftRadius:5,
-        borderTopRightRadius:5
+        borderTopRightRadius:5,
+        alignSelf:'center'
     },
     productTitle:{
         fontSize:13,

@@ -6,17 +6,17 @@ export default StyleSheet.create({
 
 
     productBox :{
-        width:wp('50%'),
+        width:Dimensions.get('window').width/2,
         height:undefined,
       
         justifyContent:'center',
          alignItems:'center',
-         marginVertical:wp('1%') 
+         marginVertical:5
     
     },
     productBoxInner:{
         backgroundColor:'#fff',
-        width:wp('48%'),
+        width:Dimensions.get('window').width/2-10,
         height:undefined,
         borderRadius:5,
         shadowColor: '#000',
@@ -26,7 +26,7 @@ export default StyleSheet.create({
         elevation: 5, 
     },
     productImage:{
-        width:Dimensions.get('window').width/2-20,
+        width:Dimensions.get('window').width/2-10,
         height:Dimensions.get('window').width/3,        
         borderTopLeftRadius:5,
         borderTopRightRadius:5,
