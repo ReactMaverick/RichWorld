@@ -500,11 +500,13 @@ function MyCart({ navigation, route }) {
               setCouponCode("")
               _getCartList(userData.id, "", response.couponDetails.coupon_discount_percent);
             } else {
+              console.log("_applyCoupon",response);
               showMessage({
-                message: response.massage,
+                message: response.message,
                 type: "info",
                 backgroundColor: "#808080",
               });
+              _deleteCoupon()
             }
           } else {
             console.log(status, response);
