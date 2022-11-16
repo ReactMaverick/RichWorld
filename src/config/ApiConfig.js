@@ -1,16 +1,18 @@
-import {Platform} from 'react-native'
-export const BASE_URL = 'https://www.richworld.online/api/';
-export const PRODUCT_DES_URL = 'https://www.richworld.online/productDescription/';
-export const PRODUCTS_URL = 'https://www.richworld.online/product-detail/';
-export const BLOG_URL = 'https://www.richworld.online/blogDetails/';
-export const FAQ_URL = 'https://www.richworld.online/faqDescription/';
+import {Platform} from 'react-native';
+export const BASE_URL = 'http://31.220.58.130/rich_ecom/public/api/';
+export const PRODUCT_DES_URL =
+  'http://31.220.58.130/rich_ecom/public/productDescription/';
+export const PRODUCTS_URL =
+  'http://31.220.58.130/rich_ecom/public/product-detail/';
+export const BLOG_URL = 'http://31.220.58.130/rich_ecom/public/blogDetails/';
+export const FAQ_URL = 'http://31.220.58.130/rich_ecom/public/faqDescription/';
 
-
-export const GOOGLE_LOGINKEY = Platform.OS == 'android' ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com' :
-'262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
+export const GOOGLE_LOGINKEY =
+  Platform.OS == 'android'
+    ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com'
+    : '262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
 
 export const FBAppId = '278707640967057';
-
 
 export const GET_HOME = BASE_URL + 'homePage';
 export const GET_ALL_CATEGORY = BASE_URL + 'allCategory?popular=';
@@ -33,7 +35,8 @@ export const UPDATE_CART_QUANTITY = BASE_URL + 'updateCartQuantity';
 export const MY_ADDRESS = BASE_URL + 'myAddress';
 export const ADD_MY_ADDRESS = BASE_URL + 'addMyAddress';
 export const UPDATE_SHIPPING_ADDRESS = BASE_URL + 'updateMyAddress';
-export const DELETE_SHIPPING_ADDRESS = BASE_URL + 'deleteAddress?address_book_id=';
+export const DELETE_SHIPPING_ADDRESS =
+  BASE_URL + 'deleteAddress?address_book_id=';
 export const UPDATE_ACCOUNT = BASE_URL + 'accountUpdate';
 export const MY_ORDERS = BASE_URL + 'myOrders';
 export const CANCLE_ORDER = BASE_URL + 'orderCancle';
@@ -45,8 +48,7 @@ export const TESTIMOIALS = BASE_URL + 'testimonials';
 export const CONTACT_US = BASE_URL + 'contactUs';
 export const CONTACT_US_REQUEST = BASE_URL + 'contactUsMessage';
 export const UPLOAD_PRODUCTS_IMAGES = BASE_URL + 'customerProductImages';
-export const GET_ATTRIBUTE_PRICE_ID = BASE_URL + 'getAttributePriceId'; 
-
+export const GET_ATTRIBUTE_PRICE_ID = BASE_URL + 'getAttributePriceId';
 
 export const FORGET_PASSWORD = BASE_URL + 'forgetPassword';
 export const FORGET_PASSWORD_OTP_CHECK = BASE_URL + 'passwordOtpCheck';
@@ -67,16 +69,3 @@ export const NOTIFY_PRODUCT = BASE_URL + 'notifyProduct';
 export const BLOGS = BASE_URL + 'getBlogs';
 export const BLOG_DETAILS = BASE_URL + 'getBlogDetails?blog_id=';
 export const PLAY_STORE = BASE_URL + 'playstore';
-
-
-
-
-
-
-
-
-
-
-
-
-

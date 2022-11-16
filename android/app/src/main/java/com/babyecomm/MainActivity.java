@@ -1,4 +1,4 @@
-package com.amrithaa.richworld;
+package com.websadroit.babyecomm;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

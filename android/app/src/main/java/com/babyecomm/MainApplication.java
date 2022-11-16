@@ -1,4 +1,4 @@
-package com.amrithaa.richworld;
+package com.websadroit.babyecomm;
 
 import android.app.Application;
 import android.content.Context;
