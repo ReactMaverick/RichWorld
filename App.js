@@ -16,7 +16,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SlideMenu from './src/components/SlideMenu/index';
 import SafeAreaViewDecider from 'react-native-smart-statusbar';
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 import SplashScreen from 'react-native-splash-screen';
 import DeviceInfo from 'react-native-device-info';
 import {PLAY_STORE} from './src/config/ApiConfig';
@@ -272,76 +272,58 @@ export default function App() {
   //   }).then(response => response.json());
   // };
 
-  const androidPush = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-      console.log(fcmToken);
-      AsyncStorage.setItem('fcmToken', fcmToken);
-    }
-    // Register background handler
-  };
+  // const androidPush = async () => {
+  //   const fcmToken = await messaging().getToken();
+  //   if (fcmToken) {
+  //     console.log(fcmToken);
+  //     AsyncStorage.setItem('fcmToken', fcmToken);
+  //   }
+  //   // Register background handler
+  // };
 
-  const checkToken = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-      console.log(fcmToken);
-      AsyncStorage.setItem('fcmToken', fcmToken);
-    }
+  // const checkToken = async () => {
+  //   const fcmToken = await messaging().getToken();
+  //   if (fcmToken) {
+  //     console.log(fcmToken);
+  //     AsyncStorage.setItem('fcmToken', fcmToken);
+  //   }
 
-    // Assume a message-notification contains a "type" property in the data payload of the screen to open
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-      // navigation.navigate(remoteMessage.data.type);
-    });
+  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //     // navigation.navigate(remoteMessage.data.type);
+  //   });
 
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-          setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-        }
-        // setLoading(false);
-      });
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(remoteMessage => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //         setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
+  //       }
+  //       // setLoading(false);
+  //     });
 
-    // }
-  };
+  //   // }
+  // };
 
   useEffect(() => {
-    // DeviceInfo.getVersion()
-    // _getPlayStore().then(response => {
-    //   seAppStore(response.google_playstore);
-    //   console.log(
-    //     DeviceInfo.getVersion().toString() +
-    //       '    ' +
-    //       response.app_version.toString(),
-    //   );
-    //   if (
-    //     DeviceInfo.getVersion().toString() != response.app_version.toString()
-    //   ) {
-    //     setUpdate(true);
-    //   } else {
-    //     setUpdate(false);
+    // if (Platform.OS == 'ios') {
+    //   const authorizationStatus = messaging().requestPermission();
+    //   if (authorizationStatus) {
+    //     console.log('Permission status:', authorizationStatus);
+    //     checkToken();
     //   }
-    //   setLoading(false);
-    // });
-
-    if (Platform.OS == 'ios') {
-      const authorizationStatus = messaging().requestPermission();
-      if (authorizationStatus) {
-        console.log('Permission status:', authorizationStatus);
-        checkToken();
-      }
-    } else {
-      androidPush();
-    }
+    // } else {
+    //   androidPush();
+    // }
 
     SplashScreen.hide();
   }, []);

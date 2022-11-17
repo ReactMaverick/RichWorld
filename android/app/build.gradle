@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // firebase fb login
+//apply plugin: 'com.google.gms.google-services' // firebase fb login
+
 
 import com.android.build.OutputFile
 

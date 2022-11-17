@@ -1,11 +1,10 @@
 import {Platform} from 'react-native';
-export const BASE_URL = 'http://31.220.58.130/rich_ecom/public/api/';
+export const BASE_URL = 'http://194.163.131.163/ecommerce/api/';
 export const PRODUCT_DES_URL =
-  'http://31.220.58.130/rich_ecom/public/productDescription/';
-export const PRODUCTS_URL =
-  'http://31.220.58.130/rich_ecom/public/product-detail/';
-export const BLOG_URL = 'http://31.220.58.130/rich_ecom/public/blogDetails/';
-export const FAQ_URL = 'http://31.220.58.130/rich_ecom/public/faqDescription/';
+  'http://194.163.131.163/ecommerce/productDescription/';
+export const PRODUCTS_URL = 'http://194.163.131.163/ecommerce/product-detail/';
+export const BLOG_URL = 'http://194.163.131.163/ecommerce/blogDetails/';
+export const FAQ_URL = 'http://194.163.131.163/ecommerce/faqDescription/';
 
 export const GOOGLE_LOGINKEY =
   Platform.OS == 'android'
