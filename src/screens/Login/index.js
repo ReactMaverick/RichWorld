@@ -151,6 +151,7 @@ function Login({navigation}) {
     formData.append('session_id', deviceToken);
     formData.append('fcmToken', fcmToken);
     formData.append('device_os', Platform.OS);
+    console.log('formData==>', formData);
 
     fetch(POST_SOCIAL_LOGIN, {
       method: 'POST',
@@ -165,7 +166,7 @@ function Login({navigation}) {
         return Promise.all([statusCode, data]);
       })
       .then(([status, response]) => {
-        console.log(response);
+        console.log(status, response);
 
         if (status == 200) {
           if (response.new_user == 'Yes') {
@@ -430,7 +431,7 @@ function Login({navigation}) {
               onPress={() => {
                 // navigation.navigate('HomeScreen');
                 onFacebookButtonPress().then(result => {
-                  // console.log('Signed in with Facebook!', result)
+                  // console.log('Signed in with Facebook!', result);
                   _socialLogin(
                     result.additionalUserInfo.profile.id,
                     'facebook',
@@ -451,6 +452,7 @@ function Login({navigation}) {
             <TouchableOpacity
               onPress={() => {
                 onGoogleButtonPress().then(result => {
+                  // console.log('google login!', result);
                   _socialLogin(
                     result.user.id,
                     'google',

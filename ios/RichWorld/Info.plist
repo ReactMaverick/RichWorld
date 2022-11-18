@@ -29,7 +29,7 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb278707640967057</string>
+				<string>fb1136747710549519</string>
 			</array>
 		</dict>
 		<dict>
@@ -44,9 +44,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>278707640967057</string>
+	<string>1136747710549519</string>
 	<key>FacebookClientToken</key>
-	<string>28ddb47afa4669f8e4d196f069a854d7</string>
+	<string>f708ad7cccd33c410512b93dff7556f5</string>
 	<key>FacebookDisplayName</key>
 	<string>RichWorld</string>
 	<key>LSApplicationQueriesSchemes</key>

@@ -11,7 +11,7 @@ export const GOOGLE_LOGINKEY =
     ? '262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com'
     : '262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com';
 
-export const FBAppId = '278707640967057';
+export const FBAppId = '1136747710549519';
 
 export const GET_HOME = BASE_URL + 'homePage';
 export const GET_ALL_CATEGORY = BASE_URL + 'allCategory?popular=';
