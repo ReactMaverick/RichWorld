@@ -271,7 +271,7 @@ function Settings({ navigation }) {
           </View>
 
         </ScrollView>
-        <Footer navigation={navigation} />
+        <Footer navigation={navigation} activeTab="Settings" />
       </>
     )
   }

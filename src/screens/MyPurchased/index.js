@@ -15,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MY_PURCHASED, SUBMIT_RATTINGS, RETURN_PRODUCT, UPLOAD_PRODUCTS_IMAGES } from '../../config/ApiConfig';
 import dateFormat, { masks } from "dateformat";
+import { BKColor } from "../../common/BKColor";
 
 function MyPurchased({ navigation }) {
   const isFocused = useIsFocused();
@@ -341,7 +342,7 @@ function MyPurchased({ navigation }) {
                   </TouchableOpacity>
                   : <></>}
 
-                <TouchableOpacity style={[styles.btn, { backgroundColor: '#620000', flex: 1 }]} onPress={() => {
+                <TouchableOpacity style={[styles.btn, { backgroundColor: BKColor.btnBackgroundColor1, flex: 1 }]} onPress={() => {
                   setProductsId(item.products_id);
                   toggleRatingModal();
                 }}>

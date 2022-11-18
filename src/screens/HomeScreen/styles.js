@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
 
@@ -14,12 +15,12 @@ export default StyleSheet.create({
     titleStyle1: {
         fontSize: 14,
         fontFamily: 'Poppins-Regular',
-        color: '#620000'
+        color: BKColor.textColor1
     },
     titleStyle2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000'
+        color: BKColor.textColor1,
     },
     titleIcon: {
         fontSize: 24,
@@ -28,7 +29,7 @@ export default StyleSheet.create({
     },
     outerProductBox: {
         flex: 1,
-
+        
         margin: 10,
         flexDirection: 'row'
     },
@@ -125,13 +126,13 @@ export default StyleSheet.create({
 
     viewAllBtn:{
         flexDirection:'row',
-        backgroundColor:'#AB0000',
+        backgroundColor: BKColor.btnBackgroundColor1,
         padding:10,
         borderRadius:5,
         alignItems:'center'
     },
     viewAllBtnText:{
-        color: '#fff',
+        color: BKColor.white,
         fontFamily: 'Poppins-Bold',
         fontSize: 12,
     },
@@ -145,7 +146,7 @@ export default StyleSheet.create({
     },
 
     text: {
-        color: '#fff',
+        color: BKColor.white,
         fontSize: 30,
         fontWeight: 'bold'
     },

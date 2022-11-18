@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHandler, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHandler, Alert, ActivityIndicator, ImageBackground } from 'react-native';
 import styles from "./styles";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -12,7 +12,7 @@ import { useDrawerStatus } from '@react-navigation/drawer';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { useSelector, useDispatch } from "react-redux";
-
+import { BKColor } from "../../common/BKColor";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 function SlideMenu({ navigation }) {
 
@@ -57,8 +57,15 @@ function SlideMenu({ navigation }) {
     }, [navigation, isDrawerOpen]);
 
     return (
-        <ScrollView style={styles.outerMenu}>
-
+        // <ScrollView style={styles.outerMenu}>
+            <ImageBackground style={styles.outerMenu} source={require('../../assets/Image/sidebar-img.png')} resizeMode='cover' >
+                <AntDesign name="close" style={{
+                    fontSize:25,
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    color:BKColor.textColor1
+                }}  onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
             <TouchableOpacity onPress={() => {
                 navigation.dispatch(DrawerActions.toggleDrawer())
                 navigation.navigate('HomeScreen');
@@ -191,7 +198,7 @@ function SlideMenu({ navigation }) {
                     <Text style={styles.menuText}>Logout</Text>
                 </TouchableOpacity>
             }
-        </ScrollView>
+        </ImageBackground>
     )
 
 }

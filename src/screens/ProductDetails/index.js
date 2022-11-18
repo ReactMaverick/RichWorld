@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { WebView } from 'react-native-webview';
+import { BKColor } from "../../common/BKColor";
 
 function ProductDetails({ navigation, route }) {
   const dispatch = useDispatch();
@@ -712,13 +713,13 @@ function ProductDetails({ navigation, route }) {
           }
 
           {productDetails.defaultStock > 0 ? (productDetails.isCartPresent) ?
-            <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Added</Text></View>
+            <View style={[styles.footerBtn, { backgroundColor: BKColor.btnBackgroundColor1 }]}><Text style={styles.btnTxt}>Added</Text></View>
             :
             <TouchableOpacity onPress={() => {
               _addToCart(quantity)
-            }} style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Add to cart</Text></TouchableOpacity>
+            }} style={[styles.footerBtn, { backgroundColor: BKColor.btnBackgroundColor1 }]}><Text style={styles.btnTxt}>Add to cart</Text></TouchableOpacity>
             :
-            <View style={[styles.footerBtn, { backgroundColor: '#620000' }]}><Text style={styles.btnTxt}>Out Of Stock</Text></View>
+            <View style={[styles.footerBtn, { backgroundColor: BKColor.btnBackgroundColor1 }]}><Text style={styles.btnTxt}>Out Of Stock</Text></View>
           }
 
         </View>

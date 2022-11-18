@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     headerMain: {
@@ -42,7 +43,7 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     searchBoxAudio:{
-        backgroundColor:"#AB0000",
+        backgroundColor:BKColor.btnBackgroundColor1,
         height: '100%',
         paddingLeft: 15,
         paddingRight: 2,

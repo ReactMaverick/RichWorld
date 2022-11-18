@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-
+import { BKColor } from '../../common/BKColor';
 export default StyleSheet.create({
     backGround:{
         flex:1,
@@ -39,7 +39,7 @@ export default StyleSheet.create({
     },
     footerText:{
         fontFamily:'Poppins-Bold',
-        color:'#620000',
+        color:BKColor.btnBackgroundColor1,
         fontSize:14,
         textTransform:'uppercase',
     },
@@ -108,7 +108,7 @@ export default StyleSheet.create({
     },
     socialLoginText:{
         fontFamily:'Poppins-Medium',
-        color:'#620000',
+        color:BKColor.btnBackgroundColor1,
         fontSize:14,
     },
     errorMessage:{

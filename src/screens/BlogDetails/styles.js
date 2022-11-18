@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { color } from 'react-native-reanimated';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
 
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform: 'uppercase'
     },
 
@@ -99,11 +100,11 @@ export default StyleSheet.create({
     },
     titleIcon: {
         fontSize: 24,
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         marginLeft:5
     },
     shareIcon: {
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontFamily: 'Poppins-Bold',
         fontSize: 18,
         marginRight: 10

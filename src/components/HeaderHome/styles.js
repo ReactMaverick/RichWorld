@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     headerMain: {
@@ -28,7 +29,7 @@ export default StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginTop: 10,
-        borderColor: "#000",
+        borderColor: BKColor.textColor1,
         borderWidth: 1,
         borderRadius: 3,
         justifyContent: 'space-between',
@@ -43,7 +44,7 @@ export default StyleSheet.create({
         padding: 10,
     },
     searchBoxAudio: {
-        backgroundColor: "#AB0000",
+        backgroundColor: BKColor.textColor1,
         height: '100%',
         paddingLeft: 15,
         paddingRight: 2,

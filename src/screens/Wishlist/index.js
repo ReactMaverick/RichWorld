@@ -238,7 +238,7 @@ function Wishlist({ navigation }) {
               ))}
 
         </ScrollView>
-        <Footer navigation={navigation} />
+        <Footer navigation={navigation} activeTab="Wishlist" />
       </>
     )
   }

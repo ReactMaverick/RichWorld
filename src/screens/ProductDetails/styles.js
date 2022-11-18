@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { color } from 'react-native-reanimated';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
-
+import { BKColor } from '../../common/BKColor';
 export default StyleSheet.create({
 
     filterBar: {
@@ -19,13 +19,13 @@ export default StyleSheet.create({
     CategoryText1: {
         fontSize: 14,
         fontFamily: 'Poppins-Regular',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform: 'uppercase'
     },
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform: 'uppercase'
     },
     productImageSection: {
@@ -49,7 +49,7 @@ export default StyleSheet.create({
         
     },
     productTitle: {
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontFamily: 'Poppins-Bold',
         fontSize: 18,
         marginLeft: 10
@@ -69,7 +69,7 @@ export default StyleSheet.create({
         // backgroundColor: '#fff'
     },
     shareIcon: {
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontFamily: 'Poppins-Bold',
         fontSize: 18,
         marginRight: 10
@@ -133,7 +133,7 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:1,
-        borderColor:'#620000',
+        borderColor:BKColor.btnBackgroundColor1,
         marginBottom:5,
     },
     attrimgActive:{
@@ -142,14 +142,14 @@ export default StyleSheet.create({
         borderRadius:20,
         marginLeft:10,
         borderWidth:3,
-        borderColor:'#620000',
+        borderColor:BKColor.btnBackgroundColor1,
         marginBottom:5,
     },
     attrbox:{
         // width:30,
         paddingHorizontal:10,
         paddingVertical:5,
-        borderColor:'#620000',
+        borderColor:BKColor.btnBackgroundColor1,
         borderWidth:1,
         marginLeft:10,
         justifyContent:'center',
@@ -162,7 +162,7 @@ export default StyleSheet.create({
         paddingHorizontal:10,
         paddingVertical:5,
         marginBottom:5,
-        backgroundColor:'#620000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         borderWidth:1,
         marginLeft:10,
         justifyContent:'center',
@@ -212,10 +212,10 @@ export default StyleSheet.create({
         margin:10,
         fontFamily:'Poppins-Bold',
         fontSize:14,
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
     },
     loyaltyPointBox:{
-        backgroundColor:'#620000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         padding:10,
         margin:10,
         borderRadius:5
@@ -239,7 +239,7 @@ export default StyleSheet.create({
         justifyContent:'center'
     },
     pincodeCheckoutBtn:{
-        backgroundColor: '#620000',
+        backgroundColor: BKColor.btnBackgroundColor1,
         width:'37%',
         justifyContent:'center',
         alignItems:'center',
@@ -253,7 +253,7 @@ export default StyleSheet.create({
     },
     bulkTitle:{
         fontFamily:'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontSize:13,
         flex:1
     },
@@ -352,7 +352,7 @@ export default StyleSheet.create({
     },
     heartIcon:{
         fontSize:25,
-        color: '#620000'
+        color: BKColor.btnBackgroundColor1
     },
     quantityOuter: {
         flexDirection: 'row',

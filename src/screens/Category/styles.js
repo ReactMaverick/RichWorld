@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
   
@@ -54,7 +55,7 @@ export default StyleSheet.create({
     cartIconBox:{
         alignSelf:'flex-end',
         marginRight:10,
-        backgroundColor: '#620000',
+        backgroundColor: BKColor.btnBackgroundColor1,
         width:36,
         height:36,
         borderRadius:18,
@@ -76,13 +77,13 @@ export default StyleSheet.create({
     CategoryText1: {
         fontSize: 14,
         fontFamily: 'Poppins-Regular',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform:'uppercase'
     },
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform:'uppercase'
     },
     filterAreaMain:{

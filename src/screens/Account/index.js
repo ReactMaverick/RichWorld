@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
 import HTMLView from 'react-native-htmlview';
+import { BKColor } from "../../common/BKColor";
 
 function Account({ navigation }) {
 
@@ -37,7 +38,7 @@ function Account({ navigation }) {
 
         <View style={{margin:10}}>
           <View style={{flexDirection:'row'}}>
-          <Text style={styles.text1}>Hi, </Text><Text style={[styles.text1,{color:'#620000'}]}>Bhuvanesh Sharma </Text>
+          <Text style={styles.text1}>Hi, </Text><Text style={[styles.text1,{color:BKColor.btnBackgroundColor1}]}>Bhuvanesh Sharma </Text>
           </View>
           
           <HTMLView

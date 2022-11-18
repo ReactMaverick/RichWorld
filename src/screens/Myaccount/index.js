@@ -13,6 +13,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { UPDATE_ACCOUNT, PLAY_STORE } from '../../config/ApiConfig';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { BKColor } from "../../common/BKColor";
+
 const actionSheetRef = createRef();
 
 
@@ -22,7 +24,7 @@ function Myaccount({ navigation }) {
 
   const dispatch = useDispatch();
 
-  const logoutData = () =>{
+  const logoutData = () => {
     dispatch({
       type: "LOGOUT",
 
@@ -77,7 +79,7 @@ function Myaccount({ navigation }) {
     if (isFocused) {
       AsyncStorage.getItem('userData').then((userData) => {
         if (userData != null) {
-           console.log(userData);
+          console.log(userData);
           setIsLogin(true)
           setUserData(JSON.parse(userData))
         } else {
@@ -86,7 +88,7 @@ function Myaccount({ navigation }) {
         }
       })
     }
-  }, [navigation, isFocused, userData]);
+  }, [navigation, isFocused]);
 
 
 
@@ -133,20 +135,20 @@ function Myaccount({ navigation }) {
 
   const onShare = async () => {
     try {
-      if(Platform.OS=="android"){
+      if (Platform.OS == "android") {
         const result = await Share.share({
           title: 'App link',
-          message: 'Please install this app and stay safe , AppLink :'+googlePlaystore,
+          message: 'Please install this app and stay safe , AppLink :' + googlePlaystore,
           url: googlePlaystore
         });
-      }else{
+      } else {
         const result = await Share.share({
           title: 'App link',
-          message: 'Please install this app and stay safe , AppLink :'+applePlaystore,
+          message: 'Please install this app and stay safe , AppLink :' + applePlaystore,
           url: applePlaystore
         });
       }
-      
+
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -160,27 +162,30 @@ function Myaccount({ navigation }) {
       console.log(error.message);
     }
   };
-  const socialSignOut = async () =>{
-    try{
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
-    await  auth().signOut();
-    }catch (error) {
+  const socialSignOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      await auth().signOut();
+    } catch (error) {
       console.log(error.message);
     }
-    
+
   }
 
   return (
     <>
       <Header navigation={navigation} />
       <ScrollView style={{ flex: 1 }}>
-        <View style={[styles.headerSection, { backgroundColor: '#AB0000' }]} >
+        <View style={[styles.headerSection, { backgroundColor: BKColor.btnBackgroundColor2 }]} >
           <Image source={require('../../assets/Image/accountBackGround.png')} style={styles.headerSection} />
         </View>
+        {userData.customer_image != null ?
+          <Image source={{ uri: userData.customer_image }} style={styles.userImage} />
+          :
+          <Image source={require('../../assets/Image/avtar.png')} style={styles.userImage} />
+        }
 
-
-        <Image source={{ uri: userData.customer_image }} style={styles.userImage} />
 
         <Text style={styles.userName}>{userData.first_name}</Text>
         <TouchableOpacity onPress={() => {
@@ -196,88 +201,88 @@ function Myaccount({ navigation }) {
           <Text style={styles.menuText}>My account</Text>
         </TouchableOpacity> */}
 
-
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('MyOrder');
-        }} style={styles.menuItem}>
-          <FontAwesome name="cube" style={styles.menuIcon} />
-          <Text style={styles.menuText}>My Orders</Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('Wishlist');
-        }} style={styles.menuItem}>
-          <FontAwesome name="heart-o" style={styles.menuIcon} />
-          <Text style={styles.menuText}>My Wishlist</Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('MyAddress');
-        }} style={styles.menuItem}>
-          <FontAwesome name="map-marker" style={styles.menuIcon} />
-          <Text style={styles.menuText}>My Address</Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('MyPurchased');
-        }} style={styles.menuItem}>
-          <FontAwesome name="inr" style={styles.menuIcon} />
-          <Text style={styles.menuText}>My purchased</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => {
-          onShare()
-        }} style={styles.menuItem}>
-          <FontAwesome name="user" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Refer Friends</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => {
-          navigation.navigate('Settings');
-        }} style={styles.menuItem}>
-          <FontAwesome name="gear" style={styles.menuIcon} />
-          <Text style={styles.menuText}>Account Setting</Text>
-        </TouchableOpacity>
-
-        {isLogin ?
+        <View style={{ paddingLeft: 15, paddingTop: 15 }}>
           <TouchableOpacity onPress={() => {
+            navigation.navigate('MyOrder');
+          }} style={styles.menuItem}>
+            <FontAwesome name="cube" style={styles.menuIcon} />
+            <Text style={styles.menuText}>My Orders</Text>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('Wishlist');
+          }} style={styles.menuItem}>
+            <FontAwesome name="heart-o" style={styles.menuIcon} />
+            <Text style={styles.menuText}>My Wishlist</Text>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('MyAddress');
+          }} style={styles.menuItem}>
+            <FontAwesome name="map-marker" style={styles.menuIcon} />
+            <Text style={styles.menuText}>My Address</Text>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('MyPurchased');
+          }} style={styles.menuItem}>
+            <FontAwesome name="inr" style={styles.menuIcon} />
+            <Text style={styles.menuText}>My purchased</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {
+            onShare()
+          }} style={styles.menuItem}>
+            <FontAwesome name="user" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Refer Friends</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('Settings');
+          }} style={styles.menuItem}>
+            <FontAwesome name="gear" style={styles.menuIcon} />
+            <Text style={styles.menuText}>Account Setting</Text>
+          </TouchableOpacity>
+
+          {isLogin ?
+            <TouchableOpacity onPress={() => {
 
               AsyncStorage.clear().then(() => {
                 logoutData()
                 setIsLogin(true)
-                try{
+                try {
                   socialSignOut()
-                }catch(e){
+                } catch (e) {
 
                 }
-                dispatch({type: "LOGOUT"});
+                dispatch({ type: "LOGOUT" });
                 navigation.navigate('HomeScreen');
               })
-            
 
 
-          }} style={styles.menuItem}>
 
-            <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
-            <Text style={styles.menuText}>Logout</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('Login');
-          }} style={styles.menuItem}>
-            <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
-            <Text style={styles.menuText}>Login</Text>
-          </TouchableOpacity>
+            }} style={styles.menuItem}>
 
-        }
+              <View style={{ width: 30 }}><MaterialCommunityIcons name="logout" style={styles.menuIcon} /></View>
+              <Text style={styles.menuText}>Logout</Text>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('Login');
+            }} style={styles.menuItem}>
+              <MaterialCommunityIcons name="logout" style={styles.menuIcon} />
+              <Text style={styles.menuText}>Login</Text>
+            </TouchableOpacity>
 
+          }
 
+        </View>
 
       </ScrollView>
-      <Footer navigation={navigation} />
+      <Footer navigation={navigation} activeTab="Myaccount" />
 
       <ActionSheet ref={actionSheetRef}>
         <TouchableOpacity onPress={() => {

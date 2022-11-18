@@ -162,7 +162,7 @@ function HomeScreen({ navigation }) {
         <ProductBox navigation={navigation} products={topSeller} />
 
       </ScrollView>
-      <Footer navigation={navigation} />
+      <Footer navigation={navigation} activeTab="Home" />
     </>
   )
 

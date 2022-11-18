@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { color } from 'react-native-reanimated';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
   
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform:'uppercase'
     },
     card:{
@@ -51,11 +52,11 @@ export default StyleSheet.create({
     boxheaderTxt:{
         fontFamily: 'Poppins-Bold',
         fontSize: 14,
-        color:'#620000'
+        color:BKColor.btnBackgroundColor1
     },
     boxIcon:{
         fontSize:16,
-        color:'#620000'
+        color:BKColor.btnBackgroundColor1
     },
     BoxDescription:{
         fontFamily: 'Poppins-Regular',

@@ -379,7 +379,7 @@ export default function App() {
           <Provider store={store}>
             <SafeAreaViewDecider
               statusBarHiddenForNotch={true}
-              backgroundColor="#620000"
+              backgroundColor="#6c1437"
             />
             <NavigationContainer>
               <Stack1 />

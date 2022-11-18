@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet,Platform } from 'react-native';
-
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     backGround: {
@@ -40,7 +40,7 @@ export default StyleSheet.create({
     },
     footerText: {
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontSize: 14,
         textTransform: 'uppercase',
     },
@@ -107,7 +107,7 @@ export default StyleSheet.create({
     },
     socialLoginText: {
         fontFamily: 'Poppins-Medium',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         fontSize: 14,
     },
     errorMessage: {
@@ -161,7 +161,7 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     btnOuterPopup: {
-        backgroundColor: '#620000',
+        backgroundColor: BKColor.btnBackgroundColor1,
 
         marginTop: 10,
         padding: 10,
@@ -185,7 +185,7 @@ export default StyleSheet.create({
     },
     backIcon:{
         fontSize:25,
-        color: '#620000'
+        color: BKColor.btnBackgroundColor1
     }
 
 

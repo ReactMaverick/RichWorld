@@ -7,13 +7,12 @@ import WishIcon from '../../assets/Image/WishIcon'
 import Account from '../../assets/Image/Account'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
-
+import { BKColor } from "../../common/BKColor";
 import { useSelector, useDispatch } from "react-redux";
 
-function Footer({ navigation }) {
+function Footer({ navigation, activeTab = "" }) {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
-
     const userData = useSelector((state) => {
 
         return state.authReducer;
@@ -42,49 +41,72 @@ function Footer({ navigation }) {
 
     return (
         <View style={styles.footerbox}>
+            {activeTab == "Home" ?
+                <View style={{ alignItems: 'center' }}>
+                    <HomeIcon color={BKColor.textColor1} width={30} height={30} />
+                    <Text style={{ color: BKColor.textColor1, fontWeight: '700' }}>Home</Text>
+                </View>
+                :
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate('HomeScreen');
 
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('HomeScreen');
+                }}>
+                    <HomeIcon />
+                </TouchableOpacity>
+            }
 
-            }}>
-                <HomeIcon />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-                if (userData == null) {
-                    navigation.navigate('Login');
-                } else {
-                    navigation.navigate('Settings');
-                }
-
-
-            }}>
-                <Settings />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => {
-                if (userData == null) {
-                    navigation.navigate('Login');
-                } else {
-                    navigation.navigate('Wishlist');
-                }
-
-            }}>
-                <WishIcon />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => {
-                if (userData == null) {
-                    navigation.navigate('Login');
-                } else {
-                    navigation.navigate('Myaccount');
-                }
-
-            }}>
-                <Account />
-            </TouchableOpacity>
+            {activeTab == "Settings" ?
+                <View style={{ alignItems: 'center' }}>
+                    <Settings color={BKColor.textColor1} width={30} height={30} />
+                    <Text style={{ color: BKColor.textColor1, fontWeight: '700' }}>Settings</Text>
+                </View>
+                :
+                <TouchableOpacity onPress={() => {
+                    if (userData == null) {
+                        navigation.navigate('Login');
+                    } else {
+                        navigation.navigate('Settings');
+                    }
+                }}>
+                    <Settings />
+                </TouchableOpacity>
+            }
 
 
+            {activeTab == "Wishlist" ?
+                <View style={{ alignItems: 'center' }}>
+                    <WishIcon color={BKColor.textColor1} width={30} height={30} />
+                    <Text style={{ color: BKColor.textColor1, fontWeight: '700' }}>Wishlist</Text>
+                </View>
+                :
+                <TouchableOpacity onPress={() => {
+                    if (userData == null) {
+                        navigation.navigate('Login');
+                    } else {
+                        navigation.navigate('Wishlist');
+                    }
 
+                }}>
+                    <WishIcon />
+                </TouchableOpacity>
+            }
+
+            {activeTab == "Myaccount" ?
+                <View style={{ alignItems: 'center' }}>
+                    <Account color={BKColor.textColor1} width={30} height={30} />
+                    <Text style={{ color: BKColor.textColor1, fontWeight: '700' }}>My account</Text>
+                </View>
+                :
+                <TouchableOpacity onPress={() => {
+                    if (userData == null) {
+                        navigation.navigate('Login');
+                    } else {
+                        navigation.navigate('Myaccount');
+                    }
+                }}>
+                    <Account />
+                </TouchableOpacity>
+            }
         </View>
     )
 

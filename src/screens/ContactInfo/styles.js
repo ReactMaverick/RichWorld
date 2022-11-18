@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet, Platform } from 'react-native';
 import { color } from 'react-native-reanimated';
-
+import { BKColor } from '../../common/BKColor';
 export default StyleSheet.create({
   
     filterBar:{
@@ -14,7 +14,7 @@ export default StyleSheet.create({
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform:'uppercase'
     },
     card:{
@@ -43,10 +43,10 @@ export default StyleSheet.create({
     },
     itemIcon:{
         fontSize:24,
-        color:'#620000'
+        color:BKColor.btnBackgroundColor1
     },
     text1:{
-        color:'#620000',
+        color:BKColor.btnBackgroundColor1,
         fontFamily:'Poppins-Bold',
         fontSize:14
     },
@@ -61,7 +61,7 @@ export default StyleSheet.create({
         fontSize:14
     },
     formTitle:{
-        color:'#620000',
+        color:BKColor.btnBackgroundColor1,
         fontFamily:'Poppins-Bold',
         fontSize:16,
         textAlign:'center',
@@ -90,7 +90,7 @@ export default StyleSheet.create({
         marginBottom:10
     },
     btnOuter:{
-        backgroundColor:'#620000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         flex:1,
         marginTop:10,
         padding:10,

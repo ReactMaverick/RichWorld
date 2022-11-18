@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-
+import { BKColor } from '../../common/BKColor';
 export default StyleSheet.create({
   
     filterBar:{
@@ -13,7 +13,7 @@ export default StyleSheet.create({
     CategoryText2: {
         fontSize: 14,
         fontFamily: 'Poppins-Bold',
-        color: '#620000',
+        color: BKColor.btnBackgroundColor1,
         textTransform:'uppercase'
     },
     card:{

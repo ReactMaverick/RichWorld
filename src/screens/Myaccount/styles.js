@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
-
+import { BKColor } from '../../common/BKColor';
 export default StyleSheet.create({
     headerSection:{
         height:150,
@@ -14,36 +14,38 @@ export default StyleSheet.create({
         borderRadius:60,
         borderWidth:3,
         borderColor:'#fff',
+        backgroundColor: BKColor.textColor1,
         marginTop:-60,
         alignSelf:'center' 
     },
     userName:{
         alignSelf:'center' ,
-        color:'#620000',
+        color:BKColor.btnBackgroundColor1,
         fontFamily:'Poppins-Bold',
         fontSize:14
     },
     menuItem:{
         flexDirection:'row',
-        marginLeft:10,
-        marginBottom:8,
+        // marginLeft:10,
+        marginBottom:20,
         alignItems:'center'
     },
     menuIcon:{
         fontSize:20,
         marginRight:10,
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         width:20
     },
     menuText:{
-        fontFamily:'Poppins-Regular',
-        color:'#818181',
-        fontSize:14
+        fontFamily: 'Poppins-Regular',
+        color: BKColor.btnBackgroundColor1,
+        fontSize: 18,
+        fontWeight: '700'
     },
     camera:{
         fontSize:30,
         alignSelf:'flex-end',
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         marginRight:10
     },
     outerBtn:{
@@ -52,7 +54,7 @@ export default StyleSheet.create({
         marginBottom:10,
         padding:10,
         borderRadius:10,        
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         justifyContent:'center',
         alignItems:'center'
     },

@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     footerbox: {
-        height: 70,
+        height: 50,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
