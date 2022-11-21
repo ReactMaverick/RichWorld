@@ -1,5 +1,6 @@
 import {Platform} from 'react-native';
 export const BASE_URL = 'http://194.163.131.163/ecommerce/api/';
+export const IMAGE_BASE_URL = 'http://194.163.131.163/ecommerce/';
 export const PRODUCT_DES_URL =
   'http://194.163.131.163/ecommerce/productDescription/';
 export const PRODUCTS_URL = 'http://194.163.131.163/ecommerce/product-detail/';

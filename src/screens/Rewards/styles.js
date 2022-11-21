@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     headerMain: {
@@ -115,7 +116,7 @@ export default StyleSheet.create({
     menuText:{
         fontFamily:'Poppins-Bold',
         fontSize: 20,
-        color: '#AB0000'
+        color: BKColor.btnBackgroundColor1
     },
     rewardImage:{
         width: 40,
@@ -133,7 +134,7 @@ export default StyleSheet.create({
     rewardText1:{
         fontFamily:'Poppins-Bold',
         fontSize: 17,
-        color: '#AB0000',
+        color: BKColor.btnBackgroundColor1,
     },
     rewardText2:{
         fontFamily:'Poppins-Bold',

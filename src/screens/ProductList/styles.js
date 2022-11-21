@@ -18,23 +18,28 @@ export default StyleSheet.create({
         backgroundColor:'#fff',
         width:Dimensions.get('window').width/2-10,
         height:undefined,
-        borderRadius:5,
+        borderRadius:10,
         shadowColor: '#000',
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.4,
         shadowRadius: 3,
-        elevation: 5, 
+        elevation: 5,
     },
     productImage:{
         width:Dimensions.get('window').width/2-10,
-        height:Dimensions.get('window').width/3,        
-        borderTopLeftRadius:5,
-        borderTopRightRadius:5,
+        height:Dimensions.get('window').width/2.5, 
         alignSelf:'center'
     },
     productTitle:{
         fontSize:13,
         fontFamily:'Poppins-Medium',
+        marginLeft:5,
+        // marginTop:5
+    },
+    productTitle2:{
+        fontSize:13,
+        fontFamily:'Poppins-Medium',
+        color:BKColor.textColor3,
         marginLeft:5,
         marginTop:5
     },
@@ -50,13 +55,13 @@ export default StyleSheet.create({
         paddingHorizontal:5
     },
     sellingPrice:{
-        color:'#2E2E2E',
+        color:BKColor.textColor2,
         fontFamily:'Poppins-Regular',
         fontSize:16,
         marginLeft:5
     },
     mrpPrice:{
-        color:'#888888',
+        color:BKColor.textColor3,
         fontFamily:'Poppins-Regular',
         fontSize:12,
         textDecorationLine:'line-through'

@@ -84,7 +84,7 @@ export default StyleSheet.create({
         marginBottom:10
     },
     btnOuter:{
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         flex:1,
         marginTop:10,
         padding:10,

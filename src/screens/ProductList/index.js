@@ -13,7 +13,7 @@ import { Rating } from 'react-native-ratings';
 import Slider from '@react-native-community/slider';
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ActionSheet from "react-native-actions-sheet";
-import { POST_PRODUCT, ADD_WISHLIST, GET_ALL_CATEGORY } from '../../config/ApiConfig';
+import { POST_PRODUCT, ADD_WISHLIST, GET_ALL_CATEGORY, IMAGE_BASE_URL } from '../../config/ApiConfig';
 import DeviceInfo from 'react-native-device-info';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,12 +21,17 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 
 const actionSheetRef = createRef();
 function ProductList({ navigation, route }) {
-  const { title1, title2, filterParam } = route.params;
+  const { title1, title2 } = route.params;
+
+  const [filterParam, setFilterParam] = useState(route.params.filterParam)
+  const [filterParamReset, setFilterParamReset] = useState(route.params.filterParam)
   const [modalVisible, setFilterModalVisible] = useState(false);
   const [data, setSliderData] = useState(50);
   const [androidId, setAndroidId] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingLoadMore, setIsLoadingLoadMore] = useState(false);
+  const [pageNo, setPageNo] = useState(0);
   const [Products, setProducts] = useState([]);
   const [attrList, setAttrList] = useState([]);
   const [maxPrice, setMaxPrice] = useState(200);
@@ -44,22 +49,66 @@ function ProductList({ navigation, route }) {
   const [selectedOptions, setSelectedOptions] = useState("");
   const [filterApplyed, setFilterApplyed] = useState(false);
 
-
   let actionSheet;
+  const _loadMore = () => {
+    setIsLoadingLoadMore(true)
+    const formData = new FormData();
+    for (let key in filterParam) {
+      formData.append(key, filterParam[key]);
+    }
+    formData.append('session_id', androidId);
+    formData.append('customers_id', userData != null ? userData.id : "");
+    formData.append('page', parseInt(pageNo) + 1);
+    formData.append('limit', 6);
+    console.log(JSON.stringify(formData, null, " "));
+    fetch(POST_PRODUCT, {
+      method: "POST",
+      body: formData
+    })
+      .then((response) => {
 
+        const statusCode = response.status;
+        const data = response.json();
+        return Promise.all([statusCode, data]);
+      })
+      .then(([status, response]) => {
+        // console.log(status, response)
+        if (status == 200) {
+          if (response.products.product_data.length > 0) {
+            setPageNo(parseInt(pageNo) + 1)
+            var tempProducts = Products.concat(response.products.product_data);
+            setProducts(tempProducts)
+          }
+        } else {
+          console.log(status, response);
+        }
+      })
+      .catch((error) => console.log("error", error))
+      .finally(() => {
+        setIsLoadingLoadMore(false)
+      });
+  }
   const _getProductList = (filterParam, androidId, user_id, callFrom = "") => {
+    setPageNo(0)
     if (callFrom != "clearAll") {
       setIsLoading(true)
     }
     setIsLoading(true)
     const formData = new FormData();
-
-
-    for (let key in filterParam) {
-      formData.append(key, filterParam[key]);
+    if (callFrom != "clearAll") {
+      for (let key in filterParam) {
+        formData.append(key, filterParam[key]);
+      }
+    } else {
+      for (let key in filterParamReset) {
+        formData.append(key, filterParamReset[key]);
+      }
     }
+
     formData.append('session_id', androidId);
     formData.append('customers_id', user_id);
+    formData.append('page', 0);
+    formData.append('limit', 6);
     // console.log(JSON.stringify(formData, null, " "));
     fetch(POST_PRODUCT, {
       method: "POST",
@@ -122,6 +171,7 @@ function ProductList({ navigation, route }) {
     tempFilterParam.min_price = 0;
     tempFilterParam.max_price = maxPriceFilter;
     tempFilterParam.filters_applied = 1;
+    setFilterParam(tempFilterParam)
     if (isLogin) {
       _getProductList(tempFilterParam, "", userData.id);
     } else {
@@ -219,6 +269,11 @@ function ProductList({ navigation, route }) {
       });
   }
 
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 1;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+  };
 
   useEffect(() => {
     setIsLoading(true)
@@ -250,6 +305,7 @@ function ProductList({ navigation, route }) {
     return () => clearTimeout(t);
   }, [navigation, route]);
 
+
   if (isLoading) {
     return (
       <>
@@ -262,7 +318,7 @@ function ProductList({ navigation, route }) {
   } else {
     return (
       <>
-       <Header navigation={navigation} backArrow={true} />
+        <Header navigation={navigation} backArrow={true} />
         <View style={styles.filterBar}>
           <View style={styles.filterTextBox}>
             {filterApplyed ?
@@ -290,7 +346,13 @@ function ProductList({ navigation, route }) {
 
         </View>
 
-        <ScrollView>
+        <ScrollView onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            // enableSomeButton();
+            _loadMore()
+            console.log("rich to bottom")
+          }
+        }}>
           <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
 
 
@@ -326,7 +388,7 @@ function ProductList({ navigation, route }) {
                       navigation.navigate('ProductDetails', { products_id: item.products_id, products_attributes_prices_id: item.products_attributes_prices_id });
                     }} style={styles.productBox} key={key}>
                       <View style={styles.productBoxInner}>
-                        <ImageBackground style={styles.productImage} source={{ uri: item.image_path }} >
+                        <ImageBackground imageStyle={{ borderRadius: 10 }} style={styles.productImage} source={{ uri: IMAGE_BASE_URL + item.default_thumb }} >
                           <View style={styles.cartIconOuter}>
                             <View style={styles.cartIconBoxSqure}>
                               {/* <AntDesign name="shoppingcart" style={styles.cartIcon} /> */}
@@ -348,21 +410,22 @@ function ProductList({ navigation, route }) {
                               </>
                             </TouchableOpacity> : <></>}
                           </View>
-
-
                         </ImageBackground>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Text style={styles.productTitle2}>{stringFormat(item.brands_name)}</Text>
+                          <Rating
+                            startingValue={item.avg_review == null ? 0 : item.avg_review}
+                            ratingCount={5}
+                            showRating={false}
+                            imageSize={12}
+                            readonly={true}
+                            style={{ marginRight: 5 }}
+                          />
+                        </View>
                         <Text style={styles.productTitle}>{stringFormat(item.products_name)}</Text>
-                        <Rating
-                          startingValue={item.avg_review == null ? 0 : item.avg_review}
-                          ratingCount={5}
-                          showRating={false}
-                          imageSize={20}
-                          readonly={true}
-                          style={{ alignSelf: 'flex-start', marginLeft: 5 }}
-                        />
                         <View style={styles.priceBox}>
                           <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price}</Text>
+                            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{item.discounted_price} </Text>
                             <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{item.products_price}</Text>
                           </View>
 
@@ -374,6 +437,12 @@ function ProductList({ navigation, route }) {
                   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={styles.sellingPrice}>No Products Found! </Text>
                   </View>
+                }
+                {isLoadingLoadMore ?
+                  <View style={{ justifyContent: 'center', alignItems: 'center', width: '100%', height: 30 }}>
+                    <ActivityIndicator size="large" color="#620000" />
+                  </View>
+                  :<></>
                 }
               </>
 

@@ -33,7 +33,7 @@ export default StyleSheet.create({
     },
     loginText:{
         fontFamily:'Poppins-Medium',
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         fontSize:22,
 
     },
@@ -69,7 +69,7 @@ export default StyleSheet.create({
         height:40,
     },
     btnOuter:{
-        backgroundColor:'#AB0000',       
+        backgroundColor:BKColor.btnBackgroundColor1,       
         margin:10,
         marginBottom:30,
        
@@ -88,7 +88,7 @@ export default StyleSheet.create({
     },
     inputicon:{
         fontSize:20,
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         // lineHeight: 0,
         marginRight: Platform.OS=="android"?0:5,
     },
@@ -107,7 +107,7 @@ export default StyleSheet.create({
     bottomErrorMessage:{
         fontSize:14,
         fontFamily:'Poppins-Bold',
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         
     },
     socialLoginOuter:

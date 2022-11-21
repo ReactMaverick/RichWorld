@@ -92,7 +92,7 @@ export default StyleSheet.create({
         paddingBottom:10
     },
     viewAllBtn:{
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         padding:10,
         margin:10,
         borderRadius:5,

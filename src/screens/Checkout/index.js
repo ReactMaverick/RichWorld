@@ -3,6 +3,7 @@ import { View, ScrollView, SafeAreaView, Image, Text, TouchableOpacity, BackHand
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import styles from "./styles";
+import { BKColor } from "../../common/BKColor";
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import RazorpayCheckout from 'react-native-razorpay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -252,7 +253,7 @@ function Checkout({ navigation, route }) {
                                         contact: userData.phone,
                                         name: userData.first_name
                                     },
-                                    theme: { color: '#AB0000' }
+                                    theme: { color: BKColor.btnBackgroundColor1 }
                                 }
                                 RazorpayCheckout.open(options).then((data) => {
 

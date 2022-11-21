@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native';
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     outerSection:{
@@ -29,7 +30,7 @@ export default StyleSheet.create({
     },
     viewAllBtn:{
         flexDirection:'row',
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         marginTop: 5,
         padding:10,
         borderRadius:5,

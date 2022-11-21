@@ -33,7 +33,7 @@ export default StyleSheet.create({
     },
     loginText:{
         fontFamily:'Poppins-Medium',
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         fontSize:22,
 
     },
@@ -66,7 +66,7 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     btnOuter:{
-        backgroundColor:'#AB0000',       
+        backgroundColor:BKColor.btnBackgroundColor1,       
         margin:10,
         marginBottom:30,
        
@@ -85,7 +85,7 @@ export default StyleSheet.create({
     },
     inputicon:{
         fontSize: 20,
-        color: '#AB0000',
+        color: BKColor.btnBackgroundColor1,
        // lineHeight: 0,
         marginRight: Platform.OS=="android"?0:5,
     },
@@ -110,7 +110,7 @@ export default StyleSheet.create({
        },
       
     signupText1:{
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         fontFamily:'Poppins-Regular',
         fontSize:16,
         marginBottom:5,
@@ -128,7 +128,7 @@ export default StyleSheet.create({
         marginRight:10
     },
     resendButtonText:{
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         fontFamily:'Poppins-Medium',
         fontSize:14,
         alignSelf:'center',

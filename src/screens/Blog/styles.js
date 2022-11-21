@@ -47,7 +47,7 @@ export default StyleSheet.create({
        
     },
     loadMorebtn: {
-        backgroundColor: '#AB0000',
+        backgroundColor: BKColor.btnBackgroundColor1,
         padding: 5,
         borderRadius: 3,
         justifyContent: 'center',

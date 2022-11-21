@@ -1,15 +1,15 @@
 import { Dimensions, StyleSheet } from 'react-native';
-
+import { BKColor } from '../../common/BKColor';
 
 export default StyleSheet.create({
     title: {
-        color: '#AB0000',
+        color: BKColor.btnBackgroundColor1,
         fontSize: 15,
         fontFamily: 'Poppins-Medium'
     },
    
     enterBtn:{
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         justifyContent:'center',
         alignItems:'center',
         height:60,
@@ -24,18 +24,18 @@ export default StyleSheet.create({
     thankyouText:{
         fontFamily:'Poppins-Regular',
         fontSize:30,
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
         marginTop:30
     },
     thankyouText1:{
         fontFamily:'Poppins-Light',
         fontSize:16,
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
     },
     thankyouText2:{
         fontFamily:'Poppins-Regular',
         fontSize:16,
-        color:'#AB0000',
+        color:BKColor.btnBackgroundColor1,
     }
 
 });

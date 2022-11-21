@@ -4,10 +4,11 @@ import HeaderHome from "../../components/HeaderHome";
 import Footer from "../../components/Footer";
 import Swiper from 'react-native-swiper'
 import styles from "./styles";
+import { BKColor } from "../../common/BKColor";
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { GET_HOME,VIEW_CART } from '../../config/ApiConfig'
+import { GET_HOME, VIEW_CART } from '../../config/ApiConfig'
 import SplashScreen from 'react-native-splash-screen'
 import DeviceInfo from 'react-native-device-info';
 import { useSelector, useDispatch } from "react-redux";
@@ -28,10 +29,10 @@ function HomeScreen({ navigation }) {
   );
 
   const initialize_cart = (item) =>
-  dispatch({
-    type: "INTIALIZE_CART",
-    payload: item,
-  });
+    dispatch({
+      type: "INTIALIZE_CART",
+      payload: item,
+    });
 
   const _getHomeData = async () => {
     fetch(GET_HOME, {
@@ -75,7 +76,7 @@ function HomeScreen({ navigation }) {
       })
       .then(([status, response]) => {
         if (status == 200) {
-         
+
           initialize_cart(response.cart)
 
         } else {
@@ -95,11 +96,11 @@ function HomeScreen({ navigation }) {
     _getHomeData();
 
     AsyncStorage.getItem('userData').then((userData) => {
-      if (userData != null) {     
-        var userDetails = JSON.parse(userData)       
+      if (userData != null) {
+        var userDetails = JSON.parse(userData)
         _getCartList(userDetails.id, "")
-      } else {        
-        DeviceInfo.getAndroidId().then((androidId) => {         
+      } else {
+        DeviceInfo.getAndroidId().then((androidId) => {
           _getCartList("", androidId)
         });
       }
@@ -113,7 +114,7 @@ function HomeScreen({ navigation }) {
 
       <ScrollView style={{ flex: 1 }}>
         {sliders.length > 0 ?
-          <Swiper style={styles.wrapper} showsButtons={false} autoplay={true} autoplayTimeout={5} activeDotColor={'#AB0000'}>
+          <Swiper style={styles.wrapper} showsButtons={false} autoplay={true} autoplayTimeout={5} activeDotColor={BKColor.btnBackgroundColor1}>
             {sliders.map((item) => (
               <TouchableOpacity onPress={() => {
                 if (item.type == "product" && item.product_exist == "Yes") {
@@ -143,23 +144,33 @@ function HomeScreen({ navigation }) {
         }
 
 
+        {feature_product.length >= 3 &&
+          <>
+            <SectionTitle Title1="FEATURE" title2="PRODUCTS" navigation={navigation} navigationType={'featureProduct'} filterParam={{ 'type': 'is_feature' }} />
+            <ProductBox navigation={navigation} products={feature_product} />
+          </>
+        }
 
-        <SectionTitle Title1="FEATURE" title2="PRODUCTS" navigation={navigation} navigationType={'featureProduct'} filterParam={{ 'type': 'is_feature' }} />
-        <ProductBox navigation={navigation} products={feature_product} />
+        {brands.length >= 3 &&
+          <>
+            <SectionTitle Title1="BRAND" title2="PRODUCTS" navigation={navigation} navigationType={'brand'} filterParam={{}} />
+            <Brands navigation={navigation} products={brands} />
+          </>
+        }
 
-        <SectionTitle Title1="BRAND" title2="PRODUCTS" navigation={navigation} navigationType={'brand'} filterParam={{}} />
-        <Brands navigation={navigation} products={brands} />
+        {category.length >= 3 &&
+          <>
+            <SectionTitle Title1="POPULAR" title2="CATEGORIES" navigation={navigation} navigationType={'category'} filterParam={{}} />
+            <CategoryItem navigation={navigation} category={category} />
+          </>
+        }
 
-
-
-
-        <SectionTitle Title1="POPULAR" title2="CATEGORIES" navigation={navigation} navigationType={'category'} filterParam={{}} />
-        <CategoryItem navigation={navigation} category={category} />
-
-
-
-        <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" navigation={navigation} navigationType={'bestSeller'} filterParam={{ 'type': 'topseller' }} />
-        <ProductBox navigation={navigation} products={topSeller} />
+        {topSeller.length >= 3 &&
+          <>
+            <SectionTitle Title1="BEST SELLER" title2="IN LAST MONTH" navigation={navigation} navigationType={'bestSeller'} filterParam={{ 'type': 'topseller' }} />
+            <ProductBox navigation={navigation} products={topSeller} />
+          </>
+        }
 
       </ScrollView>
       <Footer navigation={navigation} activeTab="Home" />
@@ -219,7 +230,7 @@ function ProductBox({ navigation, products }) {
           navigation.navigate('ProductDetails', { products_id: products[0].products_id, products_attributes_prices_id: products[0].products_attributes_prices_id })
         }} style={styles.productLeft}>
           <Image style={styles.leftImage} source={{ uri: products[0].image_path }} />
-          <Text style={styles.productTitle}>{products[0].products_model}</Text>
+          <Text style={styles.productTitle}>{products[0].products_name}</Text>
           <View style={styles.priceBox}>
             <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[0].discounted_price}</Text>
             <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[0].products_price}</Text>
@@ -230,23 +241,23 @@ function ProductBox({ navigation, products }) {
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductDetails', { products_id: products[1].products_id, products_attributes_prices_id: products[1].products_attributes_prices_id })
           }} style={[styles.productInner, { marginBottom: 10 }]}>
-            <ImageBackground style={styles.rightImage} source={{ uri: products[1].image_path }} resizeMode="contain"/>
+            <ImageBackground style={styles.rightImage} source={{ uri: products[1].image_path }} resizeMode="cover" />
             {/* <Image style={styles.rightImage} source={{ uri: products[1].image_path }} /> */}
-            <Text style={styles.productTitle}>{products[1].products_model}</Text>
+            <Text style={styles.productTitle}>{products[1].products_name}</Text>
             <View style={styles.priceBox}>
-            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[1].discounted_price}</Text>
-            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[1].products_price}</Text>
-            </View> 
+              <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[1].discounted_price}</Text>
+              <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[1].products_price}</Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
             navigation.navigate('ProductDetails', { products_id: products[2].products_id, products_attributes_prices_id: products[2].products_attributes_prices_id })
           }} style={styles.productInner}>
-            <ImageBackground style={styles.rightImage} source={{ uri: products[2].image_path }} resizeMode="contain"/>
-            <Text style={styles.productTitle}>{products[2].products_model}</Text>
+            <ImageBackground style={styles.rightImage} source={{ uri: products[2].image_path }} resizeMode="cover" />
+            <Text style={styles.productTitle}>{products[2].products_name}</Text>
             <View style={styles.priceBox}>
-            <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[2].discounted_price}</Text>
-            <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[2].products_price}</Text>
+              <FontAwesome name="inr" style={styles.sellingPrice} /><Text style={styles.sellingPrice}>{products[2].discounted_price}</Text>
+              <FontAwesome name="inr" style={styles.mrpPrice} /><Text style={styles.mrpPrice}>{products[2].products_price}</Text>
             </View>
           </TouchableOpacity>
         </View>

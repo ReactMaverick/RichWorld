@@ -2,8 +2,8 @@ export const BKColor = {
     white: '#fff',
     otpColor1: '#F2F2F2',
     textColor1: '#6c1437',
-    textColor2: '#EC1F25',
-    textColor3: '#C6C4C4',
+    textColor2: '#2E2E2E',
+    textColor3: '#888888',
     textColor4: '#828282',
     textColor5: '#1FAA59',
   

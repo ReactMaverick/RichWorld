@@ -111,7 +111,7 @@ export default StyleSheet.create({
         marginLeft:-3,
         width: 20,
         height: 20,
-        backgroundColor: '#AB0000',
+        backgroundColor: BKColor.btnBackgroundColor1,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',

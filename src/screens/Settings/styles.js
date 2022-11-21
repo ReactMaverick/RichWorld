@@ -49,7 +49,7 @@ export default StyleSheet.create({
         marginBottom:10
     },
     btnOuter:{
-        backgroundColor:'#AB0000',
+        backgroundColor:BKColor.btnBackgroundColor1,
         flex:1,
         marginTop:10,
         padding:10,
@@ -89,7 +89,7 @@ export default StyleSheet.create({
     },
     inputIcon:{
         fontSize: 20,
-        color: '#AB0000',
+        color: BKColor.btnBackgroundColor1,
        // lineHeight: 0,
         marginRight: Platform.OS=="android"?0:5,
         paddingVertical: 5
