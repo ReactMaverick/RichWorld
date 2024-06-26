@@ -48,6 +48,50 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262237353427:android:59d2cda09938f066106b26",
+        "android_client_info": {
+          "package_name": "com.websadroit.babyecomm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262237353427-pnt344t9ctlcqjcm7dtjnqh3ce9vaeld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.websadroit.babyecomm",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA8MQJoq4zfnB-FHiO_Sk8GkHDCm819r0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262237353427-k2r47mqmknqb38545a2097rrbkoh3ugc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "262237353427-gu7nc60bn3bkuuse0ie9anm8lcr1kh9o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.amrithaa.richworld"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
